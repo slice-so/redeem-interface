@@ -1,0 +1,33 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.6.4",
+    "@types/node": "^17.0.41",
+    "@types/react": "^18.0.12",
+    "autoprefixer": "^10.4.7",
+    "click-to-react-component": "^1.0.8",
+    "next": "^12.1.6",
+    "next-seo": "^5.4.0",
+    "next-themes": "^0.2.0",
+    "postcss": "^8.4.14",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "sass": "^1.52.3",
+    "typescript": "^4.7.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.4.1",
+    "eslint": "^8.17.0",
+    "eslint-config-next": "^12.1.6",
+    "nightwind": "^1.1.12",
+    "tailwindcss": "^2.2.19"
+  }
+}

@@ -6,12 +6,14 @@ import { useAccount, useProvider } from "wagmi"
 const AppContext = createContext<any>({
   connector: null,
   provider: null,
+  isAccountVerified: false,
   account: "",
   color1: colorList[0],
   color2: colorList[1],
   darkColor1: darkColorList[0],
   darkColor2: darkColorList[1],
   modalView: { name: "" },
+  setIsAccountVerified: () => null,
   setModalView: () => null,
   shuffleColors: () => null
 })
@@ -21,6 +23,7 @@ export function AppWrapper({ children }) {
   const provider = useProvider()
 
   const { data: account } = useAccount()
+  const [isAccountVerified, setIsAccountVerified] = useState(false)
 
   const [color1, setColor1] = useState([])
   const [color2, setColor2] = useState([])
@@ -46,18 +49,24 @@ export function AppWrapper({ children }) {
     shuffleColors()
   }, [])
 
+  useEffect(() => {
+    setIsAccountVerified(false)
+  }, [account])
+
   return (
     <AppContext.Provider
       value={{
         connector: account?.connector,
         provider,
         account: account?.address,
+        isAccountVerified,
         color1,
         color2,
         darkColor1,
         darkColor2,
         modalView,
         setModalView,
+        setIsAccountVerified,
         shuffleColors
       }}
     >

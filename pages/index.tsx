@@ -1,5 +1,5 @@
 import { NextSeo } from "next-seo"
-import { Container } from "@components/ui"
+import { Container, DoubleText, HomeRedeem } from "@components/ui"
 import {
   defaultDescription,
   defaultTitle,
@@ -27,7 +27,20 @@ export default function Home() {
         }}
       />
       <Container page={true}>
-        <main className="max-w-screen-lg pb-10 mx-auto text-center"></main>
+        <main className="max-w-screen-lg pb-10 mx-auto text-center">
+          <h1 className="pb-6">
+            <DoubleText
+              inactive
+              size="text-4xl sm:text-5xl"
+              logoText="Slice Redeem"
+            />
+          </h1>
+          <p className="sm:text-lg">
+            Claim products that require a post-purchase step
+          </p>
+        </main>
+
+        <HomeRedeem />
       </Container>
     </>
   )

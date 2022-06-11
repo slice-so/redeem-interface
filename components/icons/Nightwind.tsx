@@ -19,7 +19,7 @@ const Nightwind = ({ ...props }) => {
       height="140"
       viewBox="0 0 140 140"
       fill="none"
-      onClick={toggle}
+      onClick={props.onClick || toggle}
       className={`${
         props.size || "h-10"
       } w-auto cursor-pointer group mx-auto z-10`}

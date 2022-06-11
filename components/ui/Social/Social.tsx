@@ -49,7 +49,7 @@ const Social: FC<Props> = ({ wrapperClassName, accounts }, props) => {
   const size = "h-6"
 
   return (
-    <div className={`${wrapperClassName} flex justify-center md:justify-start`}>
+    <div className={`${wrapperClassName} flex justify-center`}>
       {Object.keys(accounts).map((key) => {
         const DynamicComponent = components[key].element
         const componentColor = components[key].color

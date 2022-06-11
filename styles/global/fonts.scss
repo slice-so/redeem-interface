@@ -28,10 +28,6 @@ a {
   text-underline-offset: 1px;
 }
 
-.dark a {
-  @apply hover:text-blue-300;
-}
-
 .dark .highlight {
   text-decoration-color: theme("colors.blue.300");
 }

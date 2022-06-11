@@ -18,20 +18,29 @@ module.exports = {
   ],
 
   theme: {
-    // nightwind: {
-    //   colorClasses: "gradient",
-    //   typography: true,
-    //   colors: {
-    //     white: "#141618",
-    //     black: "gray.50",
-    //   },
-    // },
+    nightwind: {
+      colorClasses: ["gradient", "placeholder"],
+      typography: {
+        strong: {
+          color: colors.white
+        }
+      },
+      colors: {
+        white: "#0F1115",
+        black: "gray.50",
+        sky: {
+          50: "#001928"
+        }
+      }
+    },
     extend: {
       screens: {
         xs: "560px"
       },
       colors: {
-        gray: colors.gray
+        gray: colors.gray,
+        sky: colors.sky,
+        cyan: colors.cyan
       },
       zIndex: {
         "-10": "-10"
@@ -39,11 +48,8 @@ module.exports = {
     }
   },
   variants: {
-    // nightwind: ["group-hover"],
+    nightwind: ["group-hover"]
   },
 
-  plugins: [
-    require("@tailwindcss/typography")
-    // require("nightwind")
-  ]
+  plugins: [require("@tailwindcss/typography"), require("nightwind")]
 }

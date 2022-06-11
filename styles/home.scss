@@ -22,3 +22,11 @@
 .imageContainer > div {
   min-width: 100%;
 }
+
+.drop-shadow-random {
+  filter: drop-shadow(0 0 2.5px theme("colors.blue.300"));
+}
+
+.drop-shadow-random-strong {
+  filter: drop-shadow(0 0 30px theme("colors.blue.300"));
+}

@@ -8,7 +8,7 @@ export interface Props {
 const Background: FC<Props> = (props) => {
   const { className, ...rest } = props
   const rootClassName = `
-    ${className} absolute w-full h-full -z-10 bg-gradient-to-br from-white to-blue-50`
+    ${className} absolute w-full h-full -z-10 bg-gradient-to-br from-white to-sky-50`
 
   return (
     <div className={rootClassName}>

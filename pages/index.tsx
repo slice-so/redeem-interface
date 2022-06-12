@@ -27,7 +27,7 @@ export default function Home() {
         }}
       />
       <Container page={true}>
-        <main className="max-w-screen-lg pb-10 mx-auto text-center">
+        <main className="max-w-screen-lg pb-16 mx-auto text-center">
           <h1 className="pb-6">
             <DoubleText
               inactive

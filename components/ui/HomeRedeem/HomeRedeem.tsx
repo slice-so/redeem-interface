@@ -14,11 +14,6 @@ const HomeRedeem = () => {
   const [loading, setLoading] = useState(false)
   const [productData, setProductData] = useState(null)
 
-  useEffect(() => {
-    slicer && setSlicerValue(Number(slicer))
-    product && setProductValue(Number(product))
-  }, [slicer, product])
-
   const checkProduct = async () => {
     setIsProductUnredeemable(false)
     setShowRedeemForm(false)
@@ -38,6 +33,14 @@ const HomeRedeem = () => {
 
     setLoading(false)
   }
+
+  useEffect(() => {
+    slicer && setSlicerValue(Number(slicer))
+    product && setProductValue(Number(product))
+    if (slicer && product) {
+      checkProduct()
+    }
+  }, [slicer, product])
 
   return (
     <>
@@ -59,22 +62,25 @@ const HomeRedeem = () => {
           />
         </div>
         <Button
-          label="Check product"
-          wrapperClassName="my-10"
+          label={showRedeemForm ? "Check new product" : "Check product"}
+          wrapperClassName="mt-8 mb-12"
           loading={loading}
           onClick={() => checkProduct()}
         />
         {isProductUnredeemable && (
           <div className="space-y-3">
-            <p className="text-red-600">
-              Product does not exist or a claim process has not been set up.
+            <p className="font-semibold text-yellow-600">
+              This product does not exist or a redeem process has not been set
+              up yet.
             </p>
             <p>
-              If you&apos;re the creator of the product, you can{" "}
+              If you own the product{" "}
               <Link
-                href={`/setup?slicerId=${slicerValue}&productId=${productValue}`}
+                href={`/create?slicerId=${slicerValue}&productId=${productValue}`}
               >
-                <a className="highlight">set up a custom redeem form here</a>
+                <a className="highlight">
+                  click here to set up a custom redeem form
+                </a>
               </Link>
               .
             </p>
@@ -82,7 +88,18 @@ const HomeRedeem = () => {
         )}
       </div>
       {showRedeemForm && productData && (
-        <VerifiedBlock>
+        <VerifiedBlock
+          beforeConnect={
+            <p className="pb-6 font-semibold text-yellow-600">
+              1. Connect your wallet to proceed
+            </p>
+          }
+          beforeSign={
+            <p className="pb-6 font-semibold text-yellow-600">
+              2. Sign the message to verify ownership of your address
+            </p>
+          }
+        >
           <RedeemForm
           // productData={productData}
           />

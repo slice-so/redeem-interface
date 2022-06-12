@@ -5,7 +5,13 @@ import { verifyMessage } from "ethers/lib/utils"
 import { Button } from "@components/ui"
 import { useAppContext } from "@components/ui/context"
 
-const VerifiedBlock = ({ children }) => {
+type Props = {
+  children: JSX.Element
+  beforeConnect?: JSX.Element
+  beforeSign?: JSX.Element
+}
+
+const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
   const message = "gm wagmi frens"
 
   const { account, isAccountVerified, setIsAccountVerified } = useAppContext()
@@ -20,19 +26,25 @@ const VerifiedBlock = ({ children }) => {
   }, [isSuccess])
 
   return !account ? (
-    <div className="flex justify-center">
-      <ConnectButton />
-    </div>
+    <>
+      {beforeConnect}
+      <div className="flex justify-center">
+        <ConnectButton />
+      </div>
+    </>
   ) : !isAccountVerified ? (
-    <div>
-      <Button
-        wrapperClassName="mb-6"
-        label="Sign message"
-        onClick={() => signMessage()}
-      />
-      {isLoading && <p>Loading...</p>}
-      {isError && <div>Error signing message</div>}
-    </div>
+    <>
+      {beforeSign}
+      <div>
+        <Button
+          wrapperClassName="mb-6"
+          label="Sign message"
+          onClick={() => signMessage()}
+        />
+        {isLoading && <p>Loading...</p>}
+        {isError && <div>Error signing message</div>}
+      </div>
+    </>
   ) : (
     children
   )

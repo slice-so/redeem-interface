@@ -17,23 +17,23 @@ import { publicProvider } from "wagmi/providers/public"
 import { chain, createClient, configureChains, WagmiConfig } from "wagmi"
 import "@rainbow-me/rainbowkit/styles.css"
 
+const { chains, provider } = configureChains(
+  [chain.mainnet, chain.rinkeby],
+  [alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }), publicProvider()]
+)
+
+const { connectors } = getDefaultWallets({
+  appName: "Slice",
+  chains
+})
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider
+})
+
 function MyApp({ Component, pageProps }: AppProps) {
-  const { chains, provider } = configureChains(
-    [chain.mainnet, chain.rinkeby],
-    [alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }), publicProvider()]
-  )
-
-  const { connectors } = getDefaultWallets({
-    appName: "Slice",
-    chains
-  })
-
-  const wagmiClient = createClient({
-    autoConnect: true,
-    connectors,
-    provider
-  })
-
   return (
     <>
       <ClickToComponent />

@@ -1,5 +1,5 @@
 import { NextSeo } from "next-seo"
-import { Container, DoubleText, HomeRedeem } from "@components/ui"
+import { Container, DoubleText, CreateRedeemForm } from "@components/ui"
 import {
   defaultDescription,
   defaultTitle,
@@ -7,7 +7,7 @@ import {
   domain
 } from "@components/common/Head"
 
-export default function Home() {
+export default function Create() {
   return (
     <>
       <NextSeo
@@ -27,16 +27,20 @@ export default function Home() {
         }}
       />
       <Container page={true}>
-        <main className="max-w-screen-lg pb-10 mx-auto text-center">
+        <main className="max-w-screen-lg pb-16 mx-auto text-center">
           <h1 className="pb-6">
-            <DoubleText inactive size="text-4xl sm:text-5xl" logoText="Setup" />
+            <DoubleText
+              inactive
+              size="text-4xl sm:text-5xl"
+              logoText="Create redeem form"
+            />
           </h1>
           <p className="sm:text-lg">
-            Claim products that require a post-purchase step
+            Set up a post-purchase step for your Slice product
           </p>
         </main>
 
-        <HomeRedeem />
+        <CreateRedeemForm />
       </Container>
     </>
   )

@@ -2,9 +2,24 @@ import Link from "next/link"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import Logo from "@components/icons/Logo"
 import Nightwind from "@components/icons/Nightwind"
-import { Container } from "@components/ui"
+import UserIcon from "@components/icons/UserIcon"
+import { Container, DropdownMenu } from "@components/ui"
+import { useAppContext } from "../context"
+import { useEffect, useState } from "react"
 
 const Navbar = () => {
+  const { account } = useAppContext()
+  const [showMenu, setShowMenu] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
+
+  useEffect(() => {
+    if (account) {
+      setShowMenu(true)
+    } else {
+      setShowMenu(false)
+    }
+  }, [account])
+
   return (
     <header className="shadow-sm bg-gray-50">
       <Container>
@@ -17,7 +32,9 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="relative z-10 flex items-center space-x-6">
-            <Nightwind size="h-[24px]" />
+            <div>
+              <Nightwind size="h-[24px]" />
+            </div>
             <div onClick={() => sa_event("connect_wallet_attempt")}>
               <ConnectButton
                 accountStatus={{
@@ -26,7 +43,20 @@ const Navbar = () => {
                 }}
               />
             </div>
+            {showMenu && (
+              <a
+                onClick={() => setShowDropdown((showDropdown) => !showDropdown)}
+              >
+                <UserIcon />
+              </a>
+            )}
           </div>
+          {showDropdown && (
+            <DropdownMenu
+              showDropdown={showDropdown}
+              setShowDropdown={setShowDropdown}
+            />
+          )}
         </nav>
       </Container>
       <hr className="w-full border-gray-200" />

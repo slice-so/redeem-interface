@@ -32,6 +32,7 @@ const CreateFormInput = ({
         label={label || `Question ${questionNumber}`}
         value={value}
         onChange={setValue}
+        required
       />
     </div>
   )

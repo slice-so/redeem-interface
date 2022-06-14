@@ -81,8 +81,8 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
     ) : purchaseData.quantity - redeemedUnits != 0 ? (
       <>
         <p className="pb-6">
-          Choose the number of units to redeem and answer any question required
-          from the seller.{" "}
+          Choose the number of units to redeem and answer the questions asked by
+          the seller.{" "}
         </p>
         <form onSubmit={(e) => submit(e)}>
           <div className="pb-8">

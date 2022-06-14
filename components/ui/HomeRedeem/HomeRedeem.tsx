@@ -10,25 +10,26 @@ const HomeRedeem = () => {
   const [slicerValue, setSlicerValue] = useState(0)
   const [productValue, setProductValue] = useState(1)
   const [isProductUnredeemable, setIsProductUnredeemable] = useState(false)
-  const [showRedeemForm, setShowRedeemForm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [productData, setProductData] = useState(null)
 
   const checkProduct = async () => {
     setIsProductUnredeemable(false)
-    setShowRedeemForm(false)
     setLoading(true)
-    const fetcher = (await import("@utils/fetcher")).default
 
-    const { data } = await fetcher(
-      `/api/redeem?slicerId=${slicerValue}&productId=${productValue}`
-    )
+    try {
+      const fetcher = (await import("@utils/fetcher")).default
+      const { data } = await fetcher(
+        `/api/redeem?slicerId=${slicerValue}&productId=${productValue}`
+      )
 
-    if (data) {
-      setProductData(data)
-      setShowRedeemForm(true)
-    } else {
-      setIsProductUnredeemable(true)
+      if (data) {
+        setProductData(data)
+      } else {
+        setIsProductUnredeemable(true)
+      }
+    } catch (err) {
+      console.log(err)
     }
 
     setLoading(false)
@@ -44,7 +45,7 @@ const HomeRedeem = () => {
 
   return (
     <>
-      {!showRedeemForm && (
+      {!productData && (
         <div className="max-w-sm mx-auto">
           <div className="flex justify-between gap-8">
             <Input
@@ -77,7 +78,7 @@ const HomeRedeem = () => {
               <p>
                 If you own the product{" "}
                 <Link
-                  href={`/create?slicerId=${slicerValue}&productId=${productValue}`}
+                  href={`/create?slicer=${slicerValue}&product=${productValue}`}
                 >
                   <a className="highlight">
                     click here to set up a custom redeem form
@@ -89,7 +90,7 @@ const HomeRedeem = () => {
           )}
         </div>
       )}
-      {showRedeemForm && (
+      {productData && (
         <>
           <div className="pb-12">
             <div className="flex justify-between max-w-[14rem] gap-8 pb-4 mx-auto text-center">
@@ -104,11 +105,12 @@ const HomeRedeem = () => {
             </div>
             <a
               className="text-sm highlight"
-              onClick={() => setShowRedeemForm(false)}
+              onClick={() => setProductData(null)}
             >
               Redeem a different product
             </a>
           </div>
+          <hr className="w-20 mx-auto mb-12 border-gray-300" />
           <VerifiedBlock
             beforeConnect={
               <p className="pb-6 font-semibold text-yellow-600">
@@ -122,7 +124,9 @@ const HomeRedeem = () => {
             }
           >
             <RedeemForm
-            // productData={productData}
+              slicerId={slicerValue}
+              productId={productValue}
+              questions={productData.questions}
             />
           </VerifiedBlock>
         </>

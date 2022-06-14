@@ -13,32 +13,48 @@ const CreateRedeemForm = () => {
 
   const [slicerValue, setSlicerValue] = useState(0)
   const [productValue, setProductValue] = useState(1)
-  const [isProductUnredeemable, setIsProductUnredeemable] = useState(false)
-  const [showCreateForm, setShowCreateForm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [productCreator, setProductCreator] = useState(null)
+  const [initData, setInitData] = useState(null)
 
   const verifyOwnerhsip = async (slicerId: number, productId: number) => {
     setProductCreator(null)
     setLoading(true)
-    const hexId = `${decimalToHex(slicerId)}-${decimalToHex(productId)}`
+    const fetcher = (await import("@utils/fetcher")).default
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+    const hexId = `${decimalToHex(Number(slicerId))}-${decimalToHex(
+      Number(productId)
+    )}`
 
-    const tokensQueryProducts = /* GraphQL */ `
-      product (id: "${hexId}") {
-        id
-        creator
-        }`
+    try {
+      const { data } = await fetcher(
+        `${baseUrl}/api/form?slicerId=${slicerId}&productId=${productId}`
+      )
+      if (data) {
+        setInitData(data)
+        setProductCreator(data.creator.toLowerCase())
+      } else {
+        setInitData(null)
+        const tokensQuery = /* GraphQL */ `
+          product (id: "${hexId}") {
+            creator
+          }`
 
-    const { data: subgraphData } = await client.query({
-      query: gql`
-        query {
-          ${tokensQueryProducts}
-        }
-      `
-    })
-    const product = subgraphData?.product
+        const { data: subgraphData } = await client.query({
+          query: gql`
+            query {
+              ${tokensQuery}
+            }
+          `
+        })
+        const product = subgraphData?.product
 
-    setProductCreator(product?.creator || "none")
+        setProductCreator(product?.creator || "none")
+      }
+    } catch (err) {
+      console.log(err)
+    }
+
     setLoading(false)
   }
 
@@ -117,7 +133,15 @@ const CreateRedeemForm = () => {
               </p>
             }
           >
-            <CreateForm productCreator={productCreator} />
+            <div className="max-w-md mx-auto">
+              <CreateForm
+                id={`${decimalToHex(slicerValue)}-${decimalToHex(
+                  productValue
+                )}`}
+                productCreator={productCreator}
+                initData={initData}
+              />
+            </div>
           </VerifiedBlock>
         </>
       )}

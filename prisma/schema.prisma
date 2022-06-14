@@ -11,16 +11,23 @@ generator client {
 }
 
 model Submission {
-  id               Int         @id
+  id               Int         @default(autoincrement()) @id
   productFormId    Int         @map(name: "productform_id")
+  buyer            String      @map(name: "buyer")
+  redeemedUnits    Int        
+  answers          String[]
   createdAt        DateTime    @default(now()) @map(name: "created_at")
   productForms     ProductForm @relation(fields: [productFormId], references: [id])
+ 
+  @@index([buyer], name:"buyerAddress")
 }
 
 model ProductForm {
   id               Int         @default(autoincrement()) @id
   slicerId         Int         @map(name: "slicer_id")
   productId        Int         @map(name: "product_id")
+  creator          String      @map(name: "creator")
+  questions        String[]    
   createdAt        DateTime    @default(now()) @map(name: "created_at")
   submissions      Submission[]
   

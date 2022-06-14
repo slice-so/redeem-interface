@@ -9,8 +9,7 @@ import { AppProps } from "next/dist/shared/lib/router/router"
 import {
   getDefaultWallets,
   RainbowKitProvider,
-  lightTheme,
-  midnightTheme
+  lightTheme
 } from "@rainbow-me/rainbowkit"
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { publicProvider } from "wagmi/providers/public"

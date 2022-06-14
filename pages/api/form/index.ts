@@ -5,26 +5,23 @@ import { prisma } from "@lib/prisma"
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
 
-  try {
-    if (req.method === "GET") {
+  if (req.method === "GET") {
+    try {
       const { slicerId, productId } = req.query
-      const data = await prisma.productForm.findFirst({
+
+      const product = await prisma.productForm.findFirst({
         where: {
           AND: [
-            { slicerId: { equals: Number(slicerId) } },
-            { productId: { equals: Number(productId) } }
+            { slicerId: Number(slicerId) },
+            { productId: Number(productId) }
           ]
-        },
-        select: {
-          id: true,
-          questions: true
         }
       })
 
-      res.status(200).json({ data })
+      res.status(200).json({ data: product })
+    } catch (err) {
+      res.status(500).send(err.message)
     }
-  } catch (err) {
-    res.status(500).send(err.message)
   }
 }
 

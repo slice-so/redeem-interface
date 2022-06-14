@@ -40,7 +40,9 @@ export default function Home() {
           </p>
         </main>
 
-        <HomeRedeem />
+        <div className="max-w-md mx-auto">
+          <HomeRedeem />
+        </div>
       </Container>
     </>
   )

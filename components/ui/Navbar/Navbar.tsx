@@ -5,9 +5,6 @@ import Nightwind from "@components/icons/Nightwind"
 import { Container } from "@components/ui"
 
 const Navbar = () => {
-  // const [session, loading] = useSession()
-  // const router = useRouter()
-
   return (
     <header className="shadow-sm bg-gray-50">
       <Container>

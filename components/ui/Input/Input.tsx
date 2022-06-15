@@ -121,6 +121,7 @@ const Input: React.FC<Props> = (props) => {
           autoCapitalize="off"
           spellCheck="false"
           disabled={disabled || loading}
+          onWheel={(e) => e.currentTarget.blur()}
           {...rest}
         ></input>
         {prefix && (

@@ -12,7 +12,7 @@ h3 {
 }
 
 a {
-  @apply cursor-pointer font-medium text-black hover:text-blue-600;
+  @apply cursor-pointer font-medium text-black hover:text-random2-600;
   text-decoration: none;
 }
 
@@ -21,13 +21,32 @@ a {
 }
 
 .highlight {
+  @apply hover:text-random2-600;
   text-decoration-line: underline;
   text-decoration-style: solid;
-  text-decoration-color: theme("colors.blue.600");
+  text-decoration-color: var(--darkColor2);
   text-decoration-thickness: 2px;
   text-underline-offset: 1px;
+  &-inverted {
+    @apply hover:text-random2-300;
+    text-decoration-color: var(--color2);
+  }
+}
+.dark .highlight {
+  @apply hover:text-random2-300;
+  text-decoration-color: var(--color2);
+  &-inverted {
+    @apply hover:text-random2-600;
+    text-decoration-color: var(--darkColor2);
+  }
 }
 
-.dark .highlight {
-  text-decoration-color: theme("colors.blue.300");
+.dark a {
+  @apply hover:text-random2-300;
+}
+
+.nightwind-prevent.highlight,
+.nightwind-prevent-block .highlight {
+  @apply hover:text-random2-600;
+  text-decoration-color: var(--darkColor2);
 }

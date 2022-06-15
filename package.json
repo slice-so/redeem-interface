@@ -9,10 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.7",
+    "@apollo/react-hooks": "^4.0.0",
+    "@apollo/react-ssr": "^4.0.0",
     "@headlessui/react": "^1.6.4",
+    "@prisma/client": "^3.15.1",
     "@rainbow-me/rainbowkit": "^0.2.4",
+    "@supabase/supabase-js": "^1.35.3",
     "@types/node": "^17.0.41",
     "@types/react": "^18.0.12",
+    "apollo-server": "^3.8.2",
     "autoprefixer": "^10.4.7",
     "click-to-react-component": "^1.0.8",
     "ethers": "^5.6.8",
@@ -20,11 +26,12 @@
     "next-seo": "^5.4.0",
     "next-themes": "^0.2.0",
     "postcss": "^8.4.14",
+    "prisma": "^3.15.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "sass": "^1.52.3",
     "typescript": "^4.7.3",
-    "wagmi": "^0.4.11"
+    "wagmi": "^0.4.12"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.4.1",

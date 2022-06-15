@@ -10,7 +10,7 @@ const Add = ({ ...props }) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-green-500 opacity-75 cursor-pointer hover:opacity-100"
+      className="opacity-75 group-hover:opacity-100"
       {...props}
     >
       <circle cx="12" cy="12" r="10"></circle>

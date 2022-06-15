@@ -1,5 +1,10 @@
 import { NextSeo } from "next-seo"
-import { Container, DoubleText, HomeRedeem } from "@components/ui"
+import {
+  Container,
+  DoubleText,
+  ProductsList,
+  VerifiedBlock
+} from "@components/ui"
 import {
   defaultDescription,
   defaultTitle,
@@ -7,7 +12,7 @@ import {
   domain
 } from "@components/common/Head"
 
-export default function Home() {
+export default function Products() {
   return (
     <>
       <NextSeo
@@ -32,17 +37,26 @@ export default function Home() {
             <DoubleText
               inactive
               size="text-4xl sm:text-5xl"
-              logoText="Slice Redeem"
+              logoText="Your products"
             />
           </h1>
-          <p className="sm:text-lg">
-            Claim products that require a post-purchase step
-          </p>
         </main>
-
-        <div className="max-w-md mx-auto">
-          <HomeRedeem />
-        </div>
+        <VerifiedBlock
+          beforeConnect={
+            <p className="pb-6 font-semibold text-yellow-600">
+              Connect your wallet to proceed
+            </p>
+          }
+          beforeSign={
+            <p className="pb-6 font-semibold text-yellow-600">
+              Sign the message to verify ownership of your address
+            </p>
+          }
+        >
+          <div className="max-w-md mx-auto">
+            <ProductsList />
+          </div>
+        </VerifiedBlock>
       </Container>
     </>
   )

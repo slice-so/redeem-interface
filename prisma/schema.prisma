@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Submission {
+  id               Int         @default(autoincrement()) @id
+  productFormId    Int         @map(name: "productform_id")
+  buyer            String      @map(name: "buyer")
+  redeemedUnits    Int        
+  answers          String[]
+  createdAt        DateTime    @default(now()) @map(name: "created_at")
+  productForms     ProductForm @relation(fields: [productFormId], references: [id])
+ 
+  @@index([buyer], name:"buyerAddress")
+}
+
+model ProductForm {
+  id               Int         @default(autoincrement()) @id
+  slicerId         Int         @map(name: "slicer_id")
+  productId        Int         @map(name: "product_id")
+  creator          String      @map(name: "creator")
+  questions        String[]    
+  createdAt        DateTime    @default(now()) @map(name: "created_at")
+  submissions      Submission[]
+  
+  @@index([slicerId], name:"slicerId")
+  @@index([productId], name:"productId")
+  @@unique([slicerId, productId], name: "product")
+}

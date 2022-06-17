@@ -5,6 +5,7 @@ import { useState } from "react"
 import { useAppContext } from "../context"
 import { CreateFormInput, Button } from "@components/ui"
 import { ProductForm } from "@prisma/client"
+import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 
 type Props = {
   id: string
@@ -14,7 +15,7 @@ type Props = {
 
 const CreateForm = ({ id, productCreator, initData }: Props) => {
   const { account } = useAppContext()
-  const questions = initData?.questions
+  const questions = initData?.questions as QuestionValue[]
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
   const [questionValues, setQuestionValues] = useState(questions || [])
@@ -29,7 +30,7 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL
       const fetcher = (await import("@utils/fetcher")).default
 
-      const cleanedValues = questionValues.filter((val) => val != "")
+      const cleanedValues = questionValues.filter((val) => val.question != "")
       const body = {
         body: JSON.stringify({
           slicerId: id.split("-")[0],

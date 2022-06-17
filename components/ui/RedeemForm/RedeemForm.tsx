@@ -1,13 +1,14 @@
 import { useState } from "react"
 import { useAppContext } from "../context"
-import { CreateFormInput, Button, Input } from "@components/ui"
+import { CreateFormInputRedeem, Button, Input } from "@components/ui"
 import useQuery from "@utils/subgraphQuery"
 import decimalToHex from "@utils/decimalToHex"
 import Spinner from "@components/icons/Spinner"
 import usePrismaQuery from "@utils/prismaQuery"
+import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 
 type Props = {
-  questions: string[]
+  questions: QuestionValue[]
   slicerId: number
   productId: number
 }
@@ -85,8 +86,8 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
           the seller.{" "}
         </p>
         <form onSubmit={(e) => submit(e)}>
-          <div className="pb-8">
-            <div className="mb-4">
+          <div className="pb-4">
+            <div className="mb-8">
               <Input
                 label="Units to redeem"
                 type="number"
@@ -99,12 +100,12 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
               />
             </div>
             {[...Array(questions.length)].map((i, key) => (
-              <CreateFormInput
+              <CreateFormInputRedeem
                 key={key}
                 questionNumber={key + 1}
-                label={questions[key]}
-                questionValues={answerValues}
-                setQuestionValues={setAnswerValues}
+                questionValue={questions[key]}
+                answerValues={answerValues}
+                setAnswerValues={setAnswerValues}
               />
             ))}
           </div>

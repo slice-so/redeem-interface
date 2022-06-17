@@ -59,6 +59,7 @@ module.exports = {
         css: {
           color: theme("colors.black"),
           a: {
+            textDecoration: "underline",
             textDecorationColor: "var(--darkColor2)",
             textDecorationThickness: "2px",
             textUnderlineOffset: "1px"

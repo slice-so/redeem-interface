@@ -12,7 +12,11 @@ type Props = {
 }
 
 const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
-  const message = "gm wagmi frens"
+  const message = `Sign this message to prove you have access to this wallet in order to sign in to thegraph.com/studio.
+
+  This won't cost you any Ether.
+  
+  Timestamp: Now`
 
   const { account, isAccountVerified, setIsAccountVerified } = useAppContext()
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({

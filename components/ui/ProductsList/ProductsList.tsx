@@ -35,7 +35,7 @@ const ProductsList = () => {
           </div>
         </div>
       </div>
-      <p className="mt-12 text-sm font-semibold text-left uppercase">
+      <p className="mt-12 text-sm font-semibold text-left text-gray-600 uppercase">
         Slicer ID / Product ID
       </p>
       <hr className="px-4 mx-auto mt-3 mb-6 border-gray-300 max-w-screen-xs" />

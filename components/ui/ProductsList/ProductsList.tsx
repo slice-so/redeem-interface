@@ -2,8 +2,8 @@ import { useAppContext } from "../context"
 import usePrismaQuery from "@utils/prismaQuery"
 import Spinner from "@components/icons/Spinner"
 import { MySwitch, ProductsListElement } from "@components/ui"
-import { ProductForm } from "@prisma/client"
 import { useState } from "react"
+import { ProductFormSubmissions } from "../ProductsListElement/ProductsListElement"
 
 const ProductsList = () => {
   const { account } = useAppContext()
@@ -11,7 +11,7 @@ const ProductsList = () => {
 
   const data = usePrismaQuery(
     `/api/form/creator?account=${account}`
-  ) as ProductForm[]
+  ) as ProductFormSubmissions[]
 
   const sortedData = sortById
     ? data?.sort(
@@ -40,7 +40,7 @@ const ProductsList = () => {
       </p>
       <hr className="px-4 mx-auto mt-3 mb-6 border-gray-300 max-w-screen-xs" />
       {[...Array(data?.length)].map((key, i) => (
-        <div key={key}>
+        <div key={i}>
           <ProductsListElement product={data[i]} />
           <hr className="px-4 mx-auto my-6 border-gray-300 max-w-screen-xs" />
         </div>

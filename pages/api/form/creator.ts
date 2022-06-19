@@ -12,6 +12,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const product = await prisma.productForm.findMany({
         where: {
           creator: String(account)
+        },
+        select: {
+          id: true,
+          createdAt: true,
+          creator: true,
+          slicerId: true,
+          productId: true,
+          questions: true,
+          submissions: true
         }
       })
 

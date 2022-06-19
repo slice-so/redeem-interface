@@ -87,6 +87,7 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
                 initData={questions}
                 questionValues={questionValues}
                 setQuestionValues={setQuestionValues}
+                // disabled={initData?.questions.length > key}
               />
             ))}
 
@@ -101,7 +102,8 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
                 </p>
               </div>
               {questionsNumber != 0 && (
-                <div className="inline-flex justify-start mt-6 space-x-3 text-red-500 cursor-pointer group">
+                // TODO: Fix unwanted state changes that cause questions to update on children state changes
+                /* questionsNumber > questions?.length && */ <div className="inline-flex justify-start mt-6 space-x-3 text-red-500 cursor-pointer group">
                   <Delete onClick={() => removeLastQuestion()} />
                   <p
                     className="inline-block font-semibold opacity-75 group-hover:opacity-100"
@@ -113,6 +115,9 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
               )}
             </div>
           </div>
+          {/* <p className="pb-8 font-semibold text-yellow-600">
+            Note that you cannot change question names after saving the form.
+          </p> */}
           <Button label="Create form" loading={loading} type="submit" />
         </form>
       </>
@@ -129,3 +134,5 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
 }
 
 export default CreateForm
+
+// TODO: Fix initData

@@ -37,7 +37,7 @@ export default function Products() {
             <DoubleText
               inactive
               size="text-4xl sm:text-5xl"
-              logoText="Your product forms"
+              logoText="Your products"
             />
           </h1>
         </main>

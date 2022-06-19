@@ -46,8 +46,6 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
     e.preventDefault()
     setLoading(true)
 
-    console.log(answerValues)
-
     try {
       const fetcher = (await import("@utils/fetcher")).default
 

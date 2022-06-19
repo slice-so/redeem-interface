@@ -28,8 +28,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       })
 
-      console.log(productFormId, submissions)
-
       res.status(200).json({ data: { productFormId, submissions } })
     } catch (err) {
       res.status(500).send(err.message)

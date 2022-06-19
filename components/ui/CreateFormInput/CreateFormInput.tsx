@@ -10,16 +10,15 @@ type Props = {
   questionNumber: number
   questionValues: QuestionValue[]
   setQuestionValues: Dispatch<SetStateAction<QuestionValue[]>>
-  label?: string
   initData?: QuestionValue[] | undefined
+  // disabled?: boolean
 }
 
 const CreateFormInput = ({
   questionNumber,
   questionValues,
   setQuestionValues,
-  label,
-  initData
+  initData // ,disabled
 }: Props) => {
   const [question, setQuestion] = useState(
     (initData && initData[questionNumber - 1]?.question) || ""
@@ -37,10 +36,11 @@ const CreateFormInput = ({
   return (
     <div className="mb-4">
       <Input
-        label={label || `Question ${questionNumber}`}
+        label={`Question ${questionNumber}`}
         value={question}
         onChange={setQuestion}
         required
+        // disabled={disabled}
       />
       <Textarea
         label={`Hint ${questionNumber}`}

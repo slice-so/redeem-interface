@@ -9,8 +9,8 @@ type ViewNames = "" | "SUBMISSIONS_VIEW"
 
 export const SUBMISSIONS_VIEW = (params: any) => {
   const { slicerId, productId, questions, submissions } = params
-  const orderedSubmissions = submissions.sort(
-    (a, b) => a.createdAt > b.createdAt
+  const orderedSubmissions = submissions.sort((a, b) =>
+    a.createdAt < b.createdAt ? 1 : -1
   )
 
   return (
@@ -28,13 +28,15 @@ export const SUBMISSIONS_VIEW = (params: any) => {
           Date
         </p>
       </div>
-      {orderedSubmissions.map((el, key) => (
-        <SubmissionBlock
-          key={key}
-          questions={questions}
-          submission={submissions[key]}
-        />
-      ))}
+      <ul className="space-y-4">
+        {orderedSubmissions.map((el, key) => (
+          <SubmissionBlock
+            key={key}
+            questions={questions}
+            submission={submissions[key]}
+          />
+        ))}
+      </ul>
     </>
   )
 }

@@ -5,7 +5,7 @@ import { useState } from "react"
 import { useAppContext } from "../context"
 import { CreateFormInput, Button } from "@components/ui"
 import { ProductForm } from "@prisma/client"
-import { QuestionValue } from "../CreateFormInput/CreateFormInput"
+// import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 
 type Props = {
   id: string
@@ -15,7 +15,7 @@ type Props = {
 
 const CreateForm = ({ id, productCreator, initData }: Props) => {
   const { account } = useAppContext()
-  const questions = initData?.questions as QuestionValue[]
+  const questions: any[] = initData?.questions
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
   const [questionValues, setQuestionValues] = useState(questions || [])

@@ -1,7 +1,61 @@
 import { webcrypto } from "crypto"
 const { subtle } = webcrypto
 
-export const generateKey = async () => {
+export const encryptTexts = async (
+  productFormId: string,
+  redeemedUnits: string,
+  texts: string[]
+) => {
+  const key = await generateKey()
+  const enc = new TextEncoder()
+  const iv = calculateIv(productFormId, redeemedUnits)
+  let encryptedTexts: string[] = []
+
+  for (let i = 0; i < texts.length; i++) {
+    const encoded = enc.encode(texts[i])
+
+    const encryptedBuf: ArrayBuffer = await subtle.encrypt(
+      {
+        name: "AES-GCM",
+        iv: iv
+      },
+      key,
+      encoded
+    )
+    encryptedTexts.push(new Uint8Array(encryptedBuf).toString())
+  }
+
+  return encryptedTexts
+}
+
+export const decryptTexts = async (
+  productFormId: string | number,
+  redeemedUnits: string | number,
+  texts: string[]
+) => {
+  const key = await generateKey()
+  const dec = new TextDecoder()
+  const iv = calculateIv(productFormId, redeemedUnits)
+
+  let decryptedTexts: string[] = []
+
+  for (let i = 0; i < texts.length; i++) {
+    const encoded = new Uint8Array(texts[i].split(",").map((e) => Number(e)))
+    const encryptedBuf: ArrayBuffer = await subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: iv
+      },
+      key,
+      encoded
+    )
+    decryptedTexts.push(dec.decode(encryptedBuf))
+  }
+
+  return decryptedTexts
+}
+
+const generateKey = async () => {
   let enc = new TextEncoder()
 
   const keyMaterial = await subtle.importKey(
@@ -26,55 +80,6 @@ export const generateKey = async () => {
   )
 
   return key
-}
-
-export const encryptText = async (
-  key: CryptoKey,
-  productFormId: string,
-  redeemedUnits: string,
-  text: string
-) => {
-  const enc = new TextEncoder()
-  const iv = calculateIv(productFormId, redeemedUnits)
-  const encoded = enc.encode(text)
-
-  const encryptedBuf: ArrayBuffer = await subtle.encrypt(
-    {
-      name: "AES-GCM",
-      iv: iv
-    },
-    key,
-    encoded
-  )
-
-  return new Uint8Array(encryptedBuf).toString()
-}
-
-export const decryptTexts = async (
-  key: CryptoKey,
-  productFormId: string | number,
-  redeemedUnits: string | number,
-  texts: string[]
-) => {
-  const dec = new TextDecoder()
-  const iv = calculateIv(productFormId, redeemedUnits)
-
-  let decryptedTexts: string[] = []
-
-  for (let i = 0; i < texts.length; i++) {
-    const encoded = new Uint8Array(texts[i].split(",").map((e) => Number(e)))
-    const encryptedBuf: ArrayBuffer = await subtle.decrypt(
-      {
-        name: "AES-GCM",
-        iv: iv
-      },
-      key,
-      encoded
-    )
-    decryptedTexts.push(dec.decode(encryptedBuf))
-  }
-
-  return decryptedTexts
 }
 
 const calculateIv = (

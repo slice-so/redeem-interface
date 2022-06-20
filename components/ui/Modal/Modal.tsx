@@ -1,9 +1,6 @@
 import Cross from "@components/icons/Cross"
 import { Dispatch, SetStateAction } from "react"
-import {
-  View
-  // VIEW,
-} from "@lib/content/modals"
+import { View, SUBMISSIONS_VIEW } from "@lib/content/modals"
 
 type Props = {
   modalView: View
@@ -14,11 +11,11 @@ const Modal = ({ modalView, setModalView }: Props) => {
   let content: JSX.Element
   const { name, cross, params } = modalView
 
-  // switch (name) {
-  //   case "VIEW":
-  //     content = VIEW()
-  //     break
-  // }
+  switch (name) {
+    case "SUBMISSIONS_VIEW":
+      content = SUBMISSIONS_VIEW(params)
+      break
+  }
 
   return (
     <div className="fixed top-0 z-50 w-screen h-screen py-12 overflow-y-scroll xs:py-20 background-modal">

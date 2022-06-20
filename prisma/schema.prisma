@@ -27,7 +27,7 @@ model ProductForm {
   slicerId         Int         @map(name: "slicer_id")
   productId        Int         @map(name: "product_id")
   creator          String      @map(name: "creator")
-  questions        String[]    
+  questions        Json[]    
   createdAt        DateTime    @default(now()) @map(name: "created_at")
   submissions      Submission[]
   

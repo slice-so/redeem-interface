@@ -37,6 +37,7 @@ const Navbar = () => {
             </div>
             <div onClick={() => sa_event("connect_wallet_attempt")}>
               <ConnectButton
+                chainStatus="none"
                 accountStatus={{
                   smallScreen: "avatar",
                   largeScreen: "full"

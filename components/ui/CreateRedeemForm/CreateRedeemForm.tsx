@@ -21,14 +21,13 @@ const CreateRedeemForm = () => {
     setProductCreator(null)
     setLoading(true)
     const fetcher = (await import("@utils/fetcher")).default
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL
     const hexId = `${decimalToHex(Number(slicerId))}-${decimalToHex(
       Number(productId)
     )}`
 
     try {
       const { data } = await fetcher(
-        `${baseUrl}/api/form?slicerId=${slicerId}&productId=${productId}`
+        `/api/form?slicerId=${slicerId}&productId=${productId}`
       )
       if (data) {
         setInitData(data)

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import corsMiddleware from "@utils/corsMiddleware"
 import { prisma } from "@lib/prisma"
+import { encryptText, generateKey } from "@utils/crypto"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
@@ -11,14 +12,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         req.body
       )
 
-      console.log(productFormId, buyer, redeemedUnits, answers)
+      const key = await generateKey()
+      let encryptedAnswers = []
+
+      for (let i = 0; i < answers.length; i++) {
+        encryptedAnswers.push(
+          await encryptText(key, productFormId, redeemedUnits, answers[i])
+        )
+      }
 
       const data = await prisma.submission.create({
         data: {
           productFormId: Number(productFormId),
           buyer,
           redeemedUnits: Number(redeemedUnits),
-          answers
+          answers: encryptedAnswers
         }
       })
 

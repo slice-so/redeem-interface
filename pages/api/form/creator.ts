@@ -27,13 +27,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       })
 
+      // Loop over products
       for (let i = 0; i < products.length; i++) {
         const { id, submissions } = products[i] || { submissions: [] }
 
+        // Loop over submissions
         for (let k = 0; k < submissions.length; k++) {
           const answers = submissions[k].answers
           const redeemedUnits = submissions[k].redeemedUnits
 
+          // Loop over answers and decrypt them
           const decryptedAnswers = await decryptTexts(
             key,
             id,
@@ -41,7 +44,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             answers
           )
 
+          // Substitute decrypted answers to existing ones
           products[i].submissions[k].answers = decryptedAnswers
+
           // TODO: Improve, don't think this scales well
         }
       }

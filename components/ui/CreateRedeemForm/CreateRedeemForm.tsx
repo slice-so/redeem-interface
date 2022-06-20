@@ -29,6 +29,7 @@ const CreateRedeemForm = () => {
       const { data } = await fetcher(
         `/api/form?slicerId=${slicerId}&productId=${productId}`
       )
+
       if (data) {
         setInitData(data)
         setProductCreator(data.creator.toLowerCase())
@@ -149,3 +150,5 @@ const CreateRedeemForm = () => {
 }
 
 export default CreateRedeemForm
+
+// TODO: Solve issue related to questions type, preventing reading and writing to db

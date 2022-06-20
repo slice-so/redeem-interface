@@ -49,6 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(200).json({ data: products })
     } catch (err) {
       res.status(500).json({ data: [] })
+      // TODO: Handle case when there are no products better
     }
   }
 }

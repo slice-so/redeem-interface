@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <NextSeo
-        title="Decentralized slicing platform"
+        title="Claim purchased Slice products"
         openGraph={{
           title: longTitle,
           description: defaultDescription,

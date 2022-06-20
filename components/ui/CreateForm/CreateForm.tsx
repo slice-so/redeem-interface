@@ -27,7 +27,6 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
     setLoading(true)
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL
       const fetcher = (await import("@utils/fetcher")).default
 
       const cleanedValues = questionValues.filter((val) => val.question != "")
@@ -41,7 +40,7 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
         method: "POST"
       }
 
-      await fetcher(`${baseUrl}/api/form/create`, body)
+      await fetcher(`/api/form/create`, body)
       setIsSuccess(true)
     } catch (err) {
       console.log(err)

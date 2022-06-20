@@ -65,8 +65,8 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
         </p>
         <p className="pt-2 pb-6 text-sm">
           You will be able to review submissions in{" "}
-          <Link href="/submissions">
-            <a className="highlight">Your submissions</a>
+          <Link href="/products">
+            <a className="highlight">Your Products</a>
           </Link>
           .
         </p>

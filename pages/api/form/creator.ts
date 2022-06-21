@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import corsMiddleware from "@utils/corsMiddleware"
 import { prisma } from "@lib/prisma"
-import { decryptTexts, generateKey } from "@utils/crypto"
+import { decryptTexts } from "@utils/crypto"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
@@ -9,8 +9,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
       const { account } = req.query
-
-      const key = await generateKey()
 
       const products = await prisma.productForm.findMany({
         where: {
@@ -27,21 +25,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       })
 
+      // Loop over products
       for (let i = 0; i < products.length; i++) {
         const { id, submissions } = products[i] || { submissions: [] }
 
+        // Loop over submissions
         for (let k = 0; k < submissions.length; k++) {
           const answers = submissions[k].answers
           const redeemedUnits = submissions[k].redeemedUnits
 
+          // Loop over answers and decrypt them
           const decryptedAnswers = await decryptTexts(
-            key,
             id,
             redeemedUnits,
             answers
           )
 
+          // Substitute decrypted answers to existing ones
           products[i].submissions[k].answers = decryptedAnswers
+
           // TODO: Improve, don't think this scales well
         }
       }
@@ -55,3 +57,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 export default handler
+
+// TODO: Add auth token to endpoints

@@ -13,14 +13,17 @@ const HomeRedeem = () => {
   const [loading, setLoading] = useState(false)
   const [productData, setProductData] = useState(null)
 
-  const checkProduct = async () => {
+  const checkProduct = async (
+    slicerId: number | string,
+    productId: number | string
+  ) => {
     setIsProductUnredeemable(false)
     setLoading(true)
 
     try {
       const fetcher = (await import("@utils/fetcher")).default
       const { data } = await fetcher(
-        `/api/redeem?slicerId=${slicerValue}&productId=${productValue}`
+        `/api/redeem?slicerId=${slicerId}&productId=${productId}`
       )
 
       if (data) {
@@ -39,7 +42,7 @@ const HomeRedeem = () => {
     slicer && setSlicerValue(Number(slicer))
     product && setProductValue(Number(product))
     if (slicer && product) {
-      checkProduct()
+      checkProduct(String(slicer), String(product))
     }
   }, [slicer, product])
 
@@ -67,7 +70,7 @@ const HomeRedeem = () => {
             label="Check product"
             wrapperClassName="mt-8 mb-12"
             loading={loading}
-            onClick={() => checkProduct()}
+            onClick={() => checkProduct(slicerValue, productValue)}
           />
           {isProductUnredeemable && (
             <div className="space-y-3">

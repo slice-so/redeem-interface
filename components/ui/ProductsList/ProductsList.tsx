@@ -21,8 +21,6 @@ const ProductsList = () => {
       )
     : data?.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
 
-  console.log(data)
-
   return sortedData ? (
     sortedData.length != 0 ? (
       <>

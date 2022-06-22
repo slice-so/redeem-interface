@@ -1,6 +1,7 @@
 import Chevron from "@components/icons/Chevron"
 import { Submission } from "@prisma/client"
 import { useState } from "react"
+import { useEnsName } from "wagmi"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 
 type Props = {
@@ -13,6 +14,9 @@ const SubmissionBlock = ({ questions, submission }: Props) => {
 
   const { buyer, redeemedUnits, createdAt, answers } = submission
   const date = new Date(createdAt).toLocaleDateString()
+
+  const { data: ens } = useEnsName({ address: buyer })
+
   const reducedAddress = buyer.replace(
     buyer.substring(5, buyer.length - 3),
     `\xa0\xa0\xa0\xa0\xa0\xa0`
@@ -35,7 +39,7 @@ const SubmissionBlock = ({ questions, submission }: Props) => {
             target="_blank"
             rel="noreferrer"
           >
-            {reducedAddress}
+            {ens || reducedAddress}
           </a>
         </p>
         <p className="text-center">{redeemedUnits}</p>

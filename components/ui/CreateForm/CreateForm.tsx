@@ -59,25 +59,14 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
   return !isSuccess ? (
     productCreator == account.toLowerCase() ? (
       <>
-        <p>
-          Buyers by default will be asked how many units they want to redeem,
-          but you can also add additional questions if needed.{" "}
-        </p>
-        <p className="pt-2 pb-6 text-sm">
-          You will be able to review submissions in{" "}
-          <Link href="/products">
-            <a className="highlight">Your Products</a>
-          </Link>
-          .
-        </p>
         <form onSubmit={(e) => submit(e)}>
-          <div className="px-2 py-8 mt-4 mb-12 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">
+          <div className="px-2 py-8 mt-4 mb-8 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">
             <p className="pb-2 font-semibold text-yellow-600">
               Add custom questions to buyers
             </p>
-            <p className="pb-6 text-sm">
-              Here you can ask for any info you need to process the purchase,
-              such as an email or physical address.
+            <p className="pb-6 text-sm text-gray-500">
+              Ask the buyer for the information you need to process the
+              purchase, such as contact details or physical address.
             </p>
             {[...Array(questionsNumber)].map((i, key) => (
               <CreateFormInput
@@ -114,6 +103,9 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
               )}
             </div>
           </div>
+          <p className="pb-12 text-sm text-gray-500">
+            Buyers will choose how many units they want to redeem
+          </p>
           {/* <p className="pb-8 font-semibold text-yellow-600">
             Note that you cannot change question names after saving the form.
           </p> */}
@@ -122,9 +114,8 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
       </>
     ) : (
       <p>
-        The connected address is not the creator of this product. Verify you are
-        the creator of this product and you are connected with the correct
-        address.
+        You&apos;re not the creator of this product. Verify you are connected
+        with the correct account.
       </p>
     )
   ) : (

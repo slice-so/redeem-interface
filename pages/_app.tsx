@@ -1,4 +1,3 @@
-import { ClickToComponent } from "click-to-react-component"
 import { ThemeProvider } from "next-themes"
 import Head from "@components/common/Head"
 import { Background, Layout } from "@components/ui"
@@ -12,17 +11,23 @@ import {
   lightTheme
 } from "@rainbow-me/rainbowkit"
 import { alchemyProvider } from "wagmi/providers/alchemy"
+import { infuraProvider } from "wagmi/providers/infura"
 import { publicProvider } from "wagmi/providers/public"
-import { chain, createClient, configureChains, WagmiConfig } from "wagmi"
+import { createClient, configureChains, WagmiConfig } from "wagmi"
+import { mainnet, goerli } from "wagmi/chains"
 import "@rainbow-me/rainbowkit/styles.css"
 
-const { chains, provider } = configureChains(
-  [chain.mainnet, chain.rinkeby],
-  [alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }), publicProvider()]
-)
+const defaultChains =
+  process.env.NEXT_PUBLIC_CHAIN_ID === "5" ? [goerli] : [mainnet]
+
+const { chains, provider } = configureChains(defaultChains, [
+  infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID }),
+  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+  publicProvider()
+])
 
 const { connectors } = getDefaultWallets({
-  appName: "Slice",
+  appName: "Slice Redeem",
   chains
 })
 
@@ -35,7 +40,6 @@ const wagmiClient = createClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <ClickToComponent />
       <Head />
       <ThemeProvider
         attribute="class"

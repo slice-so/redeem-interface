@@ -3,7 +3,7 @@ import Document, {
   Head,
   Main,
   NextScript,
-  DocumentContext,
+  DocumentContext
 } from "next/document"
 
 class MyDocument extends Document {
@@ -29,12 +29,6 @@ class MyDocument extends Document {
             defer
             src="https://scripts.simpleanalyticscdn.com/latest.js"
           ></script>
-          <noscript>
-            <img
-              src="https://queue.simpleanalyticscdn.com/noscript.gif"
-              alt=""
-            />
-          </noscript>
         </body>
       </Html>
     )

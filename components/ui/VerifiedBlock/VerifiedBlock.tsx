@@ -44,10 +44,10 @@ const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
         <Button
           wrapperClassName="mb-6"
           label="Sign message"
+          loading={isLoading}
           onClick={() => signMessage()}
         />
-        {isLoading && <p>Loading...</p>}
-        {isError && <div>Error signing message</div>}
+        {isError && <p className="text-red-500">Error signing message</p>}
       </div>
     </>
   ) : (

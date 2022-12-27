@@ -1,10 +1,9 @@
 import { colorList, darkColorList } from "@utils/colorList"
 import { createContext, useContext, useEffect, useState } from "react"
 import { View } from "@lib/content/modals"
-import { useAccount, useProvider } from "wagmi"
+import { useAccount, useNetwork, useProvider } from "wagmi"
 
 const AppContext = createContext<any>({
-  connector: null,
   provider: null,
   isAccountVerified: false,
   account: "",
@@ -21,8 +20,9 @@ const AppContext = createContext<any>({
 export function AppWrapper({ children }) {
   const [modalView, setModalView] = useState<View>({ name: "" })
   const provider = useProvider()
+  const { chain } = useNetwork()
 
-  const { data: account } = useAccount()
+  const { address: account } = useAccount()
   const [isAccountVerified, setIsAccountVerified] = useState(false)
 
   const [color1, setColor1] = useState([])
@@ -53,12 +53,26 @@ export function AppWrapper({ children }) {
     setIsAccountVerified(false)
   }, [account])
 
+  // Network modal
+  useEffect(() => {
+    if (
+      account &&
+      chain &&
+      Number(chain.id).toString(16) !== process.env.NEXT_PUBLIC_CHAIN_ID
+    ) {
+      setModalView({ cross: false, name: "NETWORK_VIEW" })
+    } else {
+      if (modalView.name == "NETWORK_VIEW") {
+        setModalView({ name: "" })
+      }
+    }
+  }, [account, chain])
+
   return (
     <AppContext.Provider
       value={{
-        connector: account?.connector,
         provider,
-        account: account?.address,
+        account,
         isAccountVerified,
         color1,
         color2,

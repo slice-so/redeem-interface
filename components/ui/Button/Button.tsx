@@ -2,6 +2,7 @@ import { FC } from "react"
 import Spinner from "@components/icons/Spinner"
 import Link from "next/link"
 import { useAppContext } from "@components/ui/context"
+import saEvent from "@utils/saEvent"
 
 interface ButtonProps {
   loading?: boolean
@@ -42,7 +43,7 @@ const Button: FC<ButtonProps> = (props) => {
   return (
     <div
       className={`relative inline-block ${wrapperClassName}`}
-      onClick={() => (saEventName ? sa_event(saEventName) : null)}
+      onClick={() => (saEventName ? saEvent(saEventName) : null)}
     >
       {href ? (
         !external ? (

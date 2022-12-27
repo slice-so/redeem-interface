@@ -6,6 +6,7 @@ import UserIcon from "@components/icons/UserIcon"
 import { Container, DropdownMenu } from "@components/ui"
 import { useAppContext } from "../context"
 import { useEffect, useState } from "react"
+import saEvent from "@utils/saEvent"
 
 const Navbar = () => {
   const { account } = useAppContext()
@@ -35,7 +36,7 @@ const Navbar = () => {
             <div>
               <Nightwind size="h-[24px]" />
             </div>
-            <div onClick={() => sa_event("connect_wallet_attempt")}>
+            <div onClick={() => saEvent("connect_wallet_attempt")}>
               <ConnectButton
                 chainStatus="none"
                 accountStatus={{

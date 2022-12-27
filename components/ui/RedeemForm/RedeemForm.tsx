@@ -26,7 +26,7 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
 
   const tokensQuery = /* GraphQL */ `
       productPurchase (id: "${hexId}") {
-        quantity
+        totalQuantity
       }
     `
   let subgraphData = useQuery(tokensQuery, [account])
@@ -68,6 +68,8 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
     setLoading(false)
   }
 
+  const maxUnits = purchaseData?.totalQuantity - redeemedUnits
+
   return !isSuccess ? (
     !subgraphData || !submissions ? (
       <div className="flex justify-center">
@@ -77,11 +79,11 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
       <p className="font-semibold text-yellow-600">
         You haven&apos;t purchased this product yet
       </p>
-    ) : purchaseData.quantity - redeemedUnits != 0 ? (
+    ) : maxUnits != 0 ? (
       <>
         <p className="pb-6">
-          Choose the number of units to redeem and answer the questions asked by
-          the seller.{" "}
+          Choose how many units you wish to redeem, and answer the required
+          questions.{" "}
         </p>
         <form onSubmit={(e) => submit(e)}>
           <div className="pb-4">
@@ -92,8 +94,8 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
                 value={units > 0 ? units : ""}
                 onChange={setUnits}
                 min={1}
-                max={1}
-                placeholder={`Up to ${purchaseData.quantity - redeemedUnits}`}
+                max={maxUnits}
+                placeholder={`Up to ${maxUnits}`}
                 required
               />
             </div>

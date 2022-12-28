@@ -11,27 +11,67 @@ generator client {
 }
 
 model Submission {
-  id               Int         @default(autoincrement()) @id
-  productFormId    Int         @map(name: "productform_id")
-  buyer            String      @map(name: "buyer")
+  id               Int          @default(autoincrement()) @id
+  formId           Int          @map(name: "form_id")
+  buyer            String       @map(name: "buyer")
   redeemedUnits    Int        
   answers          String[]
-  createdAt        DateTime    @default(now()) @map(name: "created_at")
-  productForms     ProductForm @relation(fields: [productFormId], references: [id])
+  createdAt        DateTime     @default(now()) @map(name: "created_at")
+  forms            Form         @relation(fields: [formId], references: [id])
+ 
+  user             User         @relation(fields: [buyer], references: [id])
  
   @@index([buyer], name:"buyerAddress")
 }
 
-model ProductForm {
-  id               Int         @default(autoincrement()) @id
-  slicerId         Int         @map(name: "slicer_id")
-  productId        Int         @map(name: "product_id")
-  creator          String      @map(name: "creator")
-  questions        Json[]    
-  createdAt        DateTime    @default(now()) @map(name: "created_at")
+model Form {
+  id               Int          @default(autoincrement()) @id
+  slicerId         Int          @map(name: "slicer_id")
+  productId        Int          @map(name: "product_id")
+  creator          String
+  questions        Json[]
+  createdAt        DateTime     @default(now()) @map(name: "created_at")
+  linkedProducts   Json[]       @default([])
   submissions      Submission[]
+  
+  user             User         @relation(fields: [creator], references: [id], onDelete: Cascade)
   
   @@index([slicerId], name:"slicerId")
   @@index([productId], name:"productId")
   @@unique([slicerId, productId], name: "product")
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  // type               String 
+  provider           String
+  // providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id
+  accounts      Account[]
+  sessions      Session[]
+  forms         Form[]
+  submissions   Submission[]
 }

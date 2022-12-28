@@ -1,9 +1,9 @@
 import Link from "next/link"
-import { Prisma, ProductForm } from "@prisma/client"
+import { Prisma, Form } from "@prisma/client"
 import Chevron from "@components/icons/Chevron"
 import { useAppContext } from "../context"
 
-export type ProductFormSubmissions = ProductForm & {
+export type ProductFormSubmissions = Form & {
   submissions: Prisma.JsonValue[]
 }
 type Props = {

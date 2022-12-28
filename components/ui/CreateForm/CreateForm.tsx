@@ -4,13 +4,13 @@ import Delete from "@components/icons/Delete"
 import { useState } from "react"
 import { useAppContext } from "../context"
 import { CreateFormInput, Button } from "@components/ui"
-import { ProductForm } from "@prisma/client"
+import { Form } from "@prisma/client"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 
 type Props = {
   id: string
   productCreator: string
-  initData: ProductForm
+  initData: Form
 }
 
 const CreateForm = ({ id, productCreator, initData }: Props) => {
@@ -59,9 +59,22 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
   return !isSuccess ? (
     productCreator == account.toLowerCase() ? (
       <>
+        <div className="text-left">
+          <p>Connect Printful</p>
+        </div>
+        {/* TODO:
+          - Connect printful account
+            - Auth with printful
+            - Store access token in db
+          - Link printful items with slicer product -> store in db
+          - Automatically set delivery info for delivery
+          - Add optional printful order submission on redeem
+            - Refresh auth token if expired
+        */}
+
         <form onSubmit={(e) => submit(e)}>
           <div className="px-2 py-8 mt-4 mb-8 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">
-            <p className="pb-2 font-semibold text-yellow-600">
+            <p className="pb-2 font-semibold text-gray-700">
               Add custom questions to buyers
             </p>
             <p className="pb-6 text-sm text-gray-500">

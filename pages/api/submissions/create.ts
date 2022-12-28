@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const data = await prisma.submission.create({
         data: {
-          productFormId: Number(productFormId),
+          formId: Number(productFormId),
           buyer,
           redeemedUnits: Number(redeemedUnits),
           answers: encryptedAnswers

@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const { buyer, slicerId, productId } = req.query
 
-      const product = await prisma.productForm.findFirst({
+      const product = await prisma.form.findFirst({
         where: {
           AND: [
             { slicerId: Number(slicerId) },
@@ -17,18 +17,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           ]
         }
       })
-      const productFormId = product.id
+      const formId = product.id
 
       const submissions = await prisma.submission.findMany({
         where: {
-          AND: [{ productFormId }, { buyer: String(buyer) }]
+          AND: [{ formId }, { buyer: String(buyer) }]
         },
         select: {
           redeemedUnits: true
         }
       })
 
-      res.status(200).json({ data: { productFormId, submissions } })
+      res.status(200).json({ data: { formId, submissions } })
     } catch (err) {
       res.status(500).send(err.message)
     }

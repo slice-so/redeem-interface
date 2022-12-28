@@ -114,7 +114,7 @@ const CreateRedeemForm = () => {
               </div>
             </div>
             <a
-              className="text-sm highlight"
+              className="text-sm text-gray-500 highlight"
               onClick={() => setProductCreator(null)}
             >
               Create form for a different product

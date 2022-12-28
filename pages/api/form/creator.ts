@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const { account } = req.query
 
-      const products = await prisma.productForm.findMany({
+      const products = await prisma.form.findMany({
         where: {
           creator: String(account)
         },

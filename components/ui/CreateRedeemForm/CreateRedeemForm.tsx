@@ -172,3 +172,5 @@ const CreateRedeemForm = () => {
 export default CreateRedeemForm
 
 // TODO: Solve issue related to questions type, preventing reading and writing to db
+
+// TODO: Add product info from slice db, using card

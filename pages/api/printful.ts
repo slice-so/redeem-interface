@@ -22,12 +22,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         method: "POST"
       }
 
-      const printfulData = await fetcher(endpoint, body)
+      const accessData = await fetcher(endpoint, body)
 
       let data = {}
-      if (!printfulData?.error) {
+      if (!accessData?.error) {
         const { access_token, expires_at, token_type, refresh_token } =
-          printfulData
+          accessData
 
         // Get stores data
         const storesData: {

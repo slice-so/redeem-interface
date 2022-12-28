@@ -18,7 +18,7 @@ const CreateRedeemForm = () => {
   const [initData, setInitData] = useState(null)
   const stateValue = "1234" // TODO: Handle state
 
-  const verifyOwnerhsip = async (slicerId: number, productId: number) => {
+  const verifyOwnership = async (slicerId: number, productId: number) => {
     setProductCreator(null)
     setLoading(true)
     const fetcher = (await import("@utils/fetcher")).default
@@ -64,7 +64,7 @@ const CreateRedeemForm = () => {
       slicer && setSlicerValue(Number(slicer))
       product && setProductValue(Number(product))
       if (slicer && product) {
-        verifyOwnerhsip(Number(slicer), Number(product))
+        verifyOwnership(Number(slicer), Number(product))
       }
     }
   }, [slicer, product, account])
@@ -111,7 +111,7 @@ const CreateRedeemForm = () => {
             label="Verify ownership"
             wrapperClassName="mt-8 mb-12"
             loading={loading}
-            onClick={() => verifyOwnerhsip(slicerValue, productValue)}
+            onClick={() => verifyOwnership(slicerValue, productValue)}
           />
           {productCreator == "none" && (
             <p className="font-semibold text-yellow-600">

@@ -8,7 +8,7 @@ import decimalToHex from "@utils/decimalToHex"
 
 const CreateRedeemForm = () => {
   const router = useRouter()
-  const { slicer, product } = router.query
+  const { slicer, product, state, code, success } = router.query
   const { account } = useAppContext()
 
   const [slicerValue, setSlicerValue] = useState(0)
@@ -16,6 +16,7 @@ const CreateRedeemForm = () => {
   const [loading, setLoading] = useState(false)
   const [productCreator, setProductCreator] = useState(null)
   const [initData, setInitData] = useState(null)
+  const stateValue = "1234" // TODO: Handle state
 
   const verifyOwnerhsip = async (slicerId: number, productId: number) => {
     setProductCreator(null)
@@ -67,6 +68,24 @@ const CreateRedeemForm = () => {
       }
     }
   }, [slicer, product, account])
+
+  useEffect(() => {
+    if (success == "1" && state == stateValue && code && account) {
+      try {
+        const body = {
+          body: JSON.stringify({
+            code,
+            account
+          }),
+          method: "POST"
+        }
+
+        fetch("/api/printful", body)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }, [success, state, code, account])
 
   return (
     <>
@@ -140,6 +159,7 @@ const CreateRedeemForm = () => {
                 )}`}
                 productCreator={productCreator}
                 initData={initData}
+                stateValue={stateValue}
               />
             </div>
           </VerifiedBlock>

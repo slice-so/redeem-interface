@@ -26,6 +26,7 @@ const CreateForm = ({
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
   const [questionValues, setQuestionValues] = useState(questions || [])
+  const [productVariants, setProductVariants] = useState({})
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
@@ -63,10 +64,17 @@ const CreateForm = ({
     setQuestionsNumber(questionsNumber - 1)
   }
 
+  console.log(productVariants)
+
   return !isSuccess ? (
     productCreator == account.toLowerCase() ? (
       <>
-        <CreateFormPrintful stateValue={stateValue} accounts={accounts} />
+        <CreateFormPrintful
+          stateValue={stateValue}
+          accounts={accounts}
+          productVariants={productVariants}
+          setProductVariants={setProductVariants}
+        />
 
         <form onSubmit={(e) => submit(e)}>
           <div className="px-2 py-8 mt-12 mb-8 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">

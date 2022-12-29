@@ -1,14 +1,24 @@
 import PrintfulLogo from "@components/icons/PrintfulLogo"
 import { Account } from "@prisma/client"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import PrintfulStore from "../PrintfulStore"
 
-type Props = { stateValue: string; accounts: Account[] }
+type Props = {
+  stateValue: string
+  accounts: Account[]
+  productVariants: any
+  setProductVariants: Dispatch<SetStateAction<any>>
+}
 export type Items = { [accountId: string]: any[] }
 
 export const clientId = "app-8875250"
 
-const CreateFormPrintful = ({ stateValue, accounts }: Props) => {
+const CreateFormPrintful = ({
+  stateValue,
+  accounts,
+  productVariants,
+  setProductVariants
+}: Props) => {
   const redirectUrl = process.env.NEXT_PUBLIC_APP_URL + "/create"
   const [printfulItems, setPrintfulItems] = useState<Items>({})
 
@@ -30,6 +40,8 @@ const CreateFormPrintful = ({ stateValue, accounts }: Props) => {
                 account={account}
                 printfulItems={printfulItems}
                 setPrintfulItems={setPrintfulItems}
+                productVariants={productVariants}
+                setProductVariants={setProductVariants}
               />
             ))}
         </ul>

@@ -11,6 +11,8 @@ type Props = {
   item: any
   printfulItems: Items
   setPrintfulItems: Dispatch<SetStateAction<Items>>
+  productVariants: any
+  setProductVariants: Dispatch<SetStateAction<any>>
 }
 
 export default function PrintfulItem({
@@ -18,7 +20,9 @@ export default function PrintfulItem({
   account,
   item,
   printfulItems,
-  setPrintfulItems
+  setPrintfulItems,
+  productVariants,
+  setProductVariants
 }: Props) {
   const [showVariants, setShowVariants] = useState(false)
 
@@ -35,6 +39,29 @@ export default function PrintfulItem({
       setPrintfulItems(newPrintfulItems)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const isVariantActive = (variant: any) =>
+    productVariants &&
+    productVariants[item.id] &&
+    productVariants[item.id]?.includes(variant) &&
+    true
+
+  const handleSetProductVariants = (variant: any) => {
+    const newProductsVariants = { ...productVariants }
+    if (isVariantActive(variant)) {
+      const index = newProductsVariants[item.id].findIndex(
+        (el) => el == variant
+      )
+      newProductsVariants[item.id].splice(index, 1)
+      setProductVariants(newProductsVariants)
+    } else {
+      if (!newProductsVariants[item.id]) {
+        newProductsVariants[item.id] = []
+      }
+      newProductsVariants[item.id].push(variant)
+      setProductVariants(newProductsVariants)
     }
   }
 
@@ -60,12 +87,19 @@ export default function PrintfulItem({
           <Spinner />
         ) : (
           variantsList.map((variant) => (
-            <label className="block" key={variant.id}>
-              <input type="checkbox" />
-              {variantsList.length == 1
-                ? "Unique"
-                : variant?.name?.split(" - ")[1]}
-            </label>
+            <div
+              key={variant.id}
+              className={`p-2 rounded-md border border-blue-300 ${
+                isVariantActive(variant) && "bg-blue-100"
+              }`}
+              onClick={() => handleSetProductVariants(variant)}
+            >
+              <p>
+                {variantsList.length == 1
+                  ? "Unique"
+                  : variant?.name?.split(" - ")[1]}
+              </p>
+            </div>
           ))
         ))}
     </div>

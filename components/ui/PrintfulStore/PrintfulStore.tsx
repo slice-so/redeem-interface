@@ -11,13 +11,17 @@ type Props = {
   printfulItems: Items
   setPrintfulItems: Dispatch<SetStateAction<Items>>
   wrapperClassName?: string
+  productVariants: any
+  setProductVariants: Dispatch<SetStateAction<any>>
 }
 
 export default function PrintfulStore({
   account,
   printfulItems,
   setPrintfulItems,
-  wrapperClassName
+  wrapperClassName,
+  productVariants,
+  setProductVariants
 }: Props) {
   const [showDetail, setShowDetail] = useState(false)
 
@@ -36,8 +40,6 @@ export default function PrintfulStore({
       getPrintfulItems()
     }
   }, [showDetail])
-
-  console.log(printfulItems)
 
   return (
     <li>
@@ -75,6 +77,8 @@ export default function PrintfulStore({
               item={item}
               printfulItems={printfulItems}
               setPrintfulItems={setPrintfulItems}
+              productVariants={productVariants}
+              setProductVariants={setProductVariants}
             />
           ))}
       </div>

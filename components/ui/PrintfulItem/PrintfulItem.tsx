@@ -27,7 +27,7 @@ export default function PrintfulItem({
   const getVariants = async () => {
     try {
       const variants = await fetcher(
-        `/api/printful/items/${item.id}?accountId=${account.id}&access_token=${account.access_token}&expires_at=${account.expires_at}&refresh_token=${account.refresh_token}`
+        `/api/printful/items/${item.id}?accountId=${account.id}`
       )
       const newPrintfulItems = { ...printfulItems }
       newPrintfulItems[account.id][index].variantsList = variants
@@ -64,7 +64,7 @@ export default function PrintfulItem({
               <input type="checkbox" />
               {variantsList.length == 1
                 ? "Unique"
-                : variant?.name?.split(" - ")[1]?.trim()}
+                : variant?.name?.split(" - ")[1]}
             </label>
           ))
         ))}

@@ -36,7 +36,7 @@ const updateAccessToken = async (
     }
   })
 
-  return { newAccessToken: access_token, newRefreshToken }
+  return { access_token, refresh_token: newRefreshToken }
 }
 
 export default updateAccessToken

@@ -1,24 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import corsMiddleware from "@utils/corsMiddleware"
-import { prisma } from "@lib/prisma"
 import fetcher from "@utils/fetcher"
 import { clientId } from "@components/ui/CreateFormPrintful/CreateFormPrintful"
 import updateAccessToken from "@utils/updateAccessToken"
+import getAccessToken from "@utils/getAccessToken"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
 
   try {
     if (req.method === "GET") {
-      let { accountId, access_token, expires_at, refresh_token } = req.query
+      let { accountId } = req.query
+
+      let { access_token, refresh_token, expires_at } = await getAccessToken(
+        String(accountId)
+      )
 
       // Update access tokens
       if (new Date().getTime() / 1000 > Number(expires_at)) {
-        const { newAccessToken, newRefreshToken } = await updateAccessToken(
-          String(accountId),
-          clientId,
-          String(refresh_token)
-        )
+        const { access_token: newAccessToken, refresh_token: newRefreshToken } =
+          await updateAccessToken(
+            String(accountId),
+            clientId,
+            String(refresh_token)
+          )
         access_token = newAccessToken
         refresh_token = newRefreshToken
       }

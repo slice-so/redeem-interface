@@ -23,9 +23,7 @@ export default function PrintfulStore({
 
   const getPrintfulItems = async () => {
     try {
-      const items = await fetcher(
-        `/api/printful/items?accountId=${account.id}&access_token=${account.access_token}&expires_at=${account.expires_at}&refresh_token=${account.refresh_token}`
-      )
+      const items = await fetcher(`/api/printful/items?accountId=${account.id}`)
 
       setPrintfulItems({ ...printfulItems, [account.id]: items })
     } catch (error) {

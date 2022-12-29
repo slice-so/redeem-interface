@@ -5,6 +5,8 @@ import { useAppContext } from "../context"
 import client from "@utils/apollo-client"
 import { gql } from "@apollo/client"
 import decimalToHex from "@utils/decimalToHex"
+import fetcher from "@utils/fetcher"
+import { Account } from "@prisma/client"
 
 const CreateRedeemForm = () => {
   const router = useRouter()
@@ -16,6 +18,7 @@ const CreateRedeemForm = () => {
   const [loading, setLoading] = useState(false)
   const [productCreator, setProductCreator] = useState(null)
   const [initData, setInitData] = useState(null)
+  const [printfulAccounts, setPrintfulAccounts] = useState<Account[]>(null)
   const stateValue = "1234" // TODO: Handle state
 
   const verifyOwnership = async (slicerId: number, productId: number) => {
@@ -69,9 +72,9 @@ const CreateRedeemForm = () => {
     }
   }, [slicer, product, account])
 
-  useEffect(() => {
-    if (success == "1" && state == stateValue && code && account) {
-      try {
+  const getPrintfulAccounts = async () => {
+    try {
+      if (success == "1" && state == stateValue && code && account) {
         const body = {
           body: JSON.stringify({
             code,
@@ -80,11 +83,19 @@ const CreateRedeemForm = () => {
           method: "POST"
         }
 
-        fetch("/api/printful", body)
-      } catch (error) {
-        console.log(error)
+        const data = await fetcher("/api/printful", body)
+        if (data) setPrintfulAccounts(data?.accounts)
+      } else if (account) {
+        const data = await fetcher("/api/printful?account=" + account)
+        if (data) setPrintfulAccounts(data?.accounts)
       }
+    } catch (error) {
+      console.log(error)
     }
+  }
+
+  useEffect(() => {
+    getPrintfulAccounts()
   }, [success, state, code, account])
 
   return (
@@ -160,6 +171,7 @@ const CreateRedeemForm = () => {
                 productCreator={productCreator}
                 initData={initData}
                 stateValue={stateValue}
+                accounts={printfulAccounts}
               />
             </div>
           </VerifiedBlock>

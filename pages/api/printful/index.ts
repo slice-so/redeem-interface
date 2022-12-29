@@ -8,6 +8,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
 
   try {
+    if (req.method === "GET") {
+      const { account } = req.query
+
+      const data = await prisma.user.findUnique({
+        where: {
+          id: String(account)
+        },
+        select: {
+          accounts: true
+        }
+      })
+
+      res.status(200).json(data)
+    }
     if (req.method === "POST") {
       const { code, account } = JSON.parse(req.body)
 
@@ -24,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const accessData = await fetcher(endpoint, body)
 
-      let data = {}
+      let data = undefined
       if (!accessData?.error) {
         const { access_token, expires_at, token_type, refresh_token } =
           accessData
@@ -83,11 +97,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             accounts: {
               upsert: upsertData
             }
+          },
+          select: {
+            accounts: true
           }
         })
       }
 
-      res.status(200).json({ data })
+      res.status(200).json(data)
     }
   } catch (err) {
     console.log(err)

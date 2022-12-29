@@ -1,17 +1,49 @@
-type Props = { stateValue: string }
+import PrintfulLogo from "@components/icons/PrintfulLogo"
+import { Account } from "@prisma/client"
+import { useState } from "react"
+import PrintfulItem from "../PrintfulItem"
+
+type Props = { stateValue: string; accounts: Account[] }
+export type Items = { [accountId: string]: any[] }
 
 export const clientId = "app-8875250"
 
-const CreateFormPrintful = ({ stateValue }: Props) => {
+const CreateFormPrintful = ({ stateValue, accounts }: Props) => {
   const redirectUrl = process.env.NEXT_PUBLIC_APP_URL + "/create"
+  const [printfulItems, setPrintfulItems] = useState<Items>({})
 
   return (
     <>
-      <div className="text-left">
+      <div>
+        <h3>Printful items</h3>
+        <p className="pt-2 text-gray-500">
+          Link items from your Printful stores to automatically place orders
+          when someone redeems the slice product
+        </p>
+      </div>
+      {accounts && accounts?.length != 0 && (
+        <ul className="w-full pt-8 space-y-6 text-left">
+          {accounts.map((account) => (
+            <PrintfulItem
+              key={account.id}
+              account={account}
+              printfulItems={printfulItems}
+              setPrintfulItems={setPrintfulItems}
+            />
+          ))}
+        </ul>
+      )}
+      <div className="text-center">
         <a
           href={`https://www.printful.com/oauth/authorize?client_id=${clientId}&state=${stateValue}&redirect_url=${redirectUrl}`}
+          className="inline-block mt-8 mb-4 text-sm text-black hover:text-black"
         >
-          Connect your printful account
+          <button className="flex items-center justify-center gap-2 px-8 py-2 font-medium tracking-wide transition-shadow duration-150 rounded-sm shadow-md hover:shadow-none bg-blue-50">
+            <p>Connect Printful store</p>
+            <div className="w-8">
+              <PrintfulLogo />
+            </div>
+          </button>
         </a>
       </div>
     </>

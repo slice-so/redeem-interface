@@ -3,7 +3,7 @@ import Delete from "@components/icons/Delete"
 import { useState } from "react"
 import { useAppContext } from "../context"
 import { CreateFormInput, Button, CreateFormPrintful } from "@components/ui"
-import { Form } from "@prisma/client"
+import { Account, Form } from "@prisma/client"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 
 type Props = {
@@ -11,9 +11,16 @@ type Props = {
   productCreator: string
   initData: Form
   stateValue: string
+  accounts: Account[]
 }
 
-const CreateForm = ({ id, productCreator, initData, stateValue }: Props) => {
+const CreateForm = ({
+  id,
+  productCreator,
+  initData,
+  stateValue,
+  accounts
+}: Props) => {
   const { account } = useAppContext()
   const questions = initData?.questions as QuestionValue[]
 
@@ -59,16 +66,16 @@ const CreateForm = ({ id, productCreator, initData, stateValue }: Props) => {
   return !isSuccess ? (
     productCreator == account.toLowerCase() ? (
       <>
-        <CreateFormPrintful stateValue={stateValue} />
+        <CreateFormPrintful stateValue={stateValue} accounts={accounts} />
 
         <form onSubmit={(e) => submit(e)}>
-          <div className="px-2 py-8 mt-4 mb-8 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">
+          <div className="px-2 py-8 mt-12 mb-8 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">
             <p className="pb-2 font-semibold text-gray-700">
-              Add custom questions to buyers
+              Questions to buyers
             </p>
             <p className="pb-6 text-sm text-gray-500">
-              Ask the buyer for the information you need to process the
-              purchase, such as contact details or physical address.
+              Ask information you need to process the purchase, such as contact
+              details or a physical address.
             </p>
             {[...Array(questionsNumber)].map((i, key) => (
               <CreateFormInput

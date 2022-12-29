@@ -39,7 +39,7 @@ const CreateFormPrintful = ({ stateValue, accounts }: Props) => {
           href={`https://www.printful.com/oauth/authorize?client_id=${clientId}&state=${stateValue}&redirect_url=${redirectUrl}`}
           className="inline-block mt-8 mb-4 text-sm text-black hover:text-black"
         >
-          <button className="flex items-center justify-center gap-2 px-8 py-2 font-medium tracking-wide transition-all duration-100 rounded-sm shadow-md hover:shadow-none bg-blue-50 hover:translate-y-0.5">
+          <button className="flex items-center justify-center gap-2 px-8 py-2 font-medium tracking-wide transition-all duration-100 rounded-sm shadow-md hover:shadow-none bg-blue-50 dark:hover:bg-opacity-70 hover:translate-y-0.5">
             <p>Connect Printful store</p>
             <div className="w-8">
               <PrintfulLogo />

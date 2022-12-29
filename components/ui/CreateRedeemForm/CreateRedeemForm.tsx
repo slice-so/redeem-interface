@@ -101,7 +101,7 @@ const CreateRedeemForm = () => {
   return (
     <>
       {!productCreator || productCreator == "none" ? (
-        <div className="max-w-sm mx-auto">
+        <div className="mx-auto">
           <div className="flex justify-between gap-8">
             <Input
               label="Slicer"
@@ -133,7 +133,7 @@ const CreateRedeemForm = () => {
       ) : (
         <>
           <div className="pb-12">
-            <div className="flex justify-between max-w-[14rem] gap-8 pb-4 mx-auto text-center">
+            <div className="flex justify-between gap-8 pb-4 mx-auto text-center">
               <div className="">
                 <p>Slicer</p>
                 <p className="pt-2 font-bold">{slicerValue}</p>
@@ -163,7 +163,7 @@ const CreateRedeemForm = () => {
               </p>
             }
           >
-            <div className="max-w-md mx-auto">
+            <div className="mx-auto">
               <CreateForm
                 id={`${decimalToHex(slicerValue)}-${decimalToHex(
                   productValue

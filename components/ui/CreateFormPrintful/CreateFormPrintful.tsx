@@ -1,7 +1,7 @@
 import PrintfulLogo from "@components/icons/PrintfulLogo"
 import { Account } from "@prisma/client"
 import { useState } from "react"
-import PrintfulItem from "../PrintfulItem"
+import PrintfulStore from "../PrintfulStore"
 
 type Props = { stateValue: string; accounts: Account[] }
 export type Items = { [accountId: string]: any[] }
@@ -15,22 +15,23 @@ const CreateFormPrintful = ({ stateValue, accounts }: Props) => {
   return (
     <>
       <div>
-        <h3>Printful items</h3>
         <p className="pt-2 text-gray-500">
           Link items from your Printful stores to automatically place orders
-          when someone redeems the slice product
+          when someone redeems your Slice product
         </p>
       </div>
       {accounts && accounts?.length != 0 && (
         <ul className="w-full pt-8 space-y-6 text-left">
-          {accounts.map((account) => (
-            <PrintfulItem
-              key={account.id}
-              account={account}
-              printfulItems={printfulItems}
-              setPrintfulItems={setPrintfulItems}
-            />
-          ))}
+          {accounts
+            .sort((a, b) => Number(a.id) - Number(b.id))
+            .map((account) => (
+              <PrintfulStore
+                key={account.id}
+                account={account}
+                printfulItems={printfulItems}
+                setPrintfulItems={setPrintfulItems}
+              />
+            ))}
         </ul>
       )}
       <div className="text-center">
@@ -38,7 +39,7 @@ const CreateFormPrintful = ({ stateValue, accounts }: Props) => {
           href={`https://www.printful.com/oauth/authorize?client_id=${clientId}&state=${stateValue}&redirect_url=${redirectUrl}`}
           className="inline-block mt-8 mb-4 text-sm text-black hover:text-black"
         >
-          <button className="flex items-center justify-center gap-2 px-8 py-2 font-medium tracking-wide transition-shadow duration-150 rounded-sm shadow-md hover:shadow-none bg-blue-50">
+          <button className="flex items-center justify-center gap-2 px-8 py-2 font-medium tracking-wide transition-all duration-100 rounded-sm shadow-md hover:shadow-none bg-blue-50 hover:translate-y-0.5">
             <p>Connect Printful store</p>
             <div className="w-8">
               <PrintfulLogo />

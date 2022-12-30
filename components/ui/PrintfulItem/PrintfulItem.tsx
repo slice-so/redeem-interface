@@ -49,7 +49,7 @@ export default function PrintfulItem({
 
   const handleSetLinkedProducts = (variant: any) => {
     const newProductsVariants =
-      linkedProducts[0]?.product == item && linkedProducts[0]?.variants
+      linkedProducts[0]?.product.id == item.id && linkedProducts[0]?.variants
         ? [...linkedProducts[0].variants]
         : []
 

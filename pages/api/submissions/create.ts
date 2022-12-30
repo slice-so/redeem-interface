@@ -46,13 +46,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const body = {
           body: JSON.stringify({
             recipient: {
-              name: answers["name"],
-              address1: answers["address1"],
-              city: answers["city"],
-              state_name: answers["state_name"],
-              country_name: answers["country_name"],
-              zip: answers["zip"],
-              email: answers["email"]
+              name: answers["Receiver name"],
+              address1: answers["Delivery address"],
+              city: answers["City"],
+              state_code: answers["State"],
+              country_code: answers["Country"],
+              zip: answers["Postal code"],
+              email: answers["Email"]
             },
             items: [
               {
@@ -66,8 +66,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const order = await fetcher(endpoint, body)
-        orderId = order.result.id
         orderProvider = "Printful"
+        orderId = order.result.id
+
+        if (!orderId) throw Error(order.error.message)
       }
 
       const data = await prisma.submission.create({

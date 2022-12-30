@@ -14,6 +14,19 @@ type Props = {
   accounts: Account[]
 }
 
+const defaultQuestions: QuestionValue[] = [
+  {
+    question: "Receiver name",
+    hint: "The receiver name, at which the item is to be delivered"
+  },
+  { question: "Delivery address", hint: "" },
+  { question: "City", hint: "Used for delivery" },
+  { question: "State", hint: "Used for delivery" },
+  { question: "Country", hint: "Used for delivery" },
+  { question: "Postal code", hint: "Used for delivery" },
+  { question: "Email", hint: "Used to contact you about your order" }
+]
+
 const CreateForm = ({
   id,
   productCreator,
@@ -22,7 +35,10 @@ const CreateForm = ({
   accounts
 }: Props) => {
   const { account } = useAppContext()
-  const questions = initData?.questions as QuestionValue[]
+  const questions = initData?.questions.filter(
+    (question: QuestionValue) =>
+      !defaultQuestions.find((q) => q.question === question.question)
+  ) as QuestionValue[]
   const initVariants = initData?.linkedProducts as any[]
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
@@ -39,12 +55,17 @@ const CreateForm = ({
       const fetcher = (await import("@utils/fetcher")).default
 
       const cleanedValues = questionValues.filter((val) => val.question != "")
+      const questions =
+        linkedProducts.length != 0
+          ? defaultQuestions.concat(cleanedValues)
+          : cleanedValues
+
       const body = {
         body: JSON.stringify({
           slicerId: id.split("-")[0],
           productId: id.split("-")[1],
           creator: account,
-          questions: cleanedValues,
+          questions,
           linkedProducts
         }),
         method: "POST"
@@ -66,6 +87,8 @@ const CreateForm = ({
     setQuestionsNumber(questionsNumber - 1)
   }
 
+  // TODO: Handle printful errors + fetch state and country codes + handle email formatting
+
   return !isSuccess ? (
     productCreator == account.toLowerCase() ? (
       <>
@@ -78,13 +101,21 @@ const CreateForm = ({
 
         <form onSubmit={(e) => submit(e)}>
           <div className="px-2 py-8 mt-12 mb-8 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">
-            <p className="pb-2 font-semibold text-gray-700">
+            <p className="pb-4 font-semibold text-gray-700">
               Questions to buyers
             </p>
             <p className="pb-6 text-sm text-gray-500">
-              Ask information you need to process the purchase, such as contact
-              details or a physical address.
+              Buyers will need to reply to your questions before redeeming the
+              product
             </p>
+            {linkedProducts.length != 0 && (
+              <p className="pb-6 text-yellow-600">
+                In order to process the order,{" "}
+                <span className="font-bold">email and delivery info</span>{" "}
+                (name, address, city, state, country, zip) will be automatically
+                added to the form.
+              </p>
+            )}
             {[...Array(questionsNumber)].map((i, key) => (
               <CreateFormInput
                 key={key}

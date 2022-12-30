@@ -45,13 +45,16 @@ const RedeemFormPrintful = ({
             <option value="">Pick option...</option>
             {variants.map((variant) => (
               <option key={variant.id} value={variant.external_id}>
-                {variants.length == 1 ? "Unique" : variant.name.split(" - ")[1]}
+                {(variants.length == 1 ? "Unique - " : "") +
+                  variant.name.split(" - ")[1]}
               </option>
             ))}
           </select>
-          <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-            <Chevron />
-          </div>
+          {variants.length != 1 && (
+            <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
+              <Chevron />
+            </div>
+          )}
         </div>
       </div>
     )

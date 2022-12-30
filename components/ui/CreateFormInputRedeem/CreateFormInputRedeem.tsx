@@ -35,7 +35,7 @@ const CreateFormInputRedeem = ({
   }, [answer])
 
   return (
-    <div className="mb-8">
+    <>
       <div className="pb-2">
         <div className="relative flex items-center">
           <p className="pr-1 text-sm font-semibold text-left text-gray-600">
@@ -50,7 +50,7 @@ const CreateFormInputRedeem = ({
         )}
       </div>
       <Input value={answer} onChange={setAnswer} required />
-    </div>
+    </>
   )
 }
 

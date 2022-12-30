@@ -13,8 +13,8 @@ type Props = {
   setShownItemIndex: Dispatch<SetStateAction<number>>
   printfulItems: Items
   setPrintfulItems: Dispatch<SetStateAction<Items>>
-  productVariants: any
-  setProductVariants: Dispatch<SetStateAction<any>>
+  linkedProducts: any
+  setLinkedProducts: Dispatch<SetStateAction<any>>
 }
 
 export default function PrintfulItem({
@@ -25,8 +25,8 @@ export default function PrintfulItem({
   setShownItemIndex,
   printfulItems,
   setPrintfulItems,
-  productVariants,
-  setProductVariants
+  linkedProducts,
+  setLinkedProducts
 }: Props) {
   const variantsList = printfulItems[account.id][index].variantsList
 
@@ -44,36 +44,44 @@ export default function PrintfulItem({
     }
   }
 
-  console.log(productVariants)
-
   const isVariantActive = (variant: any) =>
-    productVariants[0]?.variants?.find((v: any) => variant.id == v.id) && true
+    linkedProducts[0]?.variants?.find((v: any) => variant.id == v.id) && true
 
-  const handleSetProductVariants = (variant: any) => {
+  const handleSetLinkedProducts = (variant: any) => {
     const newProductsVariants =
-      productVariants[0]?.product == item && productVariants[0]?.variants
-        ? [...productVariants[0].variants]
+      linkedProducts[0]?.product == item && linkedProducts[0]?.variants
+        ? [...linkedProducts[0].variants]
         : []
 
     if (isVariantActive(variant)) {
       const index = newProductsVariants.findIndex((el) => el.id == variant.id)
       newProductsVariants.splice(index, 1)
-      setProductVariants(
+      setLinkedProducts(
         newProductsVariants.length != 0
-          ? [{ product: item, variants: newProductsVariants }]
+          ? [
+              {
+                accountId: account.id,
+                product: item,
+                variants: newProductsVariants
+              }
+            ]
           : []
       )
     } else {
       newProductsVariants.push(variant)
-      setProductVariants([{ product: item, variants: newProductsVariants }])
+      setLinkedProducts([
+        { accountId: account.id, product: item, variants: newProductsVariants }
+      ])
     }
   }
 
-  const handleSetAllProductVariants = () => {
-    if (productVariants[0]?.variants == variantsList) {
-      setProductVariants([])
+  const handleSetAllLinkedProducts = () => {
+    if (linkedProducts[0]?.variants == variantsList) {
+      setLinkedProducts([])
     } else {
-      setProductVariants([{ product: item, variants: variantsList }])
+      setLinkedProducts([
+        { accountId: account.id, product: item, variants: variantsList }
+      ])
     }
   }
 
@@ -106,12 +114,12 @@ export default function PrintfulItem({
             {variantsList.length != 1 && (
               <div
                 className={`p-2 rounded-md border border-blue-300 ${
-                  productVariants[0]?.variants == variantsList && "bg-blue-100"
+                  linkedProducts[0]?.variants == variantsList && "bg-blue-100"
                 }`}
-                onClick={() => handleSetAllProductVariants()}
+                onClick={() => handleSetAllLinkedProducts()}
               >
                 <p>
-                  {productVariants[0]?.variants == variantsList
+                  {linkedProducts[0]?.variants == variantsList
                     ? "Deselect all"
                     : "Select all"}
                 </p>
@@ -123,7 +131,7 @@ export default function PrintfulItem({
                   className={`p-2 rounded-md border border-blue-300 ${
                     isVariantActive(variant) && "bg-blue-100"
                   }`}
-                  onClick={() => handleSetProductVariants(variant)}
+                  onClick={() => handleSetLinkedProducts(variant)}
                 >
                   <p>
                     {variantsList.length == 1

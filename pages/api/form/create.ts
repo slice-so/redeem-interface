@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "POST") {
     try {
-      const { slicerId, productId, creator, questions, productVariants } =
+      const { slicerId, productId, creator, questions, linkedProducts } =
         JSON.parse(req.body)
       let data
 
@@ -30,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             productId: Number(productId),
             creator,
             questions,
-            linkedProducts: productVariants
+            linkedProducts
           }
         })
       } else {
@@ -40,7 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             productId: Number(productId),
             creator,
             questions,
-            linkedProducts: productVariants
+            linkedProducts
           }
         })
       }

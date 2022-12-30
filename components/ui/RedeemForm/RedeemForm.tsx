@@ -1,24 +1,36 @@
 import { useState } from "react"
 import { useAppContext } from "../context"
-import { CreateFormInputRedeem, Button, Input } from "@components/ui"
+import {
+  CreateFormInputRedeem,
+  Button,
+  Input,
+  RedeemFormPrintful
+} from "@components/ui"
 import useQuery from "@utils/subgraphQuery"
 import decimalToHex from "@utils/decimalToHex"
 import Spinner from "@components/icons/Spinner"
 import usePrismaQuery from "@utils/prismaQuery"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
+import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
 
 type Props = {
-  questions: QuestionValue[]
   slicerId: number
   productId: number
+  questions: QuestionValue[]
+  linkedProducts: LinkedProducts
 }
 
-const RedeemForm = ({ questions, slicerId, productId }: Props) => {
+const RedeemForm = ({
+  questions,
+  slicerId,
+  productId,
+  linkedProducts
+}: Props) => {
   const { account } = useAppContext()
 
   const [units, setUnits] = useState(0)
   const [answerValues, setAnswerValues] = useState([])
-  const [variants, setVariants] = useState([])
+  const [selectedProduct, setSelectedProduct] = useState("")
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const hexId = `${decimalToHex(Number(slicerId))}-${decimalToHex(
@@ -56,7 +68,7 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
           buyer: account,
           redeemedUnits: units,
           answers: answerValues,
-          variants
+          selectedProduct
         }),
         method: "POST"
       }
@@ -88,8 +100,13 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
           questions.{" "}
         </p>
         <form onSubmit={(e) => submit(e)}>
-          <div className="pb-4">
-            <div className="mb-8">
+          <div className="space-y-8">
+            <RedeemFormPrintful
+              linkedProducts={linkedProducts}
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+            />
+            <div>
               <Input
                 label="Units to redeem"
                 type="number"
@@ -110,8 +127,8 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
                 setAnswerValues={setAnswerValues}
               />
             ))}
+            <Button label="Submit" loading={loading} type="submit" />
           </div>
-          <Button label="Submit" loading={loading} type="submit" />
         </form>
       </>
     ) : (

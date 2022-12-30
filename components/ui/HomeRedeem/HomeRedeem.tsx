@@ -3,6 +3,12 @@ import { Button, Input, VerifiedBlock, RedeemForm } from "@components/ui"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 
+export type LinkedProducts = {
+  accountId: number
+  product: any
+  variants: any[]
+}[]
+
 const HomeRedeem = () => {
   const router = useRouter()
   const { slicer, product } = router.query
@@ -131,6 +137,7 @@ const HomeRedeem = () => {
               slicerId={slicerValue}
               productId={productValue}
               questions={productData.questions}
+              linkedProducts={productData.linkedProducts}
             />
           </VerifiedBlock>
         </>

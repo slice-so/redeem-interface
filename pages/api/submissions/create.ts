@@ -4,15 +4,15 @@ import { prisma } from "@lib/prisma"
 import { encryptTexts } from "@utils/crypto"
 import fetcher from "@utils/fetcher"
 import getRefreshedAccessToken from "@utils/getRefreshedAccessToken"
+import { LinkedProducts } from "@components/ui/HomeRedeem/HomeRedeem"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
 
   if (req.method === "POST") {
     try {
-      const { formId, buyer, redeemedUnits, answers, variants } = JSON.parse(
-        req.body
-      )
+      const { formId, buyer, redeemedUnits, answers, selectedProduct } =
+        JSON.parse(req.body)
       let orderId: number
       let orderProvider: string
 
@@ -22,49 +22,51 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         answers
       )
 
-      const { linkedProducts } = await prisma.form.findUnique({
+      const { linkedProducts } = (await prisma.form.findUnique({
         where: {
           id: Number(formId)
         },
         select: {
           linkedProducts: true
         }
-      })
+      })) as { linkedProducts: LinkedProducts }
 
-      if (linkedProducts) {
+      if (selectedProduct) {
         const endpoint = "https://api.printful.com/orders"
+        const { accountId, variants } = linkedProducts[0] // Only allowing to link one product at a time, for now
 
-        for (let i = 0; i < Object.entries(linkedProducts).length; i++) {
-          // TODO: Should we assume linkedProducts to only be of length 1? Handle it here or elsewhere? Each product should be linked with product from a single store
-          const [accountId, variants] = Object.entries(linkedProducts)[i]
-
-          const { access_token } = await getRefreshedAccessToken(
-            String(accountId)
-          )
-
-          const body = {
-            body: JSON.stringify({
-              recipient: {
-                name: "John Doe",
-                address1: "19749 Dearborn St",
-                city: "Chatsworth",
-                state_code: "CA",
-                country_code: "US",
-                zip: "91311"
-              },
-              items: variants.map((variant) => ({
-                external_variant_id: variant.external_id,
-                quantity: redeemedUnits
-              }))
-            }),
-            headers: { Authorization: `Bearer ${access_token}` },
-            method: "POST"
-          }
-
-          const order = await fetcher(endpoint, body)
-          orderId = order.result.id
-          orderProvider = "Printful"
+        if (!variants.find((v) => v.external_id == selectedProduct)) {
+          throw Error("Invalid product")
         }
+
+        const { access_token } = await getRefreshedAccessToken(
+          String(accountId)
+        )
+
+        const body = {
+          body: JSON.stringify({
+            recipient: {
+              name: "John Doe",
+              address1: "19749 Dearborn St",
+              city: "Chatsworth",
+              state_code: "CA",
+              country_code: "US",
+              zip: "91311"
+            },
+            items: [
+              {
+                external_variant_id: selectedProduct,
+                quantity: redeemedUnits
+              }
+            ]
+          }),
+          headers: { Authorization: `Bearer ${access_token}` },
+          method: "POST"
+        }
+
+        const order = await fetcher(endpoint, body)
+        orderId = order.result.id
+        orderProvider = "Printful"
       }
 
       const data = await prisma.submission.create({

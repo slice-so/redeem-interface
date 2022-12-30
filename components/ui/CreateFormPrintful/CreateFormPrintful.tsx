@@ -6,8 +6,8 @@ import PrintfulStore from "../PrintfulStore"
 type Props = {
   stateValue: string
   accounts: Account[]
-  productVariants: any
-  setProductVariants: Dispatch<SetStateAction<any>>
+  linkedProducts: any
+  setLinkedProducts: Dispatch<SetStateAction<any>>
 }
 export type Items = { [accountId: string]: any[] }
 
@@ -16,8 +16,8 @@ export const clientId = "app-8875250"
 const CreateFormPrintful = ({
   stateValue,
   accounts,
-  productVariants,
-  setProductVariants
+  linkedProducts,
+  setLinkedProducts
 }: Props) => {
   const redirectUrl = process.env.NEXT_PUBLIC_APP_URL + "/create"
   const [printfulItems, setPrintfulItems] = useState<Items>({})
@@ -40,8 +40,8 @@ const CreateFormPrintful = ({
                 account={account}
                 printfulItems={printfulItems}
                 setPrintfulItems={setPrintfulItems}
-                productVariants={productVariants}
-                setProductVariants={setProductVariants}
+                linkedProducts={linkedProducts}
+                setLinkedProducts={setLinkedProducts}
               />
             ))}
         </ul>

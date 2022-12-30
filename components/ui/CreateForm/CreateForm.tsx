@@ -27,7 +27,7 @@ const CreateForm = ({
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
   const [questionValues, setQuestionValues] = useState(questions || [])
-  const [productVariants, setProductVariants] = useState(initVariants || [])
+  const [linkedProducts, setLinkedProducts] = useState(initVariants || [])
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
@@ -45,7 +45,7 @@ const CreateForm = ({
           productId: id.split("-")[1],
           creator: account,
           questions: cleanedValues,
-          productVariants
+          linkedProducts
         }),
         method: "POST"
       }
@@ -72,8 +72,8 @@ const CreateForm = ({
         <CreateFormPrintful
           stateValue={stateValue}
           accounts={accounts}
-          productVariants={productVariants}
-          setProductVariants={setProductVariants}
+          linkedProducts={linkedProducts}
+          setLinkedProducts={setLinkedProducts}
         />
 
         <form onSubmit={(e) => submit(e)}>

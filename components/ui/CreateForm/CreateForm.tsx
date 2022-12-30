@@ -27,7 +27,7 @@ const CreateForm = ({
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
   const [questionValues, setQuestionValues] = useState(questions || [])
-  const [productVariants, setProductVariants] = useState(initVariants || {})
+  const [productVariants, setProductVariants] = useState(initVariants || [])
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 

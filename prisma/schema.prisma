@@ -30,7 +30,7 @@ model Form {
   creator          String
   questions        Json[]
   createdAt        DateTime     @default(now()) @map(name: "created_at")
-  linkedProducts   Json         @default("{}")
+  linkedProducts   Json[]         @default([])
 
   submissions      Submission[]
   user             User         @relation(fields: [creator], references: [id], onDelete: Cascade)

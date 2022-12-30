@@ -37,6 +37,7 @@ const HomeRedeem = () => {
 
     setLoading(false)
   }
+  console.log(productData)
 
   useEffect(() => {
     slicer && setSlicerValue(Number(slicer))

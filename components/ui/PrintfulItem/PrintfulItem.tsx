@@ -29,7 +29,6 @@ export default function PrintfulItem({
   setProductVariants
 }: Props) {
   const variantsList = printfulItems[account.id][index].variantsList
-  const productId = printfulItems[account.id][index].id
 
   const getVariants = async () => {
     try {
@@ -45,42 +44,36 @@ export default function PrintfulItem({
     }
   }
 
+  console.log(productVariants)
+
   const isVariantActive = (variant: any) =>
-    productVariants &&
-    productVariants[account.id] &&
-    productVariants[account.id][productId] &&
-    productVariants[account.id][productId]?.find(
-      (v: any) => variant.id == v.id
-    ) &&
-    true
+    productVariants[0]?.variants?.find((v: any) => variant.id == v.id) && true
 
   const handleSetProductVariants = (variant: any) => {
-    let newProductsVariants =
-      productVariants[account.id] && productVariants[account.id][productId]
-        ? [...productVariants[account.id][productId]]
-        : null
+    const newProductsVariants =
+      productVariants[0]?.product == item && productVariants[0]?.variants
+        ? [...productVariants[0].variants]
+        : []
 
     if (isVariantActive(variant)) {
       const index = newProductsVariants.findIndex((el) => el.id == variant.id)
       newProductsVariants.splice(index, 1)
-      setProductVariants({ [account.id]: { [productId]: newProductsVariants } })
+      setProductVariants(
+        newProductsVariants.length != 0
+          ? [{ product: item, variants: newProductsVariants }]
+          : []
+      )
     } else {
-      if (!newProductsVariants) {
-        newProductsVariants = []
-      }
       newProductsVariants.push(variant)
-      setProductVariants({ [account.id]: { [productId]: newProductsVariants } })
+      setProductVariants([{ product: item, variants: newProductsVariants }])
     }
   }
 
   const handleSetAllProductVariants = () => {
-    if (
-      productVariants[account.id] &&
-      productVariants[account.id][productId] == variantsList
-    ) {
-      setProductVariants({ [account.id]: { [productId]: [] } })
+    if (productVariants[0]?.variants == variantsList) {
+      setProductVariants([])
     } else {
-      setProductVariants({ [account.id]: { [productId]: variantsList } })
+      setProductVariants([{ product: item, variants: variantsList }])
     }
   }
 
@@ -113,15 +106,12 @@ export default function PrintfulItem({
             {variantsList.length != 1 && (
               <div
                 className={`p-2 rounded-md border border-blue-300 ${
-                  productVariants[account.id] &&
-                  productVariants[account.id][productId] == variantsList &&
-                  "bg-blue-100"
+                  productVariants[0]?.variants == variantsList && "bg-blue-100"
                 }`}
                 onClick={() => handleSetAllProductVariants()}
               >
                 <p>
-                  {productVariants[account.id] &&
-                  productVariants[account.id][productId] == variantsList
+                  {productVariants[0]?.variants == variantsList
                     ? "Deselect all"
                     : "Select all"}
                 </p>

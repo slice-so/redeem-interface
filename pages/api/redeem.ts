@@ -17,7 +17,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
         select: {
           id: true,
-          questions: true
+          questions: true,
+          linkedProducts: true
         }
       })
 

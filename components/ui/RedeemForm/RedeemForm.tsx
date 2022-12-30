@@ -18,6 +18,7 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
 
   const [units, setUnits] = useState(0)
   const [answerValues, setAnswerValues] = useState([])
+  const [variants, setVariants] = useState([])
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const hexId = `${decimalToHex(Number(slicerId))}-${decimalToHex(
@@ -55,7 +56,8 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
           formId,
           buyer: account,
           redeemedUnits: units,
-          answers: answerValues
+          answers: answerValues,
+          variants
         }),
         method: "POST"
       }

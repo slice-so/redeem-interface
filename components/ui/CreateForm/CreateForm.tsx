@@ -66,8 +66,6 @@ const CreateForm = ({
     setQuestionsNumber(questionsNumber - 1)
   }
 
-  console.log(productVariants)
-
   return !isSuccess ? (
     productCreator == account.toLowerCase() ? (
       <>

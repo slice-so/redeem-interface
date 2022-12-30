@@ -10,7 +10,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "POST") {
     try {
-      const { formId, buyer, redeemedUnits, answers } = JSON.parse(req.body)
+      const { formId, buyer, redeemedUnits, answers, variants } = JSON.parse(
+        req.body
+      )
       let orderId: number
       let orderProvider: string
 

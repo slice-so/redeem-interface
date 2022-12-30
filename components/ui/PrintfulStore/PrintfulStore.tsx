@@ -24,6 +24,7 @@ export default function PrintfulStore({
   setProductVariants
 }: Props) {
   const [showDetail, setShowDetail] = useState(false)
+  const [shownItemIndex, setShownItemIndex] = useState<number>()
 
   const getPrintfulItems = async () => {
     try {
@@ -73,6 +74,8 @@ export default function PrintfulStore({
             <PrintfulItem
               key={item.id}
               index={index}
+              shownItemIndex={shownItemIndex}
+              setShownItemIndex={setShownItemIndex}
               account={account}
               item={item}
               printfulItems={printfulItems}

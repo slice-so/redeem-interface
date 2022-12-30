@@ -11,7 +11,7 @@ type Props = {
 }
 
 const ProductsListElement = ({ product }: Props) => {
-  const { slicerId, productId, questions, submissions } = product || {
+  const { slicerId, productId, submissions } = product || {
     slicerId: undefined,
     productId: undefined,
     questions: [],
@@ -42,7 +42,7 @@ const ProductsListElement = ({ product }: Props) => {
             setModalView({
               name: "SUBMISSIONS_VIEW",
               cross: true,
-              params: { slicerId, productId, questions, submissions }
+              params: { slicerId, productId, submissions }
             })
           }
         >

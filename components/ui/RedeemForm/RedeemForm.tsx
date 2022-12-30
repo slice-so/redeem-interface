@@ -29,7 +29,7 @@ const RedeemForm = ({
   const { account } = useAppContext()
 
   const [units, setUnits] = useState(0)
-  const [answerValues, setAnswerValues] = useState([])
+  const [answers, setAnswers] = useState({})
   const [selectedProduct, setSelectedProduct] = useState("")
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -67,7 +67,7 @@ const RedeemForm = ({
           formId,
           buyer: account,
           redeemedUnits: units,
-          answers: answerValues,
+          answers: answers,
           selectedProduct
         }),
         method: "POST"
@@ -123,8 +123,8 @@ const RedeemForm = ({
                 key={key}
                 questionNumber={key + 1}
                 questionValue={questions[key]}
-                answerValues={answerValues}
-                setAnswerValues={setAnswerValues}
+                answers={answers}
+                setAnswers={setAnswers}
               />
             ))}
             <Button label="Submit" loading={loading} type="submit" />

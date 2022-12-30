@@ -4,15 +4,18 @@ const { subtle } = webcrypto
 export const encryptTexts = async (
   productFormId: string,
   redeemedUnits: string,
-  texts: string[]
+  texts: { [question: string]: string }
 ) => {
   const key = await generateKey()
   const enc = new TextEncoder()
   const iv = calculateIv(productFormId, redeemedUnits)
-  let encryptedTexts: string[] = []
+  let encryptedTexts = {}
 
-  for (let i = 0; i < texts.length; i++) {
-    const encoded = enc.encode(texts[i])
+  const formattedTexts = Object.entries(texts)
+
+  for (let i = 0; i < formattedTexts.length; i++) {
+    const [question, answer] = formattedTexts[i]
+    const encoded = enc.encode(answer)
 
     const encryptedBuf: ArrayBuffer = await subtle.encrypt(
       {
@@ -22,7 +25,7 @@ export const encryptTexts = async (
       key,
       encoded
     )
-    encryptedTexts.push(new Uint8Array(encryptedBuf).toString())
+    encryptedTexts[question] = new Uint8Array(encryptedBuf).toString()
   }
 
   return encryptedTexts
@@ -31,16 +34,18 @@ export const encryptTexts = async (
 export const decryptTexts = async (
   productFormId: string | number,
   redeemedUnits: string | number,
-  texts: string[]
+  texts: { [question: string]: string }
 ) => {
   const key = await generateKey()
   const dec = new TextDecoder()
   const iv = calculateIv(productFormId, redeemedUnits)
 
-  let decryptedTexts: string[] = []
+  let decryptedTexts = {}
+  const formattedTexts = Object.entries(texts)
 
-  for (let i = 0; i < texts.length; i++) {
-    const encoded = new Uint8Array(texts[i].split(",").map((e) => Number(e)))
+  for (let i = 0; i < formattedTexts.length; i++) {
+    const [question, answer] = formattedTexts[i]
+    const encoded = new Uint8Array(answer.split(",").map((e) => Number(e)))
     const encryptedBuf: ArrayBuffer = await subtle.decrypt(
       {
         name: "AES-GCM",
@@ -49,7 +54,7 @@ export const decryptTexts = async (
       key,
       encoded
     )
-    decryptedTexts.push(dec.decode(encryptedBuf))
+    decryptedTexts[question] = dec.decode(encryptedBuf)
   }
 
   return decryptedTexts

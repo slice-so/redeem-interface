@@ -12,7 +12,7 @@ model Submission {
   formId           Int          @map(name: "form_id")
   buyer            String       @map(name: "buyer")
   redeemedUnits    Int        
-  answers          String[]
+  answers          Json
   createdAt        DateTime     @default(now()) @map(name: "created_at")
   orderId          Int?
   orderProvider    String?     

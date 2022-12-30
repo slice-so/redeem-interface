@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import corsMiddleware from "@utils/corsMiddleware"
 import fetcher from "@utils/fetcher"
-import { clientId } from "@components/ui/CreateFormPrintful/CreateFormPrintful"
-import updateAccessToken from "@utils/updateAccessToken"
-import getAccessToken from "@utils/getAccessToken"
+import getRefreshedAccessToken from "@utils/getRefreshedAccessToken"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
@@ -12,21 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "GET") {
       let { accountId } = req.query
 
-      let { access_token, refresh_token, expires_at } = await getAccessToken(
-        String(accountId)
-      )
-
-      // Update access tokens
-      if (new Date().getTime() / 1000 > Number(expires_at)) {
-        const { access_token: newAccessToken, refresh_token: newRefreshToken } =
-          await updateAccessToken(
-            String(accountId),
-            clientId,
-            String(refresh_token)
-          )
-        access_token = newAccessToken
-        refresh_token = newRefreshToken
-      }
+      const { access_token } = await getRefreshedAccessToken(String(accountId))
 
       const endpoint = "https://api.printful.com/store/products"
       const data = await fetcher(endpoint, {

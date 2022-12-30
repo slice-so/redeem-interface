@@ -23,10 +23,11 @@ const CreateForm = ({
 }: Props) => {
   const { account } = useAppContext()
   const questions = initData?.questions as QuestionValue[]
+  const initVariants = initData?.linkedProducts as any[]
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
   const [questionValues, setQuestionValues] = useState(questions || [])
-  const [productVariants, setProductVariants] = useState({})
+  const [productVariants, setProductVariants] = useState(initVariants || {})
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
@@ -43,7 +44,8 @@ const CreateForm = ({
           slicerId: id.split("-")[0],
           productId: id.split("-")[1],
           creator: account,
-          questions: cleanedValues
+          questions: cleanedValues,
+          productVariants
         }),
         method: "POST"
       }

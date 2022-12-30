@@ -44,23 +44,23 @@ export default function PrintfulItem({
 
   const isVariantActive = (variant: any) =>
     productVariants &&
-    productVariants[item.id] &&
-    productVariants[item.id]?.includes(variant) &&
+    productVariants[account.id] &&
+    productVariants[account.id]?.find((v: any) => variant.id == v.id) &&
     true
 
   const handleSetProductVariants = (variant: any) => {
     const newProductsVariants = { ...productVariants }
     if (isVariantActive(variant)) {
-      const index = newProductsVariants[item.id].findIndex(
+      const index = newProductsVariants[account.id].findIndex(
         (el) => el == variant
       )
-      newProductsVariants[item.id].splice(index, 1)
+      newProductsVariants[account.id].splice(index, 1)
       setProductVariants(newProductsVariants)
     } else {
-      if (!newProductsVariants[item.id]) {
-        newProductsVariants[item.id] = []
+      if (!newProductsVariants[account.id]) {
+        newProductsVariants[account.id] = []
       }
-      newProductsVariants[item.id].push(variant)
+      newProductsVariants[account.id].push(variant)
       setProductVariants(newProductsVariants)
     }
   }

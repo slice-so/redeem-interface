@@ -34,8 +34,9 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
   const data = usePrismaQuery(
     `/api/submissions?buyer=${account}&slicerId=${slicerId}&productId=${productId}`
   )
+  console.log(data)
 
-  const productFormId = data?.productFormId
+  const formId = data?.formId
   const submissions = data?.submissions as { redeemedUnits: number }[]
   const redeemedUnits = submissions?.reduce(
     (acc, val) => acc + val.redeemedUnits,
@@ -51,7 +52,7 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
 
       const body = {
         body: JSON.stringify({
-          productFormId,
+          formId,
           buyer: account,
           redeemedUnits: units,
           answers: answerValues

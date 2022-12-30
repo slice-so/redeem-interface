@@ -14,6 +14,8 @@ model Submission {
   redeemedUnits    Int        
   answers          String[]
   createdAt        DateTime     @default(now()) @map(name: "created_at")
+  orderId          Int?
+  orderProvider    String?     
 
   forms            Form         @relation(fields: [formId], references: [id])
   user             User         @relation(fields: [buyer], references: [id])
@@ -28,7 +30,7 @@ model Form {
   creator          String
   questions        Json[]
   createdAt        DateTime     @default(now()) @map(name: "created_at")
-  linkedProducts   Json[]       @default([])
+  linkedProducts   Json         @default("{}")
 
   submissions      Submission[]
   user             User         @relation(fields: [creator], references: [id], onDelete: Cascade)

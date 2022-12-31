@@ -37,6 +37,8 @@ const RedeemForm = ({
     Number(productId)
   )}-${account.toLowerCase()}`
 
+  console.log(answers)
+
   const tokensQuery = /* GraphQL */ `
       productPurchase (id: "${hexId}") {
         totalQuantity
@@ -105,6 +107,8 @@ const RedeemForm = ({
               linkedProducts={linkedProducts}
               selectedProduct={selectedProduct}
               setSelectedProduct={setSelectedProduct}
+              answers={answers}
+              setAnswers={setAnswers}
             />
             <div>
               <Input

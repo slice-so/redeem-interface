@@ -49,8 +49,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               name: answers["Receiver name"],
               address1: answers["Delivery address"],
               city: answers["City"],
-              state_code: answers["State"],
-              country_code: answers["Country"],
+              state_name: answers["State"],
+              country_name: answers["Country"], // TODO: Use country code? Why name doesn't work?
               zip: answers["Postal code"],
               email: answers["Email"]
             },

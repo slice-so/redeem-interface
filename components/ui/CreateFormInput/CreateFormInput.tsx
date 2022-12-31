@@ -4,6 +4,7 @@ import { Input, Textarea } from "@components/ui"
 export type QuestionValue = {
   question: string
   hint: string
+  options?: string[]
 }
 
 type Props = {

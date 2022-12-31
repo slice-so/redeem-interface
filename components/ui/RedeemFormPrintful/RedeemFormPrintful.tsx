@@ -1,21 +1,54 @@
 import Chevron from "@components/icons/Chevron"
+import { countryCodes } from "@lib/countryCodes"
 import Image from "next/future/image"
 import { Dispatch, SetStateAction, useEffect, useRef } from "react"
+import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
+import Input from "../Input"
 
 type Props = {
   linkedProducts: LinkedProducts
   selectedProduct: string
   setSelectedProduct: Dispatch<SetStateAction<string>>
+  answers: { [question: string]: string }
+  setAnswers: Dispatch<SetStateAction<{ [question: string]: string }>>
 }
 
 const RedeemFormPrintful = ({
   linkedProducts,
   selectedProduct,
-  setSelectedProduct
+  setSelectedProduct,
+  answers,
+  setAnswers
 }: Props) => {
   const product = linkedProducts.length != 0 && linkedProducts[0].product
   const variants = linkedProducts.length != 0 && linkedProducts[0].variants
+
+  const deliveryQuestions: QuestionValue[] = [
+    {
+      question: "Receiver name",
+      hint: ""
+    },
+    { question: "Delivery address", hint: "" },
+    { question: "City", hint: "" },
+    {
+      question: "Country",
+      hint: "",
+      options: countryCodes.map((code) => code.name)
+    },
+    {
+      question: "State",
+      hint: "",
+      options:
+        (answers["Country"] &&
+          countryCodes
+            .find((code) => code.name == answers["Country"])
+            .states?.map((state) => state.name)) ||
+        []
+    },
+    { question: "Postal code", hint: "" },
+    { question: "Email", hint: "Used to contact you about your order" }
+  ]
 
   useEffect(() => {
     if (variants.length == 1) setSelectedProduct(variants[0].external_id)
@@ -55,6 +88,44 @@ const RedeemFormPrintful = ({
               <Chevron />
             </div>
           )}
+        </div>
+
+        <div>
+          <p>Delivery info</p>
+          {deliveryQuestions.map(({ question, hint, options }, key) => {
+            const handleSetAnswer = (answer: string) => {
+              setAnswers((prev) => ({ ...prev, [question]: answer }))
+            }
+
+            return (
+              <div key={key}>
+                {options ? (
+                  options.length != 0 && (
+                    <select
+                      className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
+                      value={answers[question]}
+                      onChange={(e) => handleSetAnswer(e.target.value)}
+                      required
+                    >
+                      <option value="">Pick option...</option>
+                      {options.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  )
+                ) : (
+                  <Input
+                    label={question}
+                    value={answers[question] || ""}
+                    onChange={handleSetAnswer}
+                    required
+                  />
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
     )

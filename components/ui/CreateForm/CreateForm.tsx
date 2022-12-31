@@ -14,19 +14,6 @@ type Props = {
   accounts: Account[]
 }
 
-const defaultQuestions: QuestionValue[] = [
-  {
-    question: "Receiver name",
-    hint: "The receiver name, at which the item is to be delivered"
-  },
-  { question: "Delivery address", hint: "" },
-  { question: "City", hint: "Used for delivery" },
-  { question: "State", hint: "Used for delivery" },
-  { question: "Country", hint: "Used for delivery" },
-  { question: "Postal code", hint: "Used for delivery" },
-  { question: "Email", hint: "Used to contact you about your order" }
-]
-
 const CreateForm = ({
   id,
   productCreator,
@@ -35,10 +22,7 @@ const CreateForm = ({
   accounts
 }: Props) => {
   const { account } = useAppContext()
-  const questions = initData?.questions.filter(
-    (question: QuestionValue) =>
-      !defaultQuestions.find((q) => q.question === question.question)
-  ) as QuestionValue[]
+  const questions = initData?.questions as QuestionValue[]
   const initVariants = initData?.linkedProducts as any[]
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
@@ -55,17 +39,13 @@ const CreateForm = ({
       const fetcher = (await import("@utils/fetcher")).default
 
       const cleanedValues = questionValues.filter((val) => val.question != "")
-      const questions =
-        linkedProducts.length != 0
-          ? defaultQuestions.concat(cleanedValues)
-          : cleanedValues
 
       const body = {
         body: JSON.stringify({
           slicerId: id.split("-")[0],
           productId: id.split("-")[1],
           creator: account,
-          questions,
+          questions: cleanedValues,
           linkedProducts
         }),
         method: "POST"

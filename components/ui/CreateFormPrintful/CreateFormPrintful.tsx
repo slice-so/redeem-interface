@@ -69,35 +69,39 @@ const CreateFormPrintful = ({
           </button>
         </a>
       </div>
-      <div className="relative flex items-center justify-end gap-2 pt-8">
-        <p>Enable instant orders</p>
-        <Question
-          text={
-            <div className="space-y-4 text-sm">
-              <p>
-                If enabled, orders will be automatically processed and fulfilled
-                by Printful.
-              </p>
-              <p>
-                If disabled, each order will need to be manually confirmed from
-                your Printful dashboard first.
-              </p>
-              <p>You can change this behaviour anytime by editing the form.</p>
-              {process.env.NEXT_PUBLIC_CHAIN_ID == "5" && (
-                <p className="text-yellow-600">
-                  Note: This feature can only be enabled on mainnet.
+      {linkedProducts.length != 0 && (
+        <div className="relative flex items-center justify-end gap-2 pt-8">
+          <p>Enable instant orders</p>
+          <Question
+            text={
+              <div className="space-y-4 text-sm">
+                <p>
+                  If enabled, orders will be automatically processed and
+                  fulfilled by Printful.
                 </p>
-              )}
-            </div>
-          }
-          position="bottom-0 right-0"
-        />
-        <MySwitch
-          enabled={externalSettings["instantOrder"]}
-          setEnabled={handleSetInstantOrder}
-          disabled={process.env.NEXT_PUBLIC_CHAIN_ID == "5"}
-        />
-      </div>
+                <p>
+                  If disabled, each order will need to be manually confirmed
+                  from your Printful dashboard first.
+                </p>
+                <p>
+                  You can change this behaviour anytime by editing the form.
+                </p>
+                {process.env.NEXT_PUBLIC_CHAIN_ID == "5" && (
+                  <p className="text-yellow-600">
+                    Note: This feature can only be enabled on mainnet.
+                  </p>
+                )}
+              </div>
+            }
+            position="bottom-0 right-0"
+          />
+          <MySwitch
+            enabled={externalSettings["instantOrder"]}
+            setEnabled={handleSetInstantOrder}
+            disabled={process.env.NEXT_PUBLIC_CHAIN_ID == "5"}
+          />
+        </div>
+      )}
     </>
   )
 }

@@ -5,15 +5,15 @@ import markdownToHtml from "@lib/markdownToHtml"
 
 type Props = {
   questionNumber: number
-  answerValues: string[]
-  setAnswerValues: Dispatch<SetStateAction<string[]>>
+  answers: { [question: string]: string }
+  setAnswers: Dispatch<SetStateAction<{ [question: string]: string }>>
   questionValue: QuestionValue
 }
 
 const CreateFormInputRedeem = ({
   questionNumber,
-  answerValues,
-  setAnswerValues,
+  answers,
+  setAnswers,
   questionValue
 }: Props) => {
   const [answer, setAnswer] = useState("")
@@ -29,13 +29,13 @@ const CreateFormInputRedeem = ({
   }, [])
 
   useEffect(() => {
-    const updatedAnswers = answerValues
-    updatedAnswers[questionNumber - 1] = answer
-    setAnswerValues(updatedAnswers)
+    const updatedAnswers = { ...answers }
+    updatedAnswers[question] = answer
+    setAnswers(updatedAnswers)
   }, [answer])
 
   return (
-    <div className="mb-8">
+    <>
       <div className="pb-2">
         <div className="relative flex items-center">
           <p className="pr-1 text-sm font-semibold text-left text-gray-600">
@@ -50,7 +50,7 @@ const CreateFormInputRedeem = ({
         )}
       </div>
       <Input value={answer} onChange={setAnswer} required />
-    </div>
+    </>
   )
 }
 

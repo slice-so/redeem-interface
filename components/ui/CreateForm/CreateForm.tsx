@@ -1,24 +1,35 @@
-import Link from "next/link"
 import Add from "@components/icons/Add"
 import Delete from "@components/icons/Delete"
 import { useState } from "react"
 import { useAppContext } from "../context"
-import { CreateFormInput, Button } from "@components/ui"
-import { ProductForm } from "@prisma/client"
+import { CreateFormInput, Button, CreateFormPrintful } from "@components/ui"
+import { Account, Form } from "@prisma/client"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 
 type Props = {
   id: string
   productCreator: string
-  initData: ProductForm
+  initData: Form
+  stateValue: string
+  accounts: Account[]
 }
 
-const CreateForm = ({ id, productCreator, initData }: Props) => {
+const CreateForm = ({
+  id,
+  productCreator,
+  initData,
+  stateValue,
+  accounts
+}: Props) => {
   const { account } = useAppContext()
   const questions = initData?.questions as QuestionValue[]
+  const initVariants = initData?.linkedProducts || []
+  const initSettings = (initData?.externalSettings || {}) as object
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
   const [questionValues, setQuestionValues] = useState(questions || [])
+  const [linkedProducts, setLinkedProducts] = useState(initVariants)
+  const [externalSettings, setExternalSettings] = useState(initSettings)
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
@@ -30,12 +41,15 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
       const fetcher = (await import("@utils/fetcher")).default
 
       const cleanedValues = questionValues.filter((val) => val.question != "")
+
       const body = {
         body: JSON.stringify({
           slicerId: id.split("-")[0],
           productId: id.split("-")[1],
           creator: account,
-          questions: cleanedValues
+          questions: cleanedValues,
+          linkedProducts,
+          externalSettings
         }),
         method: "POST"
       }
@@ -59,15 +73,32 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
   return !isSuccess ? (
     productCreator == account.toLowerCase() ? (
       <>
+        <CreateFormPrintful
+          stateValue={stateValue}
+          accounts={accounts}
+          linkedProducts={linkedProducts}
+          setLinkedProducts={setLinkedProducts}
+          externalSettings={externalSettings}
+          setExternalSettings={setExternalSettings}
+        />
+
         <form onSubmit={(e) => submit(e)}>
-          <div className="px-2 py-8 mt-4 mb-8 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">
-            <p className="pb-2 font-semibold text-yellow-600">
-              Add custom questions to buyers
+          <div className="px-2 py-8 mt-12 mb-8 bg-white border border-blue-600 shadow-lg sm:px-4 rounded-xl">
+            <p className="pb-4 font-semibold text-gray-700">
+              Questions to buyers
             </p>
             <p className="pb-6 text-sm text-gray-500">
-              Ask the buyer for the information you need to process the
-              purchase, such as contact details or physical address.
+              Buyers will need to reply to your questions before redeeming the
+              product
             </p>
+            {linkedProducts.length != 0 && (
+              <p className="pb-6 text-yellow-600">
+                In order to process the order,{" "}
+                <span className="font-bold">email and delivery info</span>{" "}
+                (name, address, city, state, country, zip) will be automatically
+                added to the form.
+              </p>
+            )}
             {[...Array(questionsNumber)].map((i, key) => (
               <CreateFormInput
                 key={key}
@@ -109,7 +140,11 @@ const CreateForm = ({ id, productCreator, initData }: Props) => {
           {/* <p className="pb-8 font-semibold text-yellow-600">
             Note that you cannot change question names after saving the form.
           </p> */}
-          <Button label="Create form" loading={loading} type="submit" />
+          <Button
+            label={initData ? "Update" : "Create form"}
+            loading={loading}
+            type="submit"
+          />
         </form>
       </>
     ) : (

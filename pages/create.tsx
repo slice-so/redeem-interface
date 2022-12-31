@@ -2,8 +2,8 @@ import { Container, DoubleText, CreateRedeemForm } from "@components/ui"
 
 export default function Create() {
   return (
-    <Container page={true}>
-      <main className="max-w-screen-lg pb-16 mx-auto text-center">
+    <Container page={true} size="max-w-screen-sm">
+      <main className="pb-16 mx-auto text-center">
         <h1 className="pb-6">
           <DoubleText
             inactive

@@ -1,3 +1,6 @@
 module.exports = {
-  swcMinify: true
+  swcMinify: true,
+  images: {
+    domains: ["files.cdn.printful.com"]
+  }
 }

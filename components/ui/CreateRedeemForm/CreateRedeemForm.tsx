@@ -5,10 +5,12 @@ import { useAppContext } from "../context"
 import client from "@utils/apollo-client"
 import { gql } from "@apollo/client"
 import decimalToHex from "@utils/decimalToHex"
+import fetcher from "@utils/fetcher"
+import { Account } from "@prisma/client"
 
 const CreateRedeemForm = () => {
   const router = useRouter()
-  const { slicer, product } = router.query
+  const { slicer, product, state, code, success } = router.query
   const { account } = useAppContext()
 
   const [slicerValue, setSlicerValue] = useState(0)
@@ -16,8 +18,10 @@ const CreateRedeemForm = () => {
   const [loading, setLoading] = useState(false)
   const [productCreator, setProductCreator] = useState(null)
   const [initData, setInitData] = useState(null)
+  const [printfulAccounts, setPrintfulAccounts] = useState<Account[]>(null)
+  const stateValue = "1234" // TODO: Handle state
 
-  const verifyOwnerhsip = async (slicerId: number, productId: number) => {
+  const verifyOwnership = async (slicerId: number, productId: number) => {
     setProductCreator(null)
     setLoading(true)
     const fetcher = (await import("@utils/fetcher")).default
@@ -63,15 +67,41 @@ const CreateRedeemForm = () => {
       slicer && setSlicerValue(Number(slicer))
       product && setProductValue(Number(product))
       if (slicer && product) {
-        verifyOwnerhsip(Number(slicer), Number(product))
+        verifyOwnership(Number(slicer), Number(product))
       }
     }
   }, [slicer, product, account])
 
+  const getPrintfulAccounts = async () => {
+    try {
+      if (success == "1" && state == stateValue && code && account) {
+        const body = {
+          body: JSON.stringify({
+            code,
+            account
+          }),
+          method: "POST"
+        }
+
+        const data = await fetcher("/api/printful", body)
+        if (data) setPrintfulAccounts(data?.accounts)
+      } else if (account) {
+        const data = await fetcher("/api/printful?account=" + account)
+        if (data) setPrintfulAccounts(data?.accounts)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getPrintfulAccounts()
+  }, [success, state, code, account])
+
   return (
     <>
       {!productCreator || productCreator == "none" ? (
-        <div className="max-w-sm mx-auto">
+        <div className="mx-auto">
           <div className="flex justify-between gap-8">
             <Input
               label="Slicer"
@@ -92,7 +122,7 @@ const CreateRedeemForm = () => {
             label="Verify ownership"
             wrapperClassName="mt-8 mb-12"
             loading={loading}
-            onClick={() => verifyOwnerhsip(slicerValue, productValue)}
+            onClick={() => verifyOwnership(slicerValue, productValue)}
           />
           {productCreator == "none" && (
             <p className="font-semibold text-yellow-600">
@@ -103,7 +133,7 @@ const CreateRedeemForm = () => {
       ) : (
         <>
           <div className="pb-12">
-            <div className="flex justify-between max-w-[14rem] gap-8 pb-4 mx-auto text-center">
+            <div className="flex justify-between gap-8 pb-4 mx-auto text-center">
               <div className="">
                 <p>Slicer</p>
                 <p className="pt-2 font-bold">{slicerValue}</p>
@@ -133,13 +163,15 @@ const CreateRedeemForm = () => {
               </p>
             }
           >
-            <div className="max-w-md mx-auto">
+            <div className="mx-auto">
               <CreateForm
                 id={`${decimalToHex(slicerValue)}-${decimalToHex(
                   productValue
                 )}`}
                 productCreator={productCreator}
                 initData={initData}
+                stateValue={stateValue}
+                accounts={printfulAccounts}
               />
             </div>
           </VerifiedBlock>
@@ -152,3 +184,5 @@ const CreateRedeemForm = () => {
 export default CreateRedeemForm
 
 // TODO: Solve issue related to questions type, preventing reading and writing to db
+
+// TODO: Add product info from slice db, using card

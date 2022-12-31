@@ -1,9 +1,9 @@
 import Link from "next/link"
-import { Prisma, ProductForm } from "@prisma/client"
+import { Prisma, Form } from "@prisma/client"
 import Chevron from "@components/icons/Chevron"
 import { useAppContext } from "../context"
 
-export type ProductFormSubmissions = ProductForm & {
+export type ProductFormSubmissions = Form & {
   submissions: Prisma.JsonValue[]
 }
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 }
 
 const ProductsListElement = ({ product }: Props) => {
-  const { slicerId, productId, questions, submissions } = product || {
+  const { slicerId, productId, submissions } = product || {
     slicerId: undefined,
     productId: undefined,
     questions: [],
@@ -23,7 +23,9 @@ const ProductsListElement = ({ product }: Props) => {
     <div className="grid grid-cols-7">
       <div className="col-span-2 font-black text-left">
         <a
-          href={`https://slice.so/slicer/${slicerId}?product=${productId}`}
+          href={`https://${
+            process.env.NEXT_PUBLIC_CHAIN_ID == "5" ? "testnet." : ""
+          }slice.so/slicer/${slicerId}?product=${productId}`}
           target="_blank"
           rel="noreferrer"
         >
@@ -42,7 +44,7 @@ const ProductsListElement = ({ product }: Props) => {
             setModalView({
               name: "SUBMISSIONS_VIEW",
               cross: true,
-              params: { slicerId, productId, questions, submissions }
+              params: { slicerId, productId, submissions }
             })
           }
         >

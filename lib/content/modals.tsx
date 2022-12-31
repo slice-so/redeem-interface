@@ -42,7 +42,7 @@ export const NETWORK_VIEW = () => {
 }
 
 export const SUBMISSIONS_VIEW = (params: any) => {
-  const { slicerId, productId, questions, submissions } = params
+  const { slicerId, productId, submissions } = params
   const orderedSubmissions = submissions.sort((a, b) =>
     a.createdAt < b.createdAt ? 1 : -1
   )
@@ -63,12 +63,8 @@ export const SUBMISSIONS_VIEW = (params: any) => {
         </p>
       </div>
       <ul className="space-y-4">
-        {orderedSubmissions.map((el, key) => (
-          <SubmissionBlock
-            key={key}
-            questions={questions}
-            submission={submissions[key]}
-          />
+        {orderedSubmissions.map((submission) => (
+          <SubmissionBlock key={submission.id} submission={submission} />
         ))}
       </ul>
     </>

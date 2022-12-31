@@ -1,23 +1,37 @@
 import { useState } from "react"
 import { useAppContext } from "../context"
-import { CreateFormInputRedeem, Button, Input } from "@components/ui"
+import {
+  CreateFormInputRedeem,
+  Button,
+  Input,
+  RedeemFormPrintful
+} from "@components/ui"
 import useQuery from "@utils/subgraphQuery"
 import decimalToHex from "@utils/decimalToHex"
 import Spinner from "@components/icons/Spinner"
 import usePrismaQuery from "@utils/prismaQuery"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
+import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
 
 type Props = {
-  questions: QuestionValue[]
   slicerId: number
   productId: number
+  questions: QuestionValue[]
+  linkedProducts: LinkedProducts
 }
 
-const RedeemForm = ({ questions, slicerId, productId }: Props) => {
+const RedeemForm = ({
+  questions,
+  slicerId,
+  productId,
+  linkedProducts
+}: Props) => {
   const { account } = useAppContext()
 
   const [units, setUnits] = useState(0)
-  const [answerValues, setAnswerValues] = useState([])
+  const [answers, setAnswers] = useState({})
+  const [selectedProduct, setSelectedProduct] = useState("")
+  const [errors, setErrors] = useState([])
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const hexId = `${decimalToHex(Number(slicerId))}-${decimalToHex(
@@ -35,7 +49,7 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
     `/api/submissions?buyer=${account}&slicerId=${slicerId}&productId=${productId}`
   )
 
-  const productFormId = data?.productFormId
+  const formId = data?.formId
   const submissions = data?.submissions as { redeemedUnits: number }[]
   const redeemedUnits = submissions?.reduce(
     (acc, val) => acc + val.redeemedUnits,
@@ -45,24 +59,38 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
   const submit = async (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault()
     setLoading(true)
+    setErrors([])
 
     try {
       const fetcher = (await import("@utils/fetcher")).default
 
       const body = {
         body: JSON.stringify({
-          productFormId,
+          formId,
           buyer: account,
           redeemedUnits: units,
-          answers: answerValues
+          answers: answers,
+          selectedProduct
         }),
         method: "POST"
       }
 
-      await fetcher(`/api/submissions/create`, body)
-      setIsSuccess(true)
-    } catch (err) {
-      console.log(err)
+      const data = await fetcher(`/api/submissions/create`, body)
+      if (data.error) {
+        setErrors(
+          data.error
+            .replaceAll("Recipient: ", "")
+            .replaceAll(
+              "Item 0: Sync variant not found",
+              "Product unavailable, contact seller for more info"
+            )
+            .split(";")
+        )
+      } else {
+        setIsSuccess(true)
+      }
+    } catch (error) {
+      console.log(error)
     }
 
     setLoading(false)
@@ -86,8 +114,15 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
           questions.{" "}
         </p>
         <form onSubmit={(e) => submit(e)}>
-          <div className="pb-4">
-            <div className="mb-8">
+          <div className="space-y-8">
+            <RedeemFormPrintful
+              linkedProducts={linkedProducts}
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+              answers={answers}
+              setAnswers={setAnswers}
+            />
+            <div>
               <Input
                 label="Units to redeem"
                 type="number"
@@ -104,12 +139,21 @@ const RedeemForm = ({ questions, slicerId, productId }: Props) => {
                 key={key}
                 questionNumber={key + 1}
                 questionValue={questions[key]}
-                answerValues={answerValues}
-                setAnswerValues={setAnswerValues}
+                answers={answers}
+                setAnswers={setAnswers}
               />
             ))}
+            <Button label="Submit" loading={loading} type="submit" />
+            {errors.length != 0 && (
+              <div className="space-y-2">
+                {errors.map((error, i) => (
+                  <p className="text-red-600" key={i}>
+                    {error}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
-          <Button label="Submit" loading={loading} type="submit" />
         </form>
       </>
     ) : (

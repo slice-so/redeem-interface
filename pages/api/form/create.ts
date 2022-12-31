@@ -7,10 +7,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "POST") {
     try {
-      const { slicerId, productId, creator, questions } = JSON.parse(req.body)
+      const {
+        slicerId,
+        productId,
+        creator,
+        questions,
+        linkedProducts,
+        externalSettings
+      } = JSON.parse(req.body)
       let data
 
-      const product = await prisma.productForm.findFirst({
+      const product = await prisma.form.findFirst({
         where: {
           AND: [
             { slicerId: Number(slicerId) },
@@ -20,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       })
 
       if (product) {
-        data = await prisma.productForm.update({
+        data = await prisma.form.update({
           where: {
             id: product.id
           },
@@ -28,16 +35,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             slicerId: Number(slicerId),
             productId: Number(productId),
             creator,
-            questions
+            questions,
+            linkedProducts,
+            externalSettings
           }
         })
       } else {
-        data = await prisma.productForm.create({
+        data = await prisma.form.create({
           data: {
             slicerId: Number(slicerId),
             productId: Number(productId),
             creator,
-            questions
+            questions,
+            linkedProducts,
+            externalSettings
           }
         })
       }

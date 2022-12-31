@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const { account } = req.query
 
-      const products = await prisma.productForm.findMany({
+      const products = await prisma.form.findMany({
         where: {
           creator: String(account)
         },
@@ -20,7 +20,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           creator: true,
           slicerId: true,
           productId: true,
-          questions: true,
           submissions: true
         }
       })
@@ -31,7 +30,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         // Loop over submissions
         for (let k = 0; k < submissions.length; k++) {
-          const answers = submissions[k].answers
+          const answers = submissions[k].answers as {
+            [question: string]: string
+          }
           const redeemedUnits = submissions[k].redeemedUnits
 
           // Loop over answers and decrypt them

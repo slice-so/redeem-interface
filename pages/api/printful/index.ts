@@ -55,7 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const upsertData = storesData.result?.map((store) => ({
           where: { id: String(store.id) },
           create: {
-            id: String(store.id), // TODO: Figure out best formatting for ID, to avoid collisions with other providers
+            id: "printful" + store.id,
             provider: "printful",
             type: store.type,
             providerAccountId: store.name,

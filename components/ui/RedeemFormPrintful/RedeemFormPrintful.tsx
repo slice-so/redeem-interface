@@ -76,30 +76,35 @@ const RedeemFormPrintful = ({
           />
         </div>
         <p className="py-6 font-medium">{product.name}</p>
-        <div className="relative">
-          <select
-            className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
-            value={selectedProduct}
-            onChange={(e) => setSelectedProduct(e.target.value)}
-            disabled={variants.length == 1}
-            required
-          >
-            <option value="">Pick option...</option>
-            {variants.map((variant) => (
-              <option key={variant.id} value={variant.external_id}>
-                {(variants.length == 1 ? "Unique" : "") +
-                  (variant.name.split(" - ")[1]
-                    ? " - " + variant.name.split(" - ")[1]
-                    : "")}
-              </option>
-            ))}
-          </select>
-          {variants.length != 1 && (
-            <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-              <Chevron />
-            </div>
-          )}
-        </div>
+        {(variants.length != 1 || variants[0].name.split(" - ")[1]) && (
+          <div className="relative">
+            <select
+              className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
+              value={selectedProduct}
+              onChange={(e) => setSelectedProduct(e.target.value)}
+              disabled={variants.length == 1}
+              required
+            >
+              <option value="">Pick option...</option>
+              {variants.map((variant) => (
+                <option key={variant.id} value={variant.external_id}>
+                  {(variants.length == 1 ? "Unique" : "") +
+                    (variants.length == 1 && variant.name.split(" - ")[1]
+                      ? " - "
+                      : "") +
+                    (variant.name.split(" - ")[1]
+                      ? variant.name.split(" - ")[1]
+                      : "")}
+                </option>
+              ))}
+            </select>
+            {variants.length != 1 && (
+              <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
+                <Chevron />
+              </div>
+            )}
+          </div>
+        )}
 
         <div>
           <p>Delivery info</p>

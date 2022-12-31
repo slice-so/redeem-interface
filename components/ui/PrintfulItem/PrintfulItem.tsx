@@ -141,8 +141,11 @@ export default function PrintfulItem({
                 >
                   <p>
                     {(variantsList.length == 1 ? "Unique" : "") +
+                      (variantsList.length == 1 && variant.name.split(" - ")[1]
+                        ? " - "
+                        : "") +
                       (variant.name.split(" - ")[1]
-                        ? " - " + variant.name.split(" - ")[1]
+                        ? variant.name.split(" - ")[1]
                         : "")}
                   </p>
                 </div>

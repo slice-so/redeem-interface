@@ -83,6 +83,11 @@ const CreateFormPrintful = ({
                 your Printful dashboard first.
               </p>
               <p>You can change this behaviour anytime by editing the form.</p>
+              {process.env.NEXT_PUBLIC_CHAIN_ID == "5" && (
+                <p className="text-yellow-600">
+                  Note: This feature can only be enabled on mainnet.
+                </p>
+              )}
             </div>
           }
           position="bottom-0 right-0"
@@ -90,6 +95,7 @@ const CreateFormPrintful = ({
         <MySwitch
           enabled={externalSettings["instantOrder"]}
           setEnabled={handleSetInstantOrder}
+          disabled={process.env.NEXT_PUBLIC_CHAIN_ID == "5"}
         />
       </div>
     </>
@@ -97,13 +103,3 @@ const CreateFormPrintful = ({
 }
 
 export default CreateFormPrintful
-
-/** TODO:
-  - Connect printful account
-    - Auth with printful
-    - Store access token in db
-  - Link printful items with slicer product -> store in db
-  - Automatically set delivery info for delivery
-  - Add optional printful order submission on redeem
-    - Refresh auth token if expired
-*/

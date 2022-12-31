@@ -70,8 +70,6 @@ const CreateForm = ({
     setQuestionsNumber(questionsNumber - 1)
   }
 
-  // TODO: Handle printful errors + fetch state and country codes + handle email formatting
-
   return !isSuccess ? (
     productCreator == account.toLowerCase() ? (
       <>

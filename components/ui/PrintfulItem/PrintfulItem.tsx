@@ -45,11 +45,15 @@ export default function PrintfulItem({
   }
 
   const isVariantActive = (variant: any) =>
-    linkedProducts[0]?.variants?.find((v: any) => variant.id == v.id) && true
+    linkedProducts &&
+    linkedProducts[0]?.variants?.find((v: any) => variant.id == v.id) &&
+    true
 
   const handleSetLinkedProducts = (variant: any) => {
     const newProductsVariants =
-      linkedProducts[0]?.product.id == item.id && linkedProducts[0]?.variants
+      linkedProducts &&
+      linkedProducts[0]?.product.id == item.id &&
+      linkedProducts[0]?.variants
         ? [...linkedProducts[0].variants]
         : []
 
@@ -76,7 +80,7 @@ export default function PrintfulItem({
   }
 
   const handleSetAllLinkedProducts = () => {
-    if (linkedProducts[0]?.variants == variantsList) {
+    if (linkedProducts && linkedProducts[0]?.variants == variantsList) {
       setLinkedProducts([])
     } else {
       setLinkedProducts([
@@ -114,12 +118,14 @@ export default function PrintfulItem({
             {variantsList.length != 1 && (
               <div
                 className={`p-2 rounded-md border border-blue-300 ${
-                  linkedProducts[0]?.variants == variantsList && "bg-blue-100"
+                  linkedProducts &&
+                  linkedProducts[0]?.variants == variantsList &&
+                  "bg-blue-100"
                 }`}
                 onClick={() => handleSetAllLinkedProducts()}
               >
                 <p>
-                  {linkedProducts[0]?.variants == variantsList
+                  {linkedProducts && linkedProducts[0]?.variants == variantsList
                     ? "Deselect all"
                     : "Select all"}
                 </p>
@@ -134,9 +140,10 @@ export default function PrintfulItem({
                   onClick={() => handleSetLinkedProducts(variant)}
                 >
                   <p>
-                    {variantsList.length == 1
-                      ? "Unique"
-                      : variant?.name?.split(" - ")[1]}
+                    {(variantsList.length == 1 ? "Unique" : "") +
+                      (variant.name.split(" - ")[1]
+                        ? " - " + variant.name.split(" - ")[1]
+                        : "")}
                   </p>
                 </div>
               </div>

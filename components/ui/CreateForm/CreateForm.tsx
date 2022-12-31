@@ -23,11 +23,13 @@ const CreateForm = ({
 }: Props) => {
   const { account } = useAppContext()
   const questions = initData?.questions as QuestionValue[]
-  const initVariants = initData?.linkedProducts as any[]
+  const initVariants = initData?.linkedProducts || []
+  const initSettings = (initData?.externalSettings || {}) as object
 
   const [questionsNumber, setQuestionsNumber] = useState(questions?.length || 0)
   const [questionValues, setQuestionValues] = useState(questions || [])
-  const [linkedProducts, setLinkedProducts] = useState(initVariants || [])
+  const [linkedProducts, setLinkedProducts] = useState(initVariants)
+  const [externalSettings, setExternalSettings] = useState(initSettings)
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
@@ -46,7 +48,8 @@ const CreateForm = ({
           productId: id.split("-")[1],
           creator: account,
           questions: cleanedValues,
-          linkedProducts
+          linkedProducts,
+          externalSettings
         }),
         method: "POST"
       }
@@ -77,6 +80,8 @@ const CreateForm = ({
           accounts={accounts}
           linkedProducts={linkedProducts}
           setLinkedProducts={setLinkedProducts}
+          externalSettings={externalSettings}
+          setExternalSettings={setExternalSettings}
         />
 
         <form onSubmit={(e) => submit(e)}>
@@ -137,7 +142,11 @@ const CreateForm = ({
           {/* <p className="pb-8 font-semibold text-yellow-600">
             Note that you cannot change question names after saving the form.
           </p> */}
-          <Button label="Create form" loading={loading} type="submit" />
+          <Button
+            label={initData ? "Update" : "Create form"}
+            loading={loading}
+            type="submit"
+          />
         </form>
       </>
     ) : (

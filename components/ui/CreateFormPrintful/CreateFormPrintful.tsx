@@ -1,13 +1,17 @@
 import PrintfulLogo from "@components/icons/PrintfulLogo"
-import { Account } from "@prisma/client"
+import { Account, Form, Prisma } from "@prisma/client"
 import { Dispatch, SetStateAction, useState } from "react"
+import MySwitch from "../MySwitch"
 import PrintfulStore from "../PrintfulStore"
+import Question from "../Question"
 
 type Props = {
   stateValue: string
   accounts: Account[]
   linkedProducts: any
   setLinkedProducts: Dispatch<SetStateAction<any>>
+  externalSettings: object
+  setExternalSettings: Dispatch<SetStateAction<object>>
 }
 export type Items = { [accountId: string]: any[] }
 
@@ -17,10 +21,16 @@ const CreateFormPrintful = ({
   stateValue,
   accounts,
   linkedProducts,
-  setLinkedProducts
+  setLinkedProducts,
+  externalSettings,
+  setExternalSettings
 }: Props) => {
   const redirectUrl = process.env.NEXT_PUBLIC_APP_URL + "/create"
   const [printfulItems, setPrintfulItems] = useState<Items>({})
+
+  const handleSetInstantOrder = (enabled: boolean) => {
+    setExternalSettings({ ...externalSettings, instantOrder: enabled })
+  }
 
   return (
     <>
@@ -58,6 +68,29 @@ const CreateFormPrintful = ({
             </div>
           </button>
         </a>
+      </div>
+      <div className="relative flex items-center justify-end gap-2 pt-8">
+        <p>Enable instant orders</p>
+        <Question
+          text={
+            <div className="space-y-4 text-sm">
+              <p>
+                If enabled, orders will be automatically processed and fulfilled
+                by Printful.
+              </p>
+              <p>
+                If disabled, each order will need to be manually confirmed from
+                your Printful dashboard first.
+              </p>
+              <p>You can change this behaviour anytime by editing the form.</p>
+            </div>
+          }
+          position="bottom-0 right-0"
+        />
+        <MySwitch
+          enabled={externalSettings["instantOrder"]}
+          setEnabled={handleSetInstantOrder}
+        />
       </div>
     </>
   )

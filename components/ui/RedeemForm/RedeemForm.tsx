@@ -77,7 +77,15 @@ const RedeemForm = ({
 
       const data = await fetcher(`/api/submissions/create`, body)
       if (data.error) {
-        setErrors(data.error.replaceAll("Recipient: ", "").split(";"))
+        setErrors(
+          data.error
+            .replaceAll("Recipient: ", "")
+            .replaceAll(
+              "Item 0: Sync variant not found",
+              "Product unavailable, contact seller for more info"
+            )
+            .split(";")
+        )
       } else {
         setIsSuccess(true)
       }

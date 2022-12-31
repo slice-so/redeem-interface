@@ -87,8 +87,10 @@ const RedeemFormPrintful = ({
             <option value="">Pick option...</option>
             {variants.map((variant) => (
               <option key={variant.id} value={variant.external_id}>
-                {(variants.length == 1 ? "Unique - " : "") +
-                  variant.name.split(" - ")[1]}
+                {(variants.length == 1 ? "Unique" : "") +
+                  (variant.name.split(" - ")[1]
+                    ? " - " + variant.name.split(" - ")[1]
+                    : "")}
               </option>
             ))}
           </select>

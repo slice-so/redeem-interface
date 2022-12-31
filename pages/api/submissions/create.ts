@@ -5,6 +5,7 @@ import { encryptTexts } from "@utils/crypto"
 import fetcher from "@utils/fetcher"
 import getRefreshedAccessToken from "@utils/getRefreshedAccessToken"
 import { LinkedProducts } from "@components/ui/HomeRedeem/HomeRedeem"
+import { Prisma } from "@prisma/client"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
@@ -22,17 +23,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         answers
       )
 
-      const { linkedProducts } = (await prisma.form.findUnique({
-        where: {
-          id: Number(formId)
-        },
-        select: {
-          linkedProducts: true
+      const { linkedProducts, externalSettings } =
+        (await prisma.form.findUnique({
+          where: {
+            id: Number(formId)
+          },
+          select: {
+            linkedProducts: true,
+            externalSettings: true
+          }
+        })) as {
+          linkedProducts: LinkedProducts
+          externalSettings: Prisma.JsonValue
         }
-      })) as { linkedProducts: LinkedProducts }
 
       if (selectedProduct) {
-        const endpoint = "https://api.printful.com/orders"
+        const endpoint = `https://api.printful.com/orders?confirm=${
+          externalSettings["instantOrder"] || false
+        }`
+        console.log(endpoint)
+
         const { accountId, variants } = linkedProducts[0] // Only allowing to link one product at a time, for now
 
         if (!variants.find((v) => v.external_id == selectedProduct)) {

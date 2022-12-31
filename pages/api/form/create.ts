@@ -7,8 +7,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "POST") {
     try {
-      const { slicerId, productId, creator, questions, linkedProducts } =
-        JSON.parse(req.body)
+      const {
+        slicerId,
+        productId,
+        creator,
+        questions,
+        linkedProducts,
+        externalSettings
+      } = JSON.parse(req.body)
       let data
 
       const product = await prisma.form.findFirst({
@@ -30,7 +36,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             productId: Number(productId),
             creator,
             questions,
-            linkedProducts
+            linkedProducts,
+            externalSettings
           }
         })
       } else {
@@ -40,7 +47,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             productId: Number(productId),
             creator,
             questions,
-            linkedProducts
+            linkedProducts,
+            externalSettings
           }
         })
       }

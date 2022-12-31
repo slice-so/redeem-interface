@@ -49,8 +49,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               name: answers["Receiver name"],
               address1: answers["Delivery address"],
               city: answers["City"],
-              state_name: answers["State"],
-              country_name: answers["Country"], // TODO: Use country code? Why name doesn't work?
+              state_code: answers["State"],
+              country_code: answers["Country"],
               zip: answers["Postal code"],
               email: answers["Email"]
             },
@@ -84,8 +84,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       })
 
       res.status(200).json({ data })
-    } catch (err) {
-      res.status(500).send(err.message)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
     }
   }
 }

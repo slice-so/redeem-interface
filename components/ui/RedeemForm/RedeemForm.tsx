@@ -31,13 +31,12 @@ const RedeemForm = ({
   const [units, setUnits] = useState(0)
   const [answers, setAnswers] = useState({})
   const [selectedProduct, setSelectedProduct] = useState("")
+  const [errors, setErrors] = useState([])
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const hexId = `${decimalToHex(Number(slicerId))}-${decimalToHex(
     Number(productId)
   )}-${account.toLowerCase()}`
-
-  console.log(answers)
 
   const tokensQuery = /* GraphQL */ `
       productPurchase (id: "${hexId}") {
@@ -60,6 +59,7 @@ const RedeemForm = ({
   const submit = async (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault()
     setLoading(true)
+    setErrors([])
 
     try {
       const fetcher = (await import("@utils/fetcher")).default
@@ -75,10 +75,14 @@ const RedeemForm = ({
         method: "POST"
       }
 
-      await fetcher(`/api/submissions/create`, body)
-      setIsSuccess(true)
-    } catch (err) {
-      console.log(err)
+      const data = await fetcher(`/api/submissions/create`, body)
+      if (data.error) {
+        setErrors(data.error.replaceAll("Recipient: ", "").split(";"))
+      } else {
+        setIsSuccess(true)
+      }
+    } catch (error) {
+      console.log(error)
     }
 
     setLoading(false)
@@ -132,6 +136,15 @@ const RedeemForm = ({
               />
             ))}
             <Button label="Submit" loading={loading} type="submit" />
+            {errors.length != 0 && (
+              <div className="space-y-2">
+                {errors.map((error, i) => (
+                  <p className="text-red-600" key={i}>
+                    {error}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
         </form>
       </>

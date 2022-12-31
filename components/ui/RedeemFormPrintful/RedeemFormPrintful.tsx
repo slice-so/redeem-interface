@@ -34,7 +34,9 @@ const RedeemFormPrintful = ({
     {
       question: "Country",
       hint: "",
-      options: countryCodes.map((code) => code.name)
+      options: countryCodes
+        .map(({ name, code }) => ({ name, value: code }))
+        .sort((a, b) => a.name.localeCompare(b.name))
     },
     {
       question: "State",
@@ -42,8 +44,9 @@ const RedeemFormPrintful = ({
       options:
         (answers["Country"] &&
           countryCodes
-            .find((code) => code.name == answers["Country"])
-            .states?.map((state) => state.name)) ||
+            .find(({ code }) => code == answers["Country"])
+            .states?.map(({ name, code }) => ({ name, value: code }))
+            .sort((a, b) => a.name.localeCompare(b.name))) ||
         []
     },
     { question: "Postal code", hint: "" },
@@ -53,6 +56,12 @@ const RedeemFormPrintful = ({
   useEffect(() => {
     if (variants.length == 1) setSelectedProduct(variants[0].external_id)
   }, [variants])
+
+  useEffect(() => {
+    if (answers["State"] && deliveryQuestions[4].options.length == 0) {
+      setAnswers((prev) => ({ ...prev, ["State"]: "" }))
+    }
+  }, [answers])
 
   return (
     product && (
@@ -109,8 +118,8 @@ const RedeemFormPrintful = ({
                     >
                       <option value="">Pick option...</option>
                       {options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
+                        <option key={option.value} value={option.value}>
+                          {option.name}
                         </option>
                       ))}
                     </select>

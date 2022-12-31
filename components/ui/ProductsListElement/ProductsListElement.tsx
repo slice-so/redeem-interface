@@ -23,7 +23,9 @@ const ProductsListElement = ({ product }: Props) => {
     <div className="grid grid-cols-7">
       <div className="col-span-2 font-black text-left">
         <a
-          href={`https://slice.so/slicer/${slicerId}?product=${productId}`}
+          href={`https://${
+            process.env.NEXT_PUBLIC_CHAIN_ID == "5" ? "testnet." : ""
+          }slice.so/slicer/${slicerId}?product=${productId}`}
           target="_blank"
           rel="noreferrer"
         >

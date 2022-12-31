@@ -36,7 +36,7 @@ export default function Home() {
             />
           </h1>
           <p className="sm:text-lg">
-            Claim products that require a post-purchase step
+            Claim Slice products that require a post-purchase step
           </p>
         </main>
 

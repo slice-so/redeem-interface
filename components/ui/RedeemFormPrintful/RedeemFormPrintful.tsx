@@ -69,8 +69,8 @@ const RedeemFormPrintful = ({
         <div className="flex justify-center">
           <Image
             src={product.thumbnail_url}
-            width={200}
-            height={200}
+            width={260}
+            height={260}
             alt={product.name + " image"}
             className="rounded-md"
           />

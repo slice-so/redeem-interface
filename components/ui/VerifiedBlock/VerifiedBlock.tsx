@@ -19,14 +19,15 @@ const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
   
   Timestamp: ${timestamp}`
 
-  const { account, isAccountVerified, setIsAccountVerified } = useAppContext()
+  const { account, isSigned, setIsSigned } = useAppContext()
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
     message
   })
 
   useEffect(() => {
     if (isSuccess) {
-      setIsAccountVerified(verifyMessage(message, data) == account)
+      setIsSigned(verifyMessage(message, data) == account)
+      localStorage.setItem("isSigned", account)
     }
   }, [isSuccess])
 
@@ -37,7 +38,7 @@ const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
         <ConnectButton />
       </div>
     </>
-  ) : !isAccountVerified ? (
+  ) : !isSigned ? (
     <>
       {beforeSign}
       <div>

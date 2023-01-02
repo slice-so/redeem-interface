@@ -15,7 +15,7 @@ type Props = {
 }
 export type Items = { [accountId: string]: any[] }
 
-export const clientId = "app-8875250"
+export const clientId = process.env.NEXT_PUBLIC_PRINTFUL_CLIENT_ID
 
 const CreateFormPrintful = ({
   stateValue,

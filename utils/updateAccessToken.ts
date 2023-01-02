@@ -1,3 +1,4 @@
+import { prisma } from "@lib/prisma"
 import fetcher from "./fetcher"
 
 const updateAccessToken = async (

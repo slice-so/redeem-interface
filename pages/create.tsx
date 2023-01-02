@@ -3,20 +3,17 @@ import { Container, DoubleText, CreateRedeemForm } from "@components/ui"
 export default function Create() {
   return (
     <Container page={true} size="max-w-screen-sm">
-      <main className="pb-16 mx-auto text-center">
-        <h1 className="pb-6">
+      <main>
+        <h1 className="pb-10">
           <DoubleText
             inactive
-            size="text-4xl sm:text-5xl"
-            logoText="Create redeem form"
+            size="text-3xl sm:text-4xl"
+            logoText="Create form"
           />
         </h1>
-        <p className="sm:text-lg">
-          Set up a post-purchase step for your Slice product
-        </p>
-      </main>
 
-      <CreateRedeemForm />
+        <CreateRedeemForm />
+      </main>
     </Container>
   )
 }

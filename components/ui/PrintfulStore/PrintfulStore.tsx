@@ -70,20 +70,23 @@ export default function PrintfulStore({
       <div className="flex gap-2">
         {showDetail &&
           printfulItems[account.id] &&
-          printfulItems[account.id].map((item, index) => (
-            <PrintfulItem
-              key={item.id}
-              index={index}
-              shownItemIndex={shownItemIndex}
-              setShownItemIndex={setShownItemIndex}
-              account={account}
-              item={item}
-              printfulItems={printfulItems}
-              setPrintfulItems={setPrintfulItems}
-              linkedProducts={linkedProducts}
-              setLinkedProducts={setLinkedProducts}
-            />
-          ))}
+          printfulItems[account.id].map(
+            (item, index) =>
+              item.thumbnail_url && (
+                <PrintfulItem
+                  key={item.id}
+                  index={index}
+                  shownItemIndex={shownItemIndex}
+                  setShownItemIndex={setShownItemIndex}
+                  account={account}
+                  item={item}
+                  printfulItems={printfulItems}
+                  setPrintfulItems={setPrintfulItems}
+                  linkedProducts={linkedProducts}
+                  setLinkedProducts={setLinkedProducts}
+                />
+              )
+          )}
       </div>
     </li>
   )

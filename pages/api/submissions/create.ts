@@ -41,7 +41,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const endpoint = `https://api.printful.com/orders?confirm=${
           externalSettings["instantOrder"] || false
         }`
-        console.log(endpoint)
 
         const { accountId, variants } = linkedProducts[0] // Only allowing to link one product at a time, for now
 

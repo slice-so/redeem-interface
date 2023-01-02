@@ -29,6 +29,3 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 export default handler
-
-1672276644045
-1672252457

@@ -10,6 +10,7 @@ export const useProductData = (slicerId: number, productId: number) => {
       .select()
       .eq("slicer_id", slicerId)
       .eq("product_id", productId)
+      .select("name,image,shortDescription")
     setProductData(data[0])
   }
 

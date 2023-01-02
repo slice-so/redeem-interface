@@ -26,23 +26,10 @@ export default function Home() {
           ]
         }}
       />
-      <Container page={true}>
-        <main className="max-w-screen-lg pb-16 mx-auto text-center">
-          <h1 className="pb-6">
-            <DoubleText
-              inactive
-              size="text-4xl sm:text-5xl"
-              logoText="Slice Redeem"
-            />
-          </h1>
-          <p className="sm:text-lg">
-            Claim Slice products that require a post-purchase step
-          </p>
-        </main>
-
-        <div className="max-w-md mx-auto">
+      <Container page={true} size="max-w-screen-xs">
+        <main>
           <HomeRedeem />
-        </div>
+        </main>
       </Container>
     </>
   )

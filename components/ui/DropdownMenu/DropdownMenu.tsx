@@ -34,7 +34,7 @@ function DropdownMenu({ showDropdown, setShowDropdown }: Props) {
 
   return (
     <div
-      className={`z-20 absolute top-0 right-0 w-56 p-1.5 mt-20 border-2 border-gray-200 space-y-1 bg-white rounded-xl shadow-base transition-opacity duration-200 nightwind-prevent-block`}
+      className={`z-20 absolute top-0 right-0 w-56 mt-20 border border-gray-200 space-y-1 bg-white rounded-md shadow-base transition-opacity duration-200 nightwind-prevent-block`}
       // ${
       //   showDropdown ? " opacity-100" : "-z-10 opacity-0"
       // }

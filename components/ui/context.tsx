@@ -5,14 +5,15 @@ import { useAccount, useNetwork, useProvider } from "wagmi"
 
 const AppContext = createContext<any>({
   provider: null,
-  isAccountVerified: false,
+  isConnected: false,
+  isSigned: false,
   account: "",
   color1: colorList[0],
   color2: colorList[1],
   darkColor1: darkColorList[0],
   darkColor2: darkColorList[1],
   modalView: { name: "" },
-  setIsAccountVerified: () => null,
+  setIsSigned: () => null,
   setModalView: () => null,
   shuffleColors: () => null
 })
@@ -23,7 +24,8 @@ export function AppWrapper({ children }) {
   const { chain } = useNetwork()
 
   const { address: account } = useAccount()
-  const [isAccountVerified, setIsAccountVerified] = useState(false)
+  const [isConnected, setIsConnected] = useState(false)
+  const [isSigned, setIsSigned] = useState(false)
 
   const [color1, setColor1] = useState([])
   const [color2, setColor2] = useState([])
@@ -50,7 +52,18 @@ export function AppWrapper({ children }) {
   }, [])
 
   useEffect(() => {
-    setIsAccountVerified(false)
+    setIsConnected(account && true)
+
+    if (account) {
+      if (account && localStorage.getItem("isSigned") == account) {
+        setIsSigned(true)
+      } else {
+        setIsSigned(false)
+        localStorage.removeItem("isSigned")
+      }
+    } else {
+      localStorage.removeItem("isSigned")
+    }
   }, [account])
 
   // Network modal
@@ -73,14 +86,15 @@ export function AppWrapper({ children }) {
       value={{
         provider,
         account,
-        isAccountVerified,
+        isConnected,
+        isSigned,
+        setIsSigned,
         color1,
         color2,
         darkColor1,
         darkColor2,
         modalView,
         setModalView,
-        setIsAccountVerified,
         shuffleColors
       }}
     >

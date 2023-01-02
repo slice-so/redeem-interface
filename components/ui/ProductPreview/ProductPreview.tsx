@@ -12,18 +12,18 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
 
   return (
     <div className="mb-6 text-sm text-center">
-      <a
-        className="font-medium text-gray-400"
-        href={`https://${
-          process.env.NEXT_PUBLIC_CHAIN_ID == "5" ? "testnet." : ""
-        }slice.so/slicer/${slicerId}?product=${productId}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        Slicer {slicerId} / Product {productId}
-      </a>
       {productData ? (
         <>
+          <a
+            className="font-semibold"
+            href={`https://${
+              process.env.NEXT_PUBLIC_CHAIN_ID == "5" ? "testnet." : ""
+            }slice.so/slicer/${slicerId}?product=${productId}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {productData.name}
+          </a>
           <div className="relative h-48 mx-auto mt-2 mb-4 w-72">
             <Image
               src={productData.image}
@@ -38,8 +38,9 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
         </>
       ) : (
         <>
+          <div className="w-32 h-5 mx-auto bg-gray-400 rounded-md animate-pulse" />
           <div className="h-48 mx-auto mt-2 mb-4 bg-gray-400 rounded-lg w-72 animate-pulse" />
-          <div className="w-64 h-6 mx-auto bg-gray-400 rounded-md animate-pulse" />
+          <div className="w-64 h-5 mx-auto bg-gray-400 rounded-md animate-pulse" />
         </>
       )}
     </div>

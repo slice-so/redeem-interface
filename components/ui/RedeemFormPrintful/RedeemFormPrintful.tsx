@@ -72,7 +72,7 @@ const RedeemFormPrintful = ({
             width={260}
             height={260}
             alt={product.name + " image"}
-            className="rounded-md"
+            className="rounded-lg"
           />
         </div>
         <p className="py-6 font-medium">{product.name}</p>

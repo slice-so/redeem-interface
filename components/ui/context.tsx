@@ -5,6 +5,7 @@ import { useAccount, useNetwork, useProvider } from "wagmi"
 
 const AppContext = createContext<any>({
   provider: null,
+  isConnected: false,
   isAccountVerified: false,
   account: "",
   color1: colorList[0],
@@ -23,6 +24,7 @@ export function AppWrapper({ children }) {
   const { chain } = useNetwork()
 
   const { address: account } = useAccount()
+  const [isConnected, setIsConnected] = useState(false)
   const [isAccountVerified, setIsAccountVerified] = useState(false)
 
   const [color1, setColor1] = useState([])
@@ -50,6 +52,7 @@ export function AppWrapper({ children }) {
   }, [])
 
   useEffect(() => {
+    setIsConnected(account && true)
     setIsAccountVerified(false)
   }, [account])
 
@@ -73,6 +76,7 @@ export function AppWrapper({ children }) {
       value={{
         provider,
         account,
+        isConnected,
         isAccountVerified,
         color1,
         color2,

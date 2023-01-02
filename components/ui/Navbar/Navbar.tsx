@@ -5,21 +5,27 @@ import Nightwind from "@components/icons/Nightwind"
 import UserIcon from "@components/icons/UserIcon"
 import { Container, DropdownMenu } from "@components/ui"
 import { useAppContext } from "../context"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import saEvent from "@utils/saEvent"
 
 const Navbar = () => {
-  const { account } = useAppContext()
-  const [showMenu, setShowMenu] = useState(false)
+  const { isConnected } = useAppContext()
   const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef(null)
 
   useEffect(() => {
-    if (account) {
-      setShowMenu(true)
-    } else {
-      setShowMenu(false)
+    function handleClick(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false)
+      }
     }
-  }, [account])
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClick)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClick)
+    }
+  }, [dropdownRef])
 
   return (
     <header className="shadow-sm bg-gray-50">
@@ -45,19 +51,19 @@ const Navbar = () => {
                 }}
               />
             </div>
-            {showMenu && (
+            {isConnected && (
               <a
                 onClick={() => setShowDropdown((showDropdown) => !showDropdown)}
+                ref={dropdownRef}
               >
                 <UserIcon />
               </a>
             )}
           </div>
           {showDropdown && (
-            <DropdownMenu
-              showDropdown={showDropdown}
-              setShowDropdown={setShowDropdown}
-            />
+            <div className="absolute top-0 right-0" ref={dropdownRef}>
+              <DropdownMenu setShowDropdown={setShowDropdown} />
+            </div>
           )}
         </nav>
       </Container>

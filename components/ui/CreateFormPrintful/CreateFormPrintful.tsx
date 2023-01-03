@@ -15,7 +15,7 @@ type Props = {
 }
 export type Items = { [accountId: string]: any[] }
 
-export const clientId = "app-8875250"
+export const clientId = process.env.NEXT_PUBLIC_PRINTFUL_CLIENT_ID
 
 const CreateFormPrintful = ({
   stateValue,
@@ -37,7 +37,7 @@ const CreateFormPrintful = ({
       <div>
         <p className="pt-2 text-gray-500">
           Link items from your Printful stores to automatically place orders
-          when someone redeems your Slice product
+          when someone redeems the related Slice product
         </p>
       </div>
       {accounts && accounts?.length != 0 && (

@@ -88,59 +88,61 @@ const CreateForm = ({
               Questions to buyers
             </p>
             <p className="pb-6 text-sm text-gray-500">
-              Buyers will need to reply to your questions before redeeming the
-              product
+              Buyers will be prompted to reply to your questions when redeeming
+              the product
             </p>
             {linkedProducts.length != 0 && (
-              <p className="pb-6 text-yellow-600">
+              <p className="text-sm text-yellow-600">
                 In order to process the order,{" "}
                 <span className="font-bold">email and delivery info</span>{" "}
-                (name, address, city, state, country, zip) will be automatically
-                added to the form.
+                (name, address, city, state, country, zip) will be added
+                automatically to the form.
               </p>
             )}
-            {[...Array(questionsNumber)].map((i, key) => (
-              <CreateFormInput
-                key={key}
-                questionNumber={key + 1}
-                initData={questions}
-                questionValues={questionValues}
-                setQuestionValues={setQuestionValues}
-                // disabled={initData?.questions.length > key}
-              />
-            ))}
+            {questionsNumber != 0 && (
+              <div className="pt-6">
+                {[...Array(questionsNumber)].map((i, key) => (
+                  <CreateFormInput
+                    key={key}
+                    questionNumber={key + 1}
+                    initData={questions}
+                    questionValues={questionValues}
+                    setQuestionValues={setQuestionValues}
+                    // disabled={initData?.questions.length > key}
+                  />
+                ))}
+              </div>
+            )}
 
             <div className="flex justify-around">
-              <div className="inline-flex justify-start mt-6 space-x-3 text-green-500 cursor-pointer group">
-                <Add onClick={() => setQuestionsNumber(questionsNumber + 1)} />
-                <p
-                  className="inline-block font-semibold opacity-75 group-hover:opacity-100"
-                  onClick={() => setQuestionsNumber(questionsNumber + 1)}
-                >
+              <div
+                className="inline-flex justify-start mt-6 space-x-3 text-green-500 cursor-pointer group"
+                onClick={() => setQuestionsNumber(questionsNumber + 1)}
+              >
+                <Add />
+                <p className="inline-block font-semibold opacity-75 group-hover:opacity-100">
                   Add
                 </p>
               </div>
               {questionsNumber != 0 && (
                 // TODO: Fix unwanted state changes that cause questions to update on children state changes
-                /* questionsNumber > questions?.length && */ <div className="inline-flex justify-start mt-6 space-x-3 text-red-500 cursor-pointer group">
-                  <Delete onClick={() => removeLastQuestion()} />
-                  <p
-                    className="inline-block font-semibold opacity-75 group-hover:opacity-100"
-                    onClick={() => removeLastQuestion()}
-                  >
+                /* questionsNumber > questions?.length && */ <div
+                  className="inline-flex justify-start mt-6 space-x-3 text-red-500 cursor-pointer group"
+                  onClick={() => removeLastQuestion()}
+                >
+                  <Delete />
+                  <p className="inline-block font-semibold opacity-75 group-hover:opacity-100">
                     Remove
                   </p>
                 </div>
               )}
             </div>
           </div>
-          <p className="pb-12 text-sm text-gray-500">
-            Buyers will choose how many units they want to redeem
-          </p>
           {/* <p className="pb-8 font-semibold text-yellow-600">
             Note that you cannot change question names after saving the form.
           </p> */}
           <Button
+            wrapperClassName="mt-6"
             label={initData ? "Update" : "Create form"}
             loading={loading}
             type="submit"

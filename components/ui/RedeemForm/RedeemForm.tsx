@@ -85,6 +85,11 @@ const RedeemForm = ({
               "Product unavailable, contact seller for more info"
             )
             .split(";")
+            .map((el: string) =>
+              el.toLowerCase().includes("printful")
+                ? "Unknown error, contact seller for more info"
+                : el
+            )
         )
       } else {
         setIsSuccess(true)
@@ -109,12 +114,18 @@ const RedeemForm = ({
       </p>
     ) : maxUnits != 0 ? (
       <>
-        <p className="pb-6">
-          Choose how many units you wish to redeem, and answer the required
-          questions.{" "}
-        </p>
         <form onSubmit={(e) => submit(e)}>
           <div className="space-y-8">
+            <Input
+              label="Units to redeem"
+              type="number"
+              value={units > 0 ? units : ""}
+              onChange={setUnits}
+              min={1}
+              max={maxUnits}
+              placeholder={`Up to ${maxUnits}`}
+              required
+            />
             <RedeemFormPrintful
               linkedProducts={linkedProducts}
               selectedProduct={selectedProduct}
@@ -122,28 +133,21 @@ const RedeemForm = ({
               answers={answers}
               setAnswers={setAnswers}
             />
-            <div>
-              <Input
-                label="Units to redeem"
-                type="number"
-                value={units > 0 ? units : ""}
-                onChange={setUnits}
-                min={1}
-                max={maxUnits}
-                placeholder={`Up to ${maxUnits}`}
-                required
-              />
-            </div>
-            {[...Array(questions.length)].map((i, key) => (
-              <CreateFormInputRedeem
-                key={key}
-                questionNumber={key + 1}
-                questionValue={questions[key]}
-                answers={answers}
-                setAnswers={setAnswers}
-              />
-            ))}
-            <Button label="Submit" loading={loading} type="submit" />
+            {questions.length != 0 && (
+              <div>
+                <p className="py-4 font-medium">Additional questions</p>
+                {[...Array(questions.length)].map((i, key) => (
+                  <CreateFormInputRedeem
+                    key={key}
+                    questionNumber={key + 1}
+                    questionValue={questions[key]}
+                    answers={answers}
+                    setAnswers={setAnswers}
+                  />
+                ))}
+              </div>
+            )}
+            <Button label="Redeem" loading={loading} type="submit" />
             {errors.length != 0 && (
               <div className="space-y-2">
                 {errors.map((error, i) => (

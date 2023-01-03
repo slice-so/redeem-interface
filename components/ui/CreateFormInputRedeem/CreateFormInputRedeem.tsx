@@ -36,15 +36,13 @@ const CreateFormInputRedeem = ({
 
   return (
     <>
-      <div className="pb-2">
+      <div className="pb-2 text-sm text-left text-gray-500">
         <div className="relative flex items-center">
-          <p className="pr-1 text-sm font-semibold text-left text-gray-600">
-            {question}
-          </p>
+          <p className="pr-1 font-medium ">{question}</p>
         </div>
         {hint && (
           <div
-            className="py-1 text-sm prose text-left text-gray-600"
+            className="prose text-gray-500"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           ></div>
         )}

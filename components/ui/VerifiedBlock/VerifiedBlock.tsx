@@ -19,7 +19,7 @@ const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
   
   Timestamp: ${timestamp}`
 
-  const { account, isSigned, setIsSigned } = useAppContext()
+  const { account, isConnected, isSigned, setIsSigned } = useAppContext()
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
     message
   })
@@ -31,7 +31,7 @@ const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
     }
   }, [isSuccess])
 
-  return !account ? (
+  return !isConnected ? (
     <>
       {beforeConnect}
       <div className="flex justify-center">

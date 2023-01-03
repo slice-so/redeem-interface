@@ -1,10 +1,8 @@
-import { useTheme } from "next-themes"
-import nightwind from "nightwind/helper"
 import Logo from "@components/icons/Logo"
-import WalletConnect from "@walletconnect/client"
 import { Dispatch, SetStateAction } from "react"
 import { DropdownMenuElement } from ".."
-import { useAppContext } from "../context"
+import File from "@components/icons/File"
+import FileText from "@components/icons/FileText"
 type Props = {
   setShowDropdown: Dispatch<SetStateAction<boolean>>
 }
@@ -33,22 +31,19 @@ function DropdownMenu({ setShowDropdown }: Props) {
 
   return (
     <div
-      className={`z-20 absolute text-sm top-0 right-0 w-56 mt-20 border border-gray-200 space-y-1 bg-white rounded-sm overflow-hidden shadow-base nightwind-prevent-block`}
+      className={`z-20 absolute text-sm top-0 right-0 w-56 mt-20 border border-gray-200 space-y-1 bg-white rounded-md overflow-hidden shadow-base nightwind-prevent-block`}
       // ${
       //   showDropdown ? " opacity-100" : "-z-10 opacity-0"
       // }
     >
       <DropdownMenuElement
-        href="/products"
+        href="/forms"
         image={
-          <Logo
-            size="w-5"
-            margin="mt-[4px] ml-[5px]"
-            interactive={false}
-            single={true}
-          />
+          <div className="w-5">
+            <FileText />
+          </div>
         }
-        label="Your products"
+        label="Your forms"
         onClick={() => setShowDropdown(false)}
       />
       {/* <DropdownMenuElement

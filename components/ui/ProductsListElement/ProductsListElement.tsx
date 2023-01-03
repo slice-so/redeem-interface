@@ -20,8 +20,8 @@ const ProductsListElement = ({ product }: Props) => {
   const { setModalView } = useAppContext()
 
   return (
-    <div className="grid grid-cols-7">
-      <div className="col-span-2 font-black text-left">
+    <div className="flex items-center justify-between w-full">
+      <div className="text-sm text-left">
         <a
           href={`https://${
             process.env.NEXT_PUBLIC_CHAIN_ID == "5" ? "testnet." : ""
@@ -31,15 +31,13 @@ const ProductsListElement = ({ product }: Props) => {
         >
           #{slicerId}/{productId}
         </a>
-      </div>
-      <div className="flex items-center col-span-2 text-sm text-left ">
         <Link href={`/create?slicer=${slicerId}&product=${productId}`}>
-          <a className="cursor-pointer hover:text-yellow-600">Edit form</a>
+          <a className="ml-4 text-gray-500">Edit form</a>
         </Link>
       </div>
       {submissions.length != 0 && (
         <div
-          className="flex items-center justify-end col-span-3 font-semibold cursor-pointer group"
+          className="flex items-center justify-end font-semibold cursor-pointer group"
           onClick={() =>
             setModalView({
               name: "SUBMISSIONS_VIEW",

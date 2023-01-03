@@ -175,7 +175,7 @@ const CreateRedeemForm = () => {
           >
             <div className="mx-auto">
               <CreateForm
-                id={`${decimalToHex(slicerId)}-${decimalToHex(productId)}`}
+                id={`${slicerId}-${productId}`}
                 productCreator={productCreator}
                 initData={initData}
                 stateValue={stateValue}

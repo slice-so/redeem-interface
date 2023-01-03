@@ -34,7 +34,3 @@ export default function Home() {
     </>
   )
 }
-
-// TODO:
-// - Create form styling
-// - Redeem form styling

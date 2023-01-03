@@ -172,8 +172,8 @@ export default function PrintfulStore({
               </p>
             )
           ) : (
-            [...Array(5)].map((i) => (
-              <div key={i} className="flex-shrink-0 w-40 pb-4 animate-pulse">
+            [...Array(5)].map((i, key) => (
+              <div key={key} className="flex-shrink-0 w-40 pb-4 animate-pulse">
                 <div>
                   <div className="h-40 bg-gray-300 rounded-md" />
                   <div className="w-24 h-5 mt-2 bg-gray-300 rounded-lg" />
@@ -194,8 +194,8 @@ export default function PrintfulStore({
                 Select all
               </span>
               <div className="flex flex-wrap gap-y-2 gap-x-3">
-                {[...Array(3)].map((i) => (
-                  <div key={i}>
+                {[...Array(3)].map((i, key) => (
+                  <div key={key}>
                     <div className="w-24 bg-gray-300 border border-blue-300 rounded-lg h-7 animate-pulse" />
                   </div>
                 ))}

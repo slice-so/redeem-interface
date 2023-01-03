@@ -51,13 +51,13 @@ export const SUBMISSIONS_VIEW = (params: any) => {
     <>
       <div className="pb-6 text-center">
         <DoubleText inactive logoText="Submissions" />
-        <p className="pt-4 text-sm font-semibold text-gray-500 uppercase">
-          #{slicerId}/{productId}
+        <p className="pt-4 text-sm font-medium text-center text-gray-400">
+          Slicer {slicerId} / Product {productId}
         </p>
       </div>
       <div className="flex justify-between p-4 text-sm font-medium text-gray-500">
         <p className="col-span-2 ">Buyer</p>
-        <p className="text-center ">Units Redeemed</p>
+        <p className="text-center ">Redeemed units</p>
         <p className="col-span-2 text-right">Date</p>
       </div>
       <ul className="space-y-4">

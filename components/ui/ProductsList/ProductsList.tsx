@@ -47,9 +47,11 @@ const ProductsList = () => {
             <hr className="px-4 mx-auto my-6 border-gray-300 max-w-screen-xs" />
           </div>
         ))}
-        <Link href="/create">
-          <a className="text-sm highlight">Create new form</a>
-        </Link>
+        <div className="pt-2">
+          <Link href="/create">
+            <a className="text-sm highlight">Create new form</a>
+          </Link>
+        </div>
       </>
     ) : (
       <>

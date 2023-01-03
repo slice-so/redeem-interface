@@ -41,7 +41,7 @@ export default function PrintfulItem({
         </p>
         {linkedProducts.length != 0 &&
           linkedProducts[0].product.id == item.id && (
-            <div className="absolute top-[8px] rounded-full bg-blue-600 p-[3px] right-[8px] text-white w-5 h-5">
+            <div className="absolute top-[8px] rounded-full nightwind-prevent bg-blue-600 p-[3px] right-[8px] text-white w-5 h-5">
               <Check />
             </div>
           )}

@@ -144,7 +144,7 @@ export default function PrintfulStore({
         {!showDetail &&
           linkedProducts.length != 0 &&
           linkedProducts[0].accountId == account?.id && (
-            <div className="rounded-full bg-blue-600 p-[3px] text-white w-5 h-5">
+            <div className="rounded-full bg-blue-600 nightwind-prevent p-[3px] text-white w-5 h-5">
               <Check />
             </div>
           )}

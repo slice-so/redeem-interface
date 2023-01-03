@@ -37,7 +37,7 @@ const CreateFormPrintful = ({
       <div>
         <p className="pt-2 text-gray-500">
           Link items from your Printful stores to automatically place orders
-          when someone redeems your Slice product
+          when someone redeems the related Slice product
         </p>
       </div>
       {accounts && accounts?.length != 0 && (

@@ -27,12 +27,12 @@ const SubmissionBlock = ({ submission }: Props) => {
     <li
       className={`pt-2 pb-1.5 bg-gray-50 rounded-md shadow-md ${
         orderedQuestions.length != 0
-          ? "transition-all duration-100 cursor-pointer group hover:shadow-sm hover:translate-y-[2px]"
+          ? "transition-shadow duration-100 cursor-pointer group hover:shadow-sm"
           : ""
       }`}
       onClick={() => (orderedQuestions.length != 0 ? setIsOpen(!isOpen) : null)}
     >
-      <div className="grid items-center justify-between grid-cols-5 px-4 py-2">
+      <div className="grid items-center justify-between grid-cols-5 px-4 py-2 text-sm">
         <p className="col-span-2">
           <a
             className="highlight"

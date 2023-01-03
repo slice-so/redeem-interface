@@ -72,7 +72,7 @@ const HomeRedeem = () => {
               />
             </h1>
             <p className="sm:text-lg">
-              Claim Slice products that require a post-purchase step
+              Claim products after purchasing them on Slice
             </p>
           </div>
           <div className="flex justify-between gap-8">
@@ -92,25 +92,22 @@ const HomeRedeem = () => {
             />
           </div>
           <Button
-            label="Check product"
+            label="Redeem product"
             wrapperClassName="mt-8 mb-12"
             loading={loading}
             onClick={() => checkProduct(slicerId, productId)}
           />
           {isProductUnredeemable && (
-            <div className="space-y-3">
+            <div className="space-y-3 text-sm">
               <p className="font-semibold text-yellow-600">
                 This product does not exist or a redeem process has not been set
-                up yet.
+                up yet
               </p>
               <p>
                 If you own the product{" "}
                 <Link href={`/create?slicer=${slicerId}&product=${productId}`}>
-                  <a className="highlight">
-                    click here to set up a custom redeem form
-                  </a>
+                  <a className="highlight">click here to set up a form</a>
                 </Link>
-                .
               </p>
             </div>
           )}
@@ -119,13 +116,12 @@ const HomeRedeem = () => {
       {productData && (
         <>
           <div className="pb-12">
-            <h2 className="pb-8">Redeem product</h2>
             <ProductPreview slicerId={slicerId} productId={productId} />
             <a
               className="text-sm highlight"
               onClick={() => setProductData(null)}
             >
-              Redeem a different product
+              Change product
             </a>
           </div>
           <hr className="w-20 mx-auto mb-12 border-gray-300" />

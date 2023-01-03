@@ -34,3 +34,8 @@ export default function Home() {
     </>
   )
 }
+
+// TODO:
+// - Footer (update links, remove unneeded, add slice)
+// - Create form styling
+// - Redeem form styling

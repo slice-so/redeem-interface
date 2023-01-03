@@ -24,22 +24,22 @@ const ProductsList = () => {
   return sortedData ? (
     sortedData.length != 0 ? (
       <>
-        <div className="flex justify-end">
+        <div className="flex justify-end text-sm">
           <div>
-            <p className="pb-3 font-semibold text-center text-yellow-600">
+            <p className="pb-3 font-medium text-center text-gray-400">
               Order by
             </p>
-            <div className="flex space-x-3">
+            <div className="flex items-center space-x-3">
               <p>Last created</p>
               <MySwitch enabled={sortById} setEnabled={setSortById} />
               <p>ID</p>
             </div>
           </div>
         </div>
-        <p className="mt-12 text-sm font-semibold text-left text-gray-600 uppercase">
+        <p className="mt-12 text-xs font-medium text-left text-gray-400 uppercase">
           Slicer ID / Product ID
         </p>
-        <hr className="px-4 mx-auto mt-3 mb-6 border-gray-300 max-w-screen-xs" />
+        <hr className="px-4 mx-auto mt-1 mb-6 border-gray-300 max-w-screen-xs" />
         {[...Array(data?.length)].map((key, i) => (
           <div key={i}>
             <ProductsListElement product={data[i]} />

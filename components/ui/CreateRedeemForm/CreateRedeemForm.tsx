@@ -5,7 +5,8 @@ import {
   Input,
   CreateForm,
   VerifiedBlock,
-  ProductPreview
+  ProductPreview,
+  DoubleText
 } from "@components/ui"
 import { useAppContext } from "../context"
 import client from "@utils/apollo-client"
@@ -104,8 +105,21 @@ const CreateRedeemForm = () => {
     getPrintfulAccounts()
   }, [success, state, code, account])
 
+  console.log(initData)
+
   return (
     <>
+      <h1 className="pb-10">
+        <DoubleText
+          inactive
+          size="text-3xl sm:text-4xl"
+          logoText={
+            !productCreator || productCreator == "none" || !initData
+              ? "Create form"
+              : "Edit form"
+          }
+        />
+      </h1>
       {!productCreator || productCreator == "none" ? (
         <div className="mx-auto">
           <div className="flex justify-between gap-8">
@@ -145,7 +159,7 @@ const CreateRedeemForm = () => {
               className="text-sm highlight"
               onClick={() => setProductCreator(null)}
             >
-              Create form for a different product
+              Change product
             </a>
           </div>
           <hr className="w-20 mx-auto mb-12 border-gray-300" />

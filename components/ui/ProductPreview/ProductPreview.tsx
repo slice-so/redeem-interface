@@ -11,7 +11,7 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
   const productData = useProductData(slicerId, productId)
 
   return (
-    <div className="mb-6 text-sm text-center">
+    <div className="mb-6 text-center">
       {productData ? (
         <>
           <a
@@ -34,7 +34,7 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
               fill={true}
             />
           </div>
-          <p>{productData.shortDescription}</p>
+          <p className="text-sm">{productData.shortDescription}</p>
         </>
       ) : (
         <>

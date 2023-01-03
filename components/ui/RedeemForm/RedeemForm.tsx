@@ -85,6 +85,11 @@ const RedeemForm = ({
               "Product unavailable, contact seller for more info"
             )
             .split(";")
+            .map((el: string) =>
+              el.toLowerCase().includes("printful")
+                ? "Unknown error, contact seller for more info"
+                : el
+            )
         )
       } else {
         setIsSuccess(true)
@@ -109,10 +114,7 @@ const RedeemForm = ({
       </p>
     ) : maxUnits != 0 ? (
       <>
-        <p className="pb-6">
-          Choose how many units you wish to redeem, and answer the required
-          questions.{" "}
-        </p>
+        <p className="pb-6">Answer the questions below to redeem the product</p>
         <form onSubmit={(e) => submit(e)}>
           <div className="space-y-8">
             <RedeemFormPrintful
@@ -143,7 +145,7 @@ const RedeemForm = ({
                 setAnswers={setAnswers}
               />
             ))}
-            <Button label="Submit" loading={loading} type="submit" />
+            <Button label="Redeem" loading={loading} type="submit" />
             {errors.length != 0 && (
               <div className="space-y-2">
                 {errors.map((error, i) => (

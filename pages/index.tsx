@@ -1,5 +1,5 @@
 import { NextSeo } from "next-seo"
-import { Container, DoubleText, HomeRedeem } from "@components/ui"
+import { Container, HomeRedeem } from "@components/ui"
 import {
   defaultDescription,
   defaultTitle,

@@ -113,7 +113,7 @@ const CreateRedeemForm = () => {
           size="text-3xl sm:text-4xl"
           logoText={
             !productCreator || productCreator == "none" || !initData
-              ? "Create form"
+              ? "Create product form"
               : "Edit form"
           }
         />

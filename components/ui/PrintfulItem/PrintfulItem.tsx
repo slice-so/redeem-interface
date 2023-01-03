@@ -1,10 +1,6 @@
 import Check from "@components/icons/Check"
-import Spinner from "@components/icons/Spinner"
-import { Account } from "@prisma/client"
-import fetcher from "@utils/fetcher"
 import Image from "next/future/image"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { Items } from "../CreateFormPrintful/CreateFormPrintful"
+import { Dispatch, SetStateAction } from "react"
 
 type Props = {
   index: number
@@ -22,7 +18,7 @@ export default function PrintfulItem({
   linkedProducts
 }: Props) {
   return (
-    <div className="w-[160px] flex-shrink-0 pb-4">
+    <div className="flex-shrink-0 w-40 pb-4">
       <div
         className="relative cursor-pointer group"
         onClick={() =>

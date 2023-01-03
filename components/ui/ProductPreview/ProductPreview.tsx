@@ -1,6 +1,7 @@
 import getBlurImageUrl from "@utils/getBlurImageUrl"
 import { useProductData } from "@utils/useProductData"
 import Image from "next/future/image"
+import productDefault from "public/product_default.png"
 
 type Props = {
   slicerId: number
@@ -26,7 +27,7 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
           </a>
           <div className="relative h-48 mx-auto mt-2 mb-4 w-72">
             <Image
-              src={productData.image}
+              src={productData.image || productDefault}
               alt={`${productData.name || "placeholder"} image`}
               blurDataURL={getBlurImageUrl(productData.image)}
               className="object-cover rounded-lg "

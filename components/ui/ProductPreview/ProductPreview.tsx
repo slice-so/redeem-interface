@@ -30,7 +30,7 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
               src={productData.image || productDefault}
               alt={`${productData.name || "placeholder"} image`}
               blurDataURL={getBlurImageUrl(productData.image)}
-              className="object-cover rounded-lg "
+              className="object-cover rounded-lg"
               placeholder="blur"
               fill={true}
             />

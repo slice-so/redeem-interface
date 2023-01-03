@@ -151,6 +151,7 @@ export default function PrintfulStore({
           )}
 
         {showDetail && !printfulItems[account?.id] && (
+          // TODO: Make loading skeleton
           <div className="ml-4">
             <Spinner />
           </div>
@@ -158,6 +159,7 @@ export default function PrintfulStore({
       </div>
       <div className="flex gap-2 px-4 overflow-y-hidden">
         {showDetail &&
+          printfulItems[account.id] &&
           (printfulItems[account.id].length != 0 ? (
             printfulItems[account.id].map(
               (item, index) =>
@@ -181,7 +183,10 @@ export default function PrintfulStore({
       {showDetail &&
         shownItemIndex != null &&
         (!variantsList ? (
-          <Spinner />
+          // TODO: Make loading skeleton
+          <>
+            <div className="" />
+          </>
         ) : (
           <div className="px-2 pb-6 text-sm sm:px-4">
             <p className="pb-4 text-base text-gray-500">
@@ -189,7 +194,7 @@ export default function PrintfulStore({
               the product
             </p>
             {variantsList.length != 1 && (
-              <p
+              <span
                 className={`inline-block mb-2 font-medium cursor-pointer opacity-60 hover:opacity-100 ${
                   linkedProducts && linkedProducts[0]?.variants == variantsList
                     ? "text-red-600"
@@ -197,12 +202,12 @@ export default function PrintfulStore({
                 }`}
                 onClick={() => handleSetAllLinkedProducts()}
               >
-                <p>
+                <span>
                   {linkedProducts && linkedProducts[0]?.variants == variantsList
                     ? "Deselect all"
                     : "Select all"}
-                </p>
-              </p>
+                </span>
+              </span>
             )}
             <div className="flex flex-wrap gap-y-2 gap-x-3">
               {variantsList.map((variant, i) => (

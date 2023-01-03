@@ -7,7 +7,7 @@ import Script from "next/script"
 export const defaultTitle = "Slice Redeem"
 export const longTitle = "Slice Redeem – Claim purchased Slice products"
 export const defaultDescription =
-  "The decentralized payments infrastructure for projects, teams and communities. Sell and claim NFTs, tickets, merch and more on d-stores."
+  "Slice is the decentralized infrastructure for payments and commerce. Claim merch, tickets, subscriptions and more on Slice Redeem."
 export const domain = process.env.NEXT_PUBLIC_APP_URL
 const twitterAccount = accounts.twitter.split("twitter.com/").pop()
 

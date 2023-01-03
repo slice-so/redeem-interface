@@ -26,10 +26,10 @@ const RedeemFormPrintful = ({
 
   const deliveryQuestions: QuestionValue[] = [
     {
-      question: "Receiver name",
+      question: "Name",
       hint: ""
     },
-    { question: "Delivery address", hint: "" },
+    { question: "Address", hint: "" },
     { question: "City", hint: "" },
     {
       question: "Country",
@@ -50,7 +50,7 @@ const RedeemFormPrintful = ({
         []
     },
     { question: "Postal code", hint: "" },
-    { question: "Email", hint: "Used to contact you about your order" }
+    { question: "Email", hint: "" }
   ]
 
   useEffect(() => {
@@ -77,37 +77,47 @@ const RedeemFormPrintful = ({
         </div>
         <p className="py-6 font-medium">{product.name}</p>
         {(variants.length != 1 || variants[0].name.split(" - ")[1]) && (
-          <div className="relative">
-            <select
-              className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
-              value={selectedProduct}
-              onChange={(e) => setSelectedProduct(e.target.value)}
-              disabled={variants.length == 1}
-              required
-            >
-              <option value="">Pick option...</option>
-              {variants.map((variant) => (
-                <option key={variant.id} value={variant.external_id}>
-                  {(variants.length == 1 ? "Unique" : "") +
-                    (variants.length == 1 && variant.name.split(" - ")[1]
-                      ? " - "
-                      : "") +
-                    (variant.name.split(" - ")[1]
-                      ? variant.name.split(" - ")[1]
-                      : "")}
-                </option>
-              ))}
-            </select>
-            {variants.length != 1 && (
-              <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-                <Chevron />
-              </div>
-            )}
-          </div>
+          <>
+            <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
+              Color / size
+            </p>
+            <div className="relative">
+              <select
+                className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
+                value={selectedProduct}
+                onChange={(e) => setSelectedProduct(e.target.value)}
+                disabled={variants.length == 1}
+                required
+              >
+                <option value="">Pick option...</option>
+                {variants.map((variant) => (
+                  <option key={variant.id} value={variant.external_id}>
+                    {(variants.length == 1 ? "Unique" : "") +
+                      (variants.length == 1 && variant.name.split(" - ")[1]
+                        ? " - "
+                        : "") +
+                      (variant.name.split(" - ")[1]
+                        ? variant.name.split(" - ")[1]
+                        : "")}
+                  </option>
+                ))}
+              </select>
+              {variants.length != 1 && (
+                <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
+                  <Chevron />
+                </div>
+              )}
+            </div>
+          </>
         )}
 
-        <div>
-          <p>Delivery info</p>
+        <div className="px-2 py-6 my-6 text-left rounded-md shadow-lg bg-gray-50 sm:px-4">
+          <div className="pb-4">
+            <p className="font-medium">Delivery info</p>
+            <p className="text-sm">
+              The item will be delivered to the address specified below.
+            </p>
+          </div>
           {deliveryQuestions.map(({ question, hint, options }, key) => {
             const handleSetAnswer = (answer: string) => {
               setAnswers((prev) => ({ ...prev, [question]: answer }))
@@ -117,19 +127,29 @@ const RedeemFormPrintful = ({
               <div key={key}>
                 {options ? (
                   options.length != 0 && (
-                    <select
-                      className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
-                      value={answers[question]}
-                      onChange={(e) => handleSetAnswer(e.target.value)}
-                      required
-                    >
-                      <option value="">Pick option...</option>
-                      {options.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
+                    <>
+                      <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
+                        {question}
+                      </p>
+                      <div className="relative mb-4">
+                        <select
+                          className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
+                          value={answers[question]}
+                          onChange={(e) => handleSetAnswer(e.target.value)}
+                          required
+                        >
+                          <option value="">Pick option...</option>
+                          {options.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.name}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
+                          <Chevron />
+                        </div>
+                      </div>
+                    </>
                   )
                 ) : (
                   <Input

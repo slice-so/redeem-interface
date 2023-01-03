@@ -105,8 +105,6 @@ const CreateRedeemForm = () => {
     getPrintfulAccounts()
   }, [success, state, code, account])
 
-  console.log(initData)
-
   return (
     <>
       <h1 className="pb-10">

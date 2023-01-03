@@ -114,9 +114,18 @@ const RedeemForm = ({
       </p>
     ) : maxUnits != 0 ? (
       <>
-        <p className="pb-6">Answer the questions below to redeem the product</p>
         <form onSubmit={(e) => submit(e)}>
           <div className="space-y-8">
+            <Input
+              label="Units to redeem"
+              type="number"
+              value={units > 0 ? units : ""}
+              onChange={setUnits}
+              min={1}
+              max={maxUnits}
+              placeholder={`Up to ${maxUnits}`}
+              required
+            />
             <RedeemFormPrintful
               linkedProducts={linkedProducts}
               selectedProduct={selectedProduct}
@@ -124,27 +133,20 @@ const RedeemForm = ({
               answers={answers}
               setAnswers={setAnswers}
             />
-            <div>
-              <Input
-                label="Units to redeem"
-                type="number"
-                value={units > 0 ? units : ""}
-                onChange={setUnits}
-                min={1}
-                max={maxUnits}
-                placeholder={`Up to ${maxUnits}`}
-                required
-              />
-            </div>
-            {[...Array(questions.length)].map((i, key) => (
-              <CreateFormInputRedeem
-                key={key}
-                questionNumber={key + 1}
-                questionValue={questions[key]}
-                answers={answers}
-                setAnswers={setAnswers}
-              />
-            ))}
+            {questions.length != 0 && (
+              <div>
+                <p className="py-4 font-medium">Additional questions</p>
+                {[...Array(questions.length)].map((i, key) => (
+                  <CreateFormInputRedeem
+                    key={key}
+                    questionNumber={key + 1}
+                    questionValue={questions[key]}
+                    answers={answers}
+                    setAnswers={setAnswers}
+                  />
+                ))}
+              </div>
+            )}
             <Button label="Redeem" loading={loading} type="submit" />
             {errors.length != 0 && (
               <div className="space-y-2">

@@ -121,7 +121,7 @@ const HomeRedeem = () => {
               className="text-sm highlight"
               onClick={() => setProductData(null)}
             >
-              Change product
+              Redeem another product
             </a>
           </div>
           <hr className="w-20 mx-auto mb-12 border-gray-300" />

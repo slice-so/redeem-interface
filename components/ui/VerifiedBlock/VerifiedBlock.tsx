@@ -19,35 +19,36 @@ const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
   
   Timestamp: ${timestamp}`
 
-  const { account, isAccountVerified, setIsAccountVerified } = useAppContext()
+  const { account, isConnected, isSigned, setIsSigned } = useAppContext()
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
     message
   })
 
   useEffect(() => {
     if (isSuccess) {
-      setIsAccountVerified(verifyMessage(message, data) == account)
+      setIsSigned(verifyMessage(message, data) == account)
+      localStorage.setItem("isSigned", account)
     }
   }, [isSuccess])
 
-  return !account ? (
+  return !isConnected ? (
     <>
       {beforeConnect}
       <div className="flex justify-center">
         <ConnectButton />
       </div>
     </>
-  ) : !isAccountVerified ? (
+  ) : !isSigned ? (
     <>
       {beforeSign}
       <div>
         <Button
           wrapperClassName="mb-6"
           label="Sign message"
+          loading={isLoading}
           onClick={() => signMessage()}
         />
-        {isLoading && <p>Loading...</p>}
-        {isError && <div>Error signing message</div>}
+        {isError && <p className="text-red-500">Error signing message</p>}
       </div>
     </>
   ) : (

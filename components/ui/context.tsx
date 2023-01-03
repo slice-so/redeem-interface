@@ -1,19 +1,19 @@
 import { colorList, darkColorList } from "@utils/colorList"
 import { createContext, useContext, useEffect, useState } from "react"
 import { View } from "@lib/content/modals"
-import { useAccount, useProvider } from "wagmi"
+import { useAccount, useNetwork, useProvider } from "wagmi"
 
 const AppContext = createContext<any>({
-  connector: null,
   provider: null,
-  isAccountVerified: false,
+  isConnected: false,
+  isSigned: false,
   account: "",
   color1: colorList[0],
   color2: colorList[1],
   darkColor1: darkColorList[0],
   darkColor2: darkColorList[1],
   modalView: { name: "" },
-  setIsAccountVerified: () => null,
+  setIsSigned: () => null,
   setModalView: () => null,
   shuffleColors: () => null
 })
@@ -21,9 +21,11 @@ const AppContext = createContext<any>({
 export function AppWrapper({ children }) {
   const [modalView, setModalView] = useState<View>({ name: "" })
   const provider = useProvider()
+  const { chain } = useNetwork()
 
-  const { data: account } = useAccount()
-  const [isAccountVerified, setIsAccountVerified] = useState(false)
+  const { address: account } = useAccount()
+  const [isConnected, setIsConnected] = useState(false)
+  const [isSigned, setIsSigned] = useState(false)
 
   const [color1, setColor1] = useState([])
   const [color2, setColor2] = useState([])
@@ -50,23 +52,49 @@ export function AppWrapper({ children }) {
   }, [])
 
   useEffect(() => {
-    setIsAccountVerified(false)
+    setIsConnected(account && true)
+
+    if (account) {
+      if (account && localStorage.getItem("isSigned") == account) {
+        setIsSigned(true)
+      } else {
+        setIsSigned(false)
+        localStorage.removeItem("isSigned")
+      }
+    } else {
+      localStorage.removeItem("isSigned")
+    }
   }, [account])
+
+  // Network modal
+  useEffect(() => {
+    if (
+      account &&
+      chain &&
+      Number(chain.id).toString(16) !== process.env.NEXT_PUBLIC_CHAIN_ID
+    ) {
+      setModalView({ cross: false, name: "NETWORK_VIEW" })
+    } else {
+      if (modalView.name == "NETWORK_VIEW") {
+        setModalView({ name: "" })
+      }
+    }
+  }, [account, chain])
 
   return (
     <AppContext.Provider
       value={{
-        connector: account?.connector,
         provider,
-        account: account?.address,
-        isAccountVerified,
+        account,
+        isConnected,
+        isSigned,
+        setIsSigned,
         color1,
         color2,
         darkColor1,
         darkColor2,
         modalView,
         setModalView,
-        setIsAccountVerified,
         shuffleColors
       }}
     >

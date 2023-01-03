@@ -4,6 +4,7 @@ import { Input, Textarea } from "@components/ui"
 export type QuestionValue = {
   question: string
   hint: string
+  options?: { value: string; name?: string }[]
 }
 
 type Props = {
@@ -34,7 +35,7 @@ const CreateFormInput = ({
   }, [question, hint])
 
   return (
-    <div className="mb-4">
+    <>
       <Input
         label={`Question ${questionNumber}`}
         value={question}
@@ -45,11 +46,12 @@ const CreateFormInput = ({
       <Textarea
         label={`Hint ${questionNumber}`}
         value={hint}
+        rows={1}
         onChange={setHint}
         placeholder="Add optional text or links to guide users in answering your question"
       />
       <hr className="w-20 mx-auto mt-12 mb-8 border-gray-300" />
-    </div>
+    </>
   )
 }
 

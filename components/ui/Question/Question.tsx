@@ -14,9 +14,9 @@ export default function Question({ text, position }: Props) {
       <div
         className={`${
           !show ? "hidden " : ""
-        }prose text-left absolute p-5 w-[22rem] z-10 xs:w-96 bg-white shadow-xl ${
+        }prose text-left absolute p-5 text-sm w-[22rem] z-10 xs:w-96 bg-white shadow-xl ${
           position || "bottom-0 left-0"
-        } mb-9 rounded-md overflow-hidden border-2 border-gray-200`}
+        } mb-9 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700`}
       >
         {text}
       </div>

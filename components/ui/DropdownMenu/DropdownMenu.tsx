@@ -1,55 +1,49 @@
-import { useTheme } from "next-themes"
-import nightwind from "nightwind/helper"
 import Logo from "@components/icons/Logo"
-import WalletConnect from "@walletconnect/client"
 import { Dispatch, SetStateAction } from "react"
 import { DropdownMenuElement } from ".."
-import { useAppContext } from "../context"
+import File from "@components/icons/File"
+import FileText from "@components/icons/FileText"
 type Props = {
-  showDropdown: boolean
   setShowDropdown: Dispatch<SetStateAction<boolean>>
 }
 
-function DropdownMenu({ showDropdown, setShowDropdown }: Props) {
-  const { connector }: { connector: WalletConnect } = useAppContext()
+function DropdownMenu({ setShowDropdown }: Props) {
+  // const { connector }: { connector: WalletConnect } = useAppContext()
 
-  const { theme, setTheme } = useTheme()
+  // const { theme, setTheme } = useTheme()
 
-  const toggle = () => {
-    nightwind.beforeTransition()
-    if (theme !== "dark") {
-      setTheme("dark")
-    } else {
-      setTheme("light")
-    }
-  }
-  const disconnect = async () => {
-    if (connector.connected) {
-      await connector.killSession()
-      setShowDropdown(false)
-    } else {
-      setShowDropdown(false)
-    }
-  }
+  // const toggle = () => {
+  //   nightwind.beforeTransition()
+  //   if (theme !== "dark") {
+  //     setTheme("dark")
+  //   } else {
+  //     setTheme("light")
+  //   }
+  // }
+  // const disconnect = async () => {
+  //   if (connector.connected) {
+  //     await connector.killSession()
+  //     setShowDropdown(false)
+  //   } else {
+  //     setShowDropdown(false)
+  //   }
+  // }
 
   return (
     <div
-      className={`z-20 absolute top-0 right-0 w-56 p-1.5 mt-20 border-2 border-gray-200 space-y-1 bg-white rounded-xl shadow-base transition-opacity duration-200 nightwind-prevent-block`}
+      className={`z-20 absolute text-sm top-0 right-0 w-56 mt-20 border border-gray-200 space-y-1 bg-white rounded-md overflow-hidden shadow-base nightwind-prevent-block`}
       // ${
       //   showDropdown ? " opacity-100" : "-z-10 opacity-0"
       // }
     >
       <DropdownMenuElement
-        href="/products"
+        href="/forms"
         image={
-          <Logo
-            size="w-5"
-            margin="mt-[4px] ml-[5px]"
-            interactive={false}
-            single={true}
-          />
+          <div className="w-5">
+            <FileText />
+          </div>
         }
-        label="Your products"
+        label="Your forms"
         onClick={() => setShowDropdown(false)}
       />
       {/* <DropdownMenuElement

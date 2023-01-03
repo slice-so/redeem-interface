@@ -1,6 +1,6 @@
 import Cross from "@components/icons/Cross"
 import { Dispatch, SetStateAction } from "react"
-import { View, SUBMISSIONS_VIEW } from "@lib/content/modals"
+import { View, NETWORK_VIEW, SUBMISSIONS_VIEW } from "@lib/content/modals"
 
 type Props = {
   modalView: View
@@ -12,6 +12,9 @@ const Modal = ({ modalView, setModalView }: Props) => {
   const { name, cross, params } = modalView
 
   switch (name) {
+    case "NETWORK_VIEW":
+      content = NETWORK_VIEW()
+      break
     case "SUBMISSIONS_VIEW":
       content = SUBMISSIONS_VIEW(params)
       break

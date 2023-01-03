@@ -41,9 +41,9 @@ const Input: React.FC<Props> = (props) => {
     ...rest
   } = props
 
-  const rootClassName = `peer py-2 pl-5 w-full appearance-none transition-all duration-150 rounded-t-sm ${
+  const rootClassName = `peer py-2 pl-5 w-full appearance-none transition-shadow duration-100 rounded-t-sm ${
     !prefix && !error ? "shadow-light-focusable" : ""
-  } ease-in-out pr-3 border-t-0 border-r-0 border-l-0 border-b-[3px] focus:outline-none ${className} ${
+  } ease-in-out pr-3 border-t-0 border-r-0 border-l-0 border-b-[2px] focus:outline-none ${className} ${
     error
       ? "text-red-500 border-red-400 bg-white focus:border-red-400 shadow-error"
       : inverted
@@ -62,12 +62,8 @@ const Input: React.FC<Props> = (props) => {
     <label>
       {label && (
         <>
-          <div className="relative flex items-center pb-2">
-            <p
-              className={`text-sm font-semibold text-left pr-1 ${
-                inverted ? "text-gray-200" : "text-gray-700"
-              }`}
-            >
+          <div className="relative flex items-center pb-1">
+            <p className="pr-1 text-sm font-medium text-left text-gray-500">
               {label}
             </p>
             {question && (
@@ -77,7 +73,7 @@ const Input: React.FC<Props> = (props) => {
         </>
       )}
       <div
-        className={`flex flex-row-reverse mb-3 rounded-t-sm ${
+        className={`flex flex-row-reverse mb-4 rounded-t-sm ${
           prefix && !error ? "shadow-light-focusable overflow-hidden" : ""
         }`}
       >

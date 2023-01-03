@@ -43,7 +43,7 @@ const Textarea: React.FC<Props> = (props) => {
     setShowPreview((showPreview) => !showPreview)
   }
 
-  const rootClassName = `peer py-2 mb-[-7px] pl-5 w-full appearance-none transition-all duration-150 rounded-t-sm shadow-light-focusable ease-in-out pr-3 border-t-0 border-r-0 border-l-0 border-b-[3px] focus:outline-none ${
+  const rootClassName = `peer py-2 mb-[-7px] pl-5 w-full appearance-none transition-shadow duration-100 rounded-t-sm shadow-light-focusable ease-in-out pr-3 border-t-0 border-r-0 border-l-0 border-b-[3px] focus:outline-none ${
     className ? className : ""
   } ${
     inverted
@@ -54,7 +54,7 @@ const Textarea: React.FC<Props> = (props) => {
   return (
     <label>
       {label && (
-        <div className="relative flex items-center pb-2">
+        <div className="relative flex items-center pb-1">
           <p
             className={`text-sm pr-1 font-semibold text-left ${
               inverted ? "text-gray-200" : "text-gray-700"
@@ -86,7 +86,7 @@ const Textarea: React.FC<Props> = (props) => {
           )}
           {markdownView && value && (
             <a
-              className="absolute top-0 right-0 flex items-center h-full pb-2 mr-1 text-sm text-blue-600"
+              className="absolute top-0 right-0 flex items-end h-full pb-3 mr-1 text-sm text-gray-500"
               onClick={async () => await handleShowPreview()}
             >
               {!showPreview ? "Show preview" : "Hide preview"}
@@ -111,7 +111,7 @@ const Textarea: React.FC<Props> = (props) => {
           className={
             previewBox
               ? previewBox
-              : "px-3 py-6 prose text-left bg-white rounded-sm shadow-light-focusable"
+              : "px-3 py-4 prose text-left bg-white shadow-light-focusable rounded-sm"
           }
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />

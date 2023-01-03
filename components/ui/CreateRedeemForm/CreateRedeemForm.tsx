@@ -1,23 +1,34 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { Button, Input, CreateForm, VerifiedBlock } from "@components/ui"
+import {
+  Button,
+  Input,
+  CreateForm,
+  VerifiedBlock,
+  ProductPreview,
+  DoubleText
+} from "@components/ui"
 import { useAppContext } from "../context"
 import client from "@utils/apollo-client"
 import { gql } from "@apollo/client"
 import decimalToHex from "@utils/decimalToHex"
+import fetcher from "@utils/fetcher"
+import { Account } from "@prisma/client"
 
 const CreateRedeemForm = () => {
   const router = useRouter()
-  const { slicer, product } = router.query
+  const { slicer, product, state, code, success } = router.query
   const { account } = useAppContext()
 
-  const [slicerValue, setSlicerValue] = useState(0)
-  const [productValue, setProductValue] = useState(1)
+  const [slicerId, setSlicerId] = useState(0)
+  const [productId, setProductId] = useState(1)
   const [loading, setLoading] = useState(false)
   const [productCreator, setProductCreator] = useState(null)
   const [initData, setInitData] = useState(null)
+  const [printfulAccounts, setPrintfulAccounts] = useState<Account[]>(null)
+  const stateValue = "1234" // TODO: Handle state
 
-  const verifyOwnerhsip = async (slicerId: number, productId: number) => {
+  const verifyOwnership = async (slicerId: number, productId: number) => {
     setProductCreator(null)
     setLoading(true)
     const fetcher = (await import("@utils/fetcher")).default
@@ -60,39 +71,76 @@ const CreateRedeemForm = () => {
 
   useEffect(() => {
     if (account) {
-      slicer && setSlicerValue(Number(slicer))
-      product && setProductValue(Number(product))
+      slicer && setSlicerId(Number(slicer))
+      product && setProductId(Number(product))
       if (slicer && product) {
-        verifyOwnerhsip(Number(slicer), Number(product))
+        verifyOwnership(Number(slicer), Number(product))
       }
     }
   }, [slicer, product, account])
 
+  const getPrintfulAccounts = async () => {
+    try {
+      if (success == "1" && state == stateValue && code && account) {
+        const body = {
+          body: JSON.stringify({
+            code,
+            account
+          }),
+          method: "POST"
+        }
+
+        const data = await fetcher("/api/printful", body)
+        if (data) setPrintfulAccounts(data?.accounts)
+      } else if (account) {
+        const data = await fetcher("/api/printful?account=" + account)
+        if (data) setPrintfulAccounts(data?.accounts)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getPrintfulAccounts()
+  }, [success, state, code, account])
+
   return (
     <>
+      <h1 className="pb-10">
+        <DoubleText
+          inactive
+          size="text-3xl sm:text-4xl"
+          logoText={
+            !productCreator || productCreator == "none" || !initData
+              ? "Create product form"
+              : "Edit form"
+          }
+        />
+      </h1>
       {!productCreator || productCreator == "none" ? (
-        <div className="max-w-sm mx-auto">
+        <div className="mx-auto">
           <div className="flex justify-between gap-8">
             <Input
               label="Slicer"
               type="number"
               min={0}
-              value={slicerValue}
-              onChange={setSlicerValue}
+              value={slicerId}
+              onChange={setSlicerId}
             />
             <Input
               label="Product"
               type="number"
               min={1}
-              value={productValue}
-              onChange={setProductValue}
+              value={productId}
+              onChange={setProductId}
             />
           </div>
           <Button
             label="Verify ownership"
             wrapperClassName="mt-8 mb-12"
             loading={loading}
-            onClick={() => verifyOwnerhsip(slicerValue, productValue)}
+            onClick={() => verifyOwnership(slicerId, productId)}
           />
           {productCreator == "none" && (
             <p className="font-semibold text-yellow-600">
@@ -103,21 +151,13 @@ const CreateRedeemForm = () => {
       ) : (
         <>
           <div className="pb-12">
-            <div className="flex justify-between max-w-[14rem] gap-8 pb-4 mx-auto text-center">
-              <div className="">
-                <p>Slicer</p>
-                <p className="pt-2 font-bold">{slicerValue}</p>
-              </div>
-              <div>
-                <p>Product</p>
-                <p className="pt-2 font-bold">{productValue}</p>
-              </div>
-            </div>
+            <ProductPreview slicerId={slicerId} productId={productId} />
+
             <a
               className="text-sm highlight"
               onClick={() => setProductCreator(null)}
             >
-              Create form for a different product
+              Change product
             </a>
           </div>
           <hr className="w-20 mx-auto mb-12 border-gray-300" />
@@ -133,13 +173,13 @@ const CreateRedeemForm = () => {
               </p>
             }
           >
-            <div className="max-w-md mx-auto">
+            <div className="mx-auto">
               <CreateForm
-                id={`${decimalToHex(slicerValue)}-${decimalToHex(
-                  productValue
-                )}`}
+                id={`${slicerId}-${productId}`}
                 productCreator={productCreator}
                 initData={initData}
+                stateValue={stateValue}
+                accounts={printfulAccounts}
               />
             </div>
           </VerifiedBlock>
@@ -152,3 +192,5 @@ const CreateRedeemForm = () => {
 export default CreateRedeemForm
 
 // TODO: Solve issue related to questions type, preventing reading and writing to db
+
+// TODO: Add product info from slice db, using card

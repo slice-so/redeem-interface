@@ -1,6 +1,5 @@
 import Check from "@components/icons/Check"
 import Chevron from "@components/icons/Chevron"
-import Spinner from "@components/icons/Spinner"
 import { Account } from "@prisma/client"
 import fetcher from "@utils/fetcher"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
@@ -149,93 +148,105 @@ export default function PrintfulStore({
               <Check />
             </div>
           )}
-
-        {showDetail && !printfulItems[account?.id] && (
-          // TODO: Make loading skeleton
-          <div className="ml-4">
-            <Spinner />
-          </div>
-        )}
       </div>
       <div className="flex gap-2 px-4 overflow-y-hidden">
         {showDetail &&
-          printfulItems[account.id] &&
-          (printfulItems[account.id].length != 0 ? (
-            printfulItems[account.id].map(
-              (item, index) =>
-                item.thumbnail_url && (
-                  <PrintfulItem
-                    key={item.id}
-                    index={index}
-                    shownItemIndex={shownItemIndex}
-                    setShownItemIndex={setShownItemIndex}
-                    item={item}
-                    linkedProducts={linkedProducts}
-                  />
-                )
+          (printfulItems[account?.id] ? (
+            printfulItems[account.id].length != 0 ? (
+              printfulItems[account.id].map(
+                (item, index) =>
+                  item.thumbnail_url && (
+                    <PrintfulItem
+                      key={item.id}
+                      index={index}
+                      shownItemIndex={shownItemIndex}
+                      setShownItemIndex={setShownItemIndex}
+                      item={item}
+                      linkedProducts={linkedProducts}
+                    />
+                  )
+              )
+            ) : (
+              <p className="pb-4 text-gray-500">
+                Add products on your Printful store to see them here.
+              </p>
             )
           ) : (
-            <p className="pb-4 text-gray-500">
-              Add products on your Printful store to see them here.
-            </p>
+            [...Array(5)].map((i) => (
+              <div key={i} className="flex-shrink-0 w-40 pb-4 animate-pulse">
+                <div>
+                  <div className="h-40 bg-gray-300 rounded-md" />
+                  <div className="w-24 h-5 mt-2 bg-gray-300 rounded-lg" />
+                </div>
+              </div>
+            ))
           ))}
       </div>
-      {showDetail &&
-        shownItemIndex != null &&
-        (!variantsList ? (
-          // TODO: Make loading skeleton
-          <>
-            <div className="" />
-          </>
-        ) : (
-          <div className="px-2 pb-6 text-sm sm:px-4">
-            <p className="pb-4 text-base text-gray-500">
-              Choose the variants among which the buyers can pick when redeeming
-              the product
-            </p>
-            {variantsList.length != 1 && (
-              <span
-                className={`inline-block mb-2 font-medium cursor-pointer opacity-60 hover:opacity-100 ${
-                  linkedProducts && linkedProducts[0]?.variants == variantsList
-                    ? "text-red-600"
-                    : "text-blue-600 "
-                }`}
-                onClick={() => handleSetAllLinkedProducts()}
-              >
-                <span>
+      {showDetail && shownItemIndex != null && (
+        <div className="px-2 pb-6 text-sm sm:px-4">
+          <p className="pb-4 text-base text-gray-500">
+            Choose the variants among which the buyers can pick when redeeming
+            the product
+          </p>
+          {!variantsList ? (
+            <>
+              <span className="inline-block mb-2 font-medium text-blue-600 opacity-60">
+                Select all
+              </span>
+              <div className="flex flex-wrap gap-y-2 gap-x-3">
+                {[...Array(3)].map((i) => (
+                  <div key={i}>
+                    <div className="w-24 bg-gray-300 border border-blue-300 rounded-lg h-7 animate-pulse" />
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              {variantsList.length != 1 && (
+                <span
+                  className={`inline-block mb-2 font-medium cursor-pointer opacity-60 hover:opacity-100 ${
+                    linkedProducts &&
+                    linkedProducts[0]?.variants == variantsList
+                      ? "text-red-600"
+                      : "text-blue-600"
+                  }`}
+                  onClick={() => handleSetAllLinkedProducts()}
+                >
                   {linkedProducts && linkedProducts[0]?.variants == variantsList
                     ? "Deselect all"
                     : "Select all"}
                 </span>
-              </span>
-            )}
-            <div className="flex flex-wrap gap-y-2 gap-x-3">
-              {variantsList.map((variant, i) => (
-                <div key={i}>
-                  <div
-                    className={`p-1 px-3 cursor-pointer rounded-lg border border-blue-300 ${
-                      isVariantActive(variant)
-                        ? "bg-blue-100"
-                        : "hover:bg-blue-50 "
-                    }`}
-                    onClick={() => handleSetLinkedProducts(variant)}
-                  >
-                    <p>
-                      {(variantsList.length == 1 ? "Unique" : "") +
-                        (variantsList.length == 1 &&
-                        variant.name.split(" - ")[1]
-                          ? " - "
-                          : "") +
-                        (variant.name.split(" - ")[1]
-                          ? variant.name.split(" - ")[1]
-                          : "")}
-                    </p>
+              )}
+              <div className="flex flex-wrap gap-y-2 gap-x-3">
+                {variantsList.map((variant, i) => (
+                  <div key={i}>
+                    <div
+                      className={`p-1 px-3 cursor-pointer rounded-lg border border-blue-300 ${
+                        isVariantActive(variant)
+                          ? "bg-blue-100"
+                          : "hover:bg-blue-50 "
+                      }`}
+                      onClick={() => handleSetLinkedProducts(variant)}
+                    >
+                      <p>
+                        {(variantsList.length == 1 ? "Unique" : "") +
+                          (variantsList.length == 1 &&
+                          variant.name.split(" - ")[1]
+                            ? " - "
+                            : "") +
+                          (variant.name.split(" - ")[1]
+                            ? variant.name.split(" - ")[1]
+                            : "")}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </li>
   )
 }

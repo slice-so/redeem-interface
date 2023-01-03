@@ -31,7 +31,7 @@ function DropdownMenu({ setShowDropdown }: Props) {
 
   return (
     <div
-      className={`z-20 absolute text-sm top-0 right-0 w-56 mt-20 border border-gray-200 space-y-1 bg-white rounded-sm overflow-hidden shadow-base nightwind-prevent-block`}
+      className={`z-20 absolute text-sm top-0 right-0 w-56 mt-20 border border-gray-200 space-y-1 bg-white rounded-md overflow-hidden shadow-base nightwind-prevent-block`}
       // ${
       //   showDropdown ? " opacity-100" : "-z-10 opacity-0"
       // }

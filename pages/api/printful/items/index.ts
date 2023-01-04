@@ -12,10 +12,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const { access_token } = await getRefreshedAccessToken(String(accountId))
 
-      const endpoint = "https://api.printful.com/store/products"
-      const data = await fetcher(endpoint, {
+      const endpoint = "https://api.printful.com/"
+      let data = await fetcher(`${endpoint}store/products`, {
         headers: { Authorization: `Bearer ${access_token}` }
       })
+      if (data.code == 400) {
+        data = await fetcher(`${endpoint}sync/products`, {
+          headers: { Authorization: `Bearer ${access_token}` }
+        })
+      }
 
       res.status(200).json(data.result.sort((a, b) => a.id - b.id))
     }

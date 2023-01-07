@@ -232,11 +232,11 @@ export default function PrintfulStore({
                       <p>
                         {(variantsList.length == 1 ? "Unique" : "") +
                           (variantsList.length == 1 &&
-                          variant.name.split(" - ")[1]
+                          variant.name.split(item.name + " - ")[1]
                             ? " - "
                             : "") +
-                          (variant.name.split(" - ")[1]
-                            ? variant.name.split(" - ")[1]
+                          (variant.name.split(item.name + " - ")[1]
+                            ? variant.name.split(item.name + " - ")[1]
                             : "")}
                       </p>
                     </div>

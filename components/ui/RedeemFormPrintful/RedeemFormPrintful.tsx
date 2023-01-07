@@ -76,7 +76,8 @@ const RedeemFormPrintful = ({
           />
         </div>
         <p className="py-6 font-medium">{product.name}</p>
-        {(variants.length != 1 || variants[0].name.split(" - ")[1]) && (
+        {(variants.length != 1 ||
+          variants[0].name.split(product.name + " - ")[1]) && (
           <>
             <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
               Color / size
@@ -93,11 +94,12 @@ const RedeemFormPrintful = ({
                 {variants.map((variant) => (
                   <option key={variant.id} value={variant.external_id}>
                     {(variants.length == 1 ? "Unique" : "") +
-                      (variants.length == 1 && variant.name.split(" - ")[1]
+                      (variants.length == 1 &&
+                      variant.name.split(product.name + " - ")[1]
                         ? " - "
                         : "") +
-                      (variant.name.split(" - ")[1]
-                        ? variant.name.split(" - ")[1]
+                      (variant.name.split(product.name + " - ")[1]
+                        ? variant.name.split(product.name + " - ")[1]
                         : "")}
                   </option>
                 ))}

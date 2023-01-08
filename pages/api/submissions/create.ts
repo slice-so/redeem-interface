@@ -81,6 +81,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (!orderId) throw Error(order.error.message)
       }
 
+      // Create user if it doesn't exist
+      await prisma.user.upsert({
+        where: {
+          id: buyer
+        },
+        update: {},
+        create: {
+          id: buyer
+        }
+      })
+
       const data = await prisma.submission.create({
         data: {
           formId: Number(formId),

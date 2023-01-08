@@ -36,7 +36,7 @@ const RedeemForm = ({
   const [isSuccess, setIsSuccess] = useState(false)
   const hexId = `${decimalToHex(Number(slicerId))}-${decimalToHex(
     Number(productId)
-  )}-${account.toLowerCase()}`
+  )}-${account?.toLowerCase()}`
 
   const tokensQuery = /* GraphQL */ `
       productPurchase (id: "${hexId}") {

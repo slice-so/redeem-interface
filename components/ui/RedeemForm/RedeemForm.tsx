@@ -166,7 +166,12 @@ const RedeemForm = ({
       </p>
     )
   ) : (
-    <p>Product redeemed successfully! 🎉</p>
+    <>
+      <p>Product redeemed successfully! 🎉</p>
+      <p className="pt-4 text-sm text-gray-500">
+        For any question get in touch with the seller
+      </p>
+    </>
   )
 }
 

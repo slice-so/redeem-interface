@@ -71,7 +71,7 @@ const CreateForm = ({
   }
 
   return !isSuccess ? (
-    productCreator == account.toLowerCase() ? (
+    productCreator == account?.toLowerCase() ? (
       <>
         <CreateFormPrintful
           stateValue={stateValue}

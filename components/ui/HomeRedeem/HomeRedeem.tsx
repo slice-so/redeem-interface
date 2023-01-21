@@ -12,7 +12,7 @@ import Link from "next/link"
 import Spinner from "@components/icons/Spinner"
 
 export type LinkedProducts = {
-  accountId: number
+  accountId: string
   product: any
   variants: any[]
 }[]

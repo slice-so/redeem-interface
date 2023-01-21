@@ -4,6 +4,7 @@ import { Account } from "@prisma/client"
 import fetcher from "@utils/fetcher"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Items } from "../CreateFormPrintful/CreateFormPrintful"
+import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
 import PrintfulItem from "../PrintfulItem"
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
   printfulItems: Items
   setPrintfulItems: Dispatch<SetStateAction<Items>>
   wrapperClassName?: string
-  linkedProducts: any
+  linkedProducts: LinkedProducts
   setLinkedProducts: Dispatch<SetStateAction<any>>
 }
 
@@ -25,6 +26,10 @@ export default function PrintfulStore({
 }: Props) {
   const [showDetail, setShowDetail] = useState(false)
   const [shownItemIndex, setShownItemIndex] = useState<number>(null)
+
+  const linkedProduct = linkedProducts?.find(
+    (product) => product.accountId == account.id
+  )
 
   const item =
     printfulItems &&
@@ -60,16 +65,12 @@ export default function PrintfulStore({
   }
 
   const isVariantActive = (variant: any) =>
-    linkedProducts &&
-    linkedProducts[0]?.variants?.find((v: any) => variant.id == v.id) &&
-    true
+    linkedProduct?.variants?.find((v: any) => variant.id == v.id) && true
 
   const handleSetLinkedProducts = (variant: any) => {
     const newProductsVariants =
-      linkedProducts &&
-      linkedProducts[0]?.product.id == item.id &&
-      linkedProducts[0]?.variants
-        ? [...linkedProducts[0].variants]
+      linkedProduct?.product.id == item.id && linkedProduct?.variants
+        ? [...linkedProduct.variants]
         : []
 
     if (isVariantActive(variant)) {
@@ -99,7 +100,7 @@ export default function PrintfulStore({
   }
 
   const handleSetAllLinkedProducts = () => {
-    if (linkedProducts && linkedProducts[0]?.variants == variantsList) {
+    if (linkedProduct?.variants == variantsList) {
       setLinkedProducts([])
     } else {
       setLinkedProducts([
@@ -143,7 +144,9 @@ export default function PrintfulStore({
 
         {!showDetail &&
           linkedProducts.length != 0 &&
-          linkedProducts[0].accountId == account?.id && (
+          linkedProducts.findIndex(
+            (product) => product.accountId == account?.id
+          ) != -1 && (
             <div className="rounded-full bg-blue-600 nightwind-prevent p-[3px] text-white w-5 h-5">
               <Check />
             </div>
@@ -206,14 +209,13 @@ export default function PrintfulStore({
               {variantsList.length != 1 && (
                 <span
                   className={`inline-block mb-2 font-medium cursor-pointer opacity-60 hover:opacity-100 ${
-                    linkedProducts &&
-                    linkedProducts[0]?.variants == variantsList
+                    linkedProduct?.variants == variantsList
                       ? "text-red-600"
                       : "text-blue-600"
                   }`}
                   onClick={() => handleSetAllLinkedProducts()}
                 >
-                  {linkedProducts && linkedProducts[0]?.variants == variantsList
+                  {linkedProduct?.variants == variantsList
                     ? "Deselect all"
                     : "Select all"}
                 </span>

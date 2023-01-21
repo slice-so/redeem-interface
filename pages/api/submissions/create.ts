@@ -42,9 +42,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           externalSettings["instantOrder"] || false
         }`
 
-        const { accountId, variants } = linkedProducts[0] // Only allowing to link one product at a time, for now
+        const { accountId } = linkedProducts?.find(
+          (product) =>
+            product.variants.findIndex(
+              (variant) => variant.external_id == selectedProduct
+            ) != -1
+        )
 
-        if (!variants.find((v) => v.external_id == selectedProduct)) {
+        if (!accountId) {
           throw Error("Invalid product")
         }
 

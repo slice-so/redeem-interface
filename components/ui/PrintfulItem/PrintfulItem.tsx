@@ -40,7 +40,9 @@ export default function PrintfulItem({
           {item.name}
         </p>
         {linkedProducts.length != 0 &&
-          linkedProducts[0].product.id == item.id && (
+          linkedProducts.findIndex(
+            (linkedProduct) => linkedProduct.product.id == item.id
+          ) != -1 && (
             <div className="absolute top-[8px] rounded-full nightwind-prevent bg-blue-600 p-[3px] right-[8px] text-white w-5 h-5">
               <Check />
             </div>

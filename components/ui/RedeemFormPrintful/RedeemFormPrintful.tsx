@@ -28,8 +28,6 @@ const RedeemFormPrintful = ({
   const product = chosenProduct?.product
   const variants = chosenProduct?.variants
 
-  console.log(variants)
-
   const deliveryQuestions: QuestionValue[] = [
     {
       question: "Name",
@@ -58,6 +56,13 @@ const RedeemFormPrintful = ({
     { question: "Postal code", hint: "" },
     { question: "Email", hint: "" }
   ]
+
+  const handleSetChosenProduct = (externalId: string) => {
+    const product = linkedProducts.find(
+      ({ product }) => product.external_id == externalId
+    )
+    setChosenProduct(product)
+  }
 
   useEffect(() => {
     if (variants?.length == 1) setSelectedProduct(variants[0].external_id)
@@ -92,12 +97,13 @@ const RedeemFormPrintful = ({
               <select
                 className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200"
                 value={chosenProduct.product.external_id}
-                // TODO: Might need to handle differently
-                onChange={(e) => setChosenProduct(JSON.parse(e.target.value))}
+                onChange={(e) => {
+                  handleSetChosenProduct(e.target.value)
+                }}
                 required
               >
                 {linkedProducts.map(({ product }) => (
-                  <option key={product.id} value={product}>
+                  <option key={product.id} value={product.external_id}>
                     {product.name}
                   </option>
                 ))}

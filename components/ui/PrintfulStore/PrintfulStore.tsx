@@ -27,16 +27,17 @@ export default function PrintfulStore({
   const [showDetail, setShowDetail] = useState(false)
   const [shownItemIndex, setShownItemIndex] = useState<number>(null)
 
-  const linkedProduct = linkedProducts?.find(
-    (product) => product.accountId == account.id
-  )
-
   const item =
     printfulItems &&
     account.id &&
     shownItemIndex != null &&
     printfulItems[account.id][shownItemIndex]
   const variantsList = item?.variantsList
+
+  const linkedProductIndex = linkedProducts?.findIndex(
+    ({ product }) => product.id == item.id
+  )
+  const linkedProduct = linkedProducts[linkedProductIndex]
 
   const getPrintfulItems = async () => {
     try {
@@ -68,45 +69,66 @@ export default function PrintfulStore({
     linkedProduct?.variants?.find((v: any) => variant.id == v.id) && true
 
   const handleSetLinkedProducts = (variant: any) => {
-    const newProductsVariants =
-      linkedProduct?.product.id == item.id && linkedProduct?.variants
-        ? [...linkedProduct.variants]
+    const newProductsVariants = linkedProduct ? [...linkedProduct.variants] : []
+    const newLinkedProducts =
+      linkedProducts.length && linkedProducts[0].accountId == account.id
+        ? [...linkedProducts]
         : []
 
     if (isVariantActive(variant)) {
       const index = newProductsVariants.findIndex((el) => el.id == variant.id)
       newProductsVariants.splice(index, 1)
-      setLinkedProducts(
-        newProductsVariants.length != 0
-          ? [
-              {
-                accountId: account.id,
-                product: item,
-                variants: newProductsVariants
-              }
-            ]
-          : []
-      )
+      if (!newProductsVariants.length) {
+        newLinkedProducts.splice(linkedProductIndex, 1)
+      }
     } else {
       newProductsVariants.push(variant)
-      setLinkedProducts([
-        {
+    }
+
+    if (newProductsVariants.length) {
+      if (newLinkedProducts.length && linkedProductIndex != -1) {
+        newLinkedProducts[linkedProductIndex] = {
           accountId: account.id,
           product: item,
           variants: newProductsVariants
         }
-      ])
+      } else {
+        newLinkedProducts.push({
+          accountId: account.id,
+          product: item,
+          variants: newProductsVariants
+        })
+      }
     }
+
+    setLinkedProducts(newLinkedProducts)
   }
 
   const handleSetAllLinkedProducts = () => {
+    const newLinkedProducts =
+      linkedProducts.length && linkedProducts[0].accountId == account.id
+        ? [...linkedProducts]
+        : []
+
     if (linkedProduct?.variants == variantsList) {
-      setLinkedProducts([])
+      newLinkedProducts.splice(linkedProductIndex, 1)
     } else {
-      setLinkedProducts([
-        { accountId: account.id, product: item, variants: variantsList }
-      ])
+      if (newLinkedProducts.length && linkedProductIndex != -1) {
+        newLinkedProducts[linkedProductIndex] = {
+          accountId: account.id,
+          product: item,
+          variants: variantsList
+        }
+      } else {
+        newLinkedProducts.push({
+          accountId: account.id,
+          product: item,
+          variants: variantsList
+        })
+      }
     }
+
+    setLinkedProducts(newLinkedProducts)
   }
 
   useEffect(() => {

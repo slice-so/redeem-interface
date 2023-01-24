@@ -92,12 +92,21 @@ const CreateForm = ({
               the product
             </p>
             {linkedProducts.length != 0 && (
-              <p className="text-sm text-yellow-600">
-                In order to process the order,{" "}
-                <span className="font-bold">email and delivery info</span>{" "}
-                (name, address, city, state, country, zip) will be added
-                automatically to the form.
-              </p>
+              <div className="text-sm text-yellow-600">
+                <p>
+                  In order to process the order,{" "}
+                  <span className="font-bold">email and delivery info</span>{" "}
+                  (name, address, city, state, country, zip) will be added
+                  automatically to the form.
+                </p>
+                {linkedProducts.length != 1 && (
+                  <p className="pt-6">
+                    Buyers will pick{" "}
+                    <b>one of the {linkedProducts.length} selected products</b>{" "}
+                    when redeeming their purchases.
+                  </p>
+                )}
+              </div>
             )}
             {questionsNumber != 0 && (
               <div className="pt-6">

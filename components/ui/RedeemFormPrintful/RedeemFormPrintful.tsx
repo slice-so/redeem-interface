@@ -1,7 +1,7 @@
 import Chevron from "@components/icons/Chevron"
 import { countryCodes } from "@lib/countryCodes"
 import Image from "next/future/image"
-import { Dispatch, SetStateAction, useEffect, useRef } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
 import Input from "../Input"
@@ -21,8 +21,12 @@ const RedeemFormPrintful = ({
   answers,
   setAnswers
 }: Props) => {
-  const product = linkedProducts.length != 0 && linkedProducts[0].product
-  const variants = linkedProducts.length != 0 && linkedProducts[0].variants
+  const [chosenProduct, setChosenProduct] = useState(
+    linkedProducts.length != 0 ? linkedProducts[0] : null
+  )
+
+  const product = chosenProduct?.product
+  const variants = chosenProduct?.variants
 
   const deliveryQuestions: QuestionValue[] = [
     {
@@ -53,9 +57,16 @@ const RedeemFormPrintful = ({
     { question: "Email", hint: "" }
   ]
 
+  const handleSetChosenProduct = (externalId: string) => {
+    const product = linkedProducts.find(
+      ({ product }) => product.external_id == externalId
+    )
+    setChosenProduct(product)
+  }
+
   useEffect(() => {
-    if (variants.length == 1) setSelectedProduct(variants[0].external_id)
-  }, [variants])
+    if (variants?.length == 1) setSelectedProduct(variants[0].external_id)
+  }, [variants, setSelectedProduct])
 
   useEffect(() => {
     if (answers["State"] && deliveryQuestions[4].options.length == 0) {
@@ -64,7 +75,7 @@ const RedeemFormPrintful = ({
   }, [answers])
 
   return (
-    product && (
+    linkedProducts.length != 0 && (
       <div className="mb-6">
         <div className="flex justify-center">
           <Image
@@ -75,7 +86,34 @@ const RedeemFormPrintful = ({
             className="rounded-lg"
           />
         </div>
-        <p className="py-6 font-medium">{product.name}</p>
+        {linkedProducts.length == 1 ? (
+          <p className="py-6 font-medium">{product.name}</p>
+        ) : (
+          <div className="py-6">
+            <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
+              Product to redeem
+            </p>
+            <div className="relative">
+              <select
+                className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200"
+                value={chosenProduct.product.external_id}
+                onChange={(e) => {
+                  handleSetChosenProduct(e.target.value)
+                }}
+                required
+              >
+                {linkedProducts.map(({ product }) => (
+                  <option key={product.id} value={product.external_id}>
+                    {product.name}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
+                <Chevron />
+              </div>
+            </div>
+          </div>
+        )}
         {(variants.length != 1 ||
           variants[0].name.split(product.name + " - ")[1]) && (
           <>

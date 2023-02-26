@@ -102,7 +102,7 @@ const HomeRedeem = () => {
             </>
           ) : (
             <div className="flex justify-center">
-              <Spinner size="w-10 h-10" />
+              <Spinner className="w-16 h-16 text-random2-600" />
             </div>
           )}
           {isProductUnredeemable && (

@@ -13,6 +13,7 @@ import {
   Slice,
   Notion
 } from "@components/icons/Social"
+import Logo from "@components/icons/Logo"
 
 type Props = {
   accounts: object
@@ -40,25 +41,25 @@ const Social: FC<Props> = ({ wrapperClassName, accounts }, props) => {
     instagram: { color: "hover:text-pink-500", element: Instagram },
     reddit: { color: "hover:text-red-500", element: Reddit },
     linkedin: { color: "hover:text-blue-700", element: Linkedin },
-    slice: { color: "hover:text-blue-600", element: Slice },
+    slice: { color: "hover:text-blue-600", element: Logo },
     mail: { color: "hover:text-gray-500", element: Mail }
   }
 
-  const size = "h-6"
-
   return (
-    <div className={`${wrapperClassName} flex justify-center`}>
+    <div className={`${wrapperClassName} flex justify-center items-center`}>
       {Object.keys(accounts).map((key) => {
         const DynamicComponent = components[key].element
         const componentColor = components[key].color
         return (
           <a
             key={key}
-            className={`${componentColor} ${size} mx-[18px]`}
+            className={`${componentColor} ${
+              key == "slice" ? "h-5" : "h-6"
+            } mx-[18px]`}
             href={accounts[key]}
             target="_blank"
             rel="noreferrer"
-            aria-label={`${accounts[key]} logo`}
+            aria-label={`${key} logo`}
           >
             <DynamicComponent />
           </a>

@@ -9,9 +9,10 @@ import {
 } from "@components/ui"
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import Spinner from "@components/icons/Spinner"
 
 export type LinkedProducts = {
-  accountId: number
+  accountId: string
   product: any
   variants: any[]
 }[]
@@ -75,28 +76,35 @@ const HomeRedeem = () => {
               Claim products after purchasing them on Slice
             </p>
           </div>
-          <div className="flex justify-between gap-8">
-            <Input
-              label="Slicer"
-              type="number"
-              min={0}
-              value={slicerId}
-              onChange={setSlicerId}
-            />
-            <Input
-              label="Product"
-              type="number"
-              min={1}
-              value={productId}
-              onChange={setProductId}
-            />
-          </div>
-          <Button
-            label="Redeem product"
-            wrapperClassName="mt-8 mb-12"
-            loading={loading}
-            onClick={() => checkProduct(slicerId, productId)}
-          />
+          {!loading ? (
+            <>
+              <div className="flex justify-between gap-8">
+                <Input
+                  label="Slicer"
+                  type="number"
+                  min={0}
+                  value={slicerId}
+                  onChange={setSlicerId}
+                />
+                <Input
+                  label="Product"
+                  type="number"
+                  min={1}
+                  value={productId}
+                  onChange={setProductId}
+                />
+              </div>
+              <Button
+                label="Redeem product"
+                wrapperClassName="mt-8 mb-12"
+                onClick={() => checkProduct(slicerId, productId)}
+              />
+            </>
+          ) : (
+            <div className="flex justify-center">
+              <Spinner size="w-10 h-10" />
+            </div>
+          )}
           {isProductUnredeemable && (
             <div className="space-y-3 text-sm">
               <p className="font-semibold text-yellow-600">

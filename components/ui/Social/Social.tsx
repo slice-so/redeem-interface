@@ -54,7 +54,7 @@ const Social: FC<Props> = ({ wrapperClassName, accounts }, props) => {
           <a
             key={key}
             className={`${componentColor} ${
-              key == "slice" ? "h-5" : "h-6"
+              key == "slice" ? "h-5 w-6" : "h-6"
             } mx-[18px]`}
             href={accounts[key]}
             target="_blank"

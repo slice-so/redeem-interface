@@ -20,7 +20,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           creator: true,
           slicerId: true,
           productId: true,
-          submissions: true
+          submissions: {
+            select: {
+              id: true,
+              formId: true,
+              redeemedUnits: true,
+              answers: true,
+              createdAt: true,
+              orderId: true,
+              orderProvider: true
+            }
+          }
         }
       })
 

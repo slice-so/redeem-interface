@@ -147,6 +147,11 @@ const RedeemForm = ({
                 ))}
               </div>
             )}
+
+            <p className="pt-8 text-sm text-yellow-600">
+              Your Ethereum address is only used to validate onchain purchases.
+              It is never shown or shared with anyone
+            </p>
             <Button label="Redeem" loading={loading} type="submit" />
             {errors.length != 0 && (
               <div className="space-y-2">

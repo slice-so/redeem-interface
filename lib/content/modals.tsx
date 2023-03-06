@@ -55,14 +55,18 @@ export const SUBMISSIONS_VIEW = (params: any) => {
           Slicer {slicerId} / Product {productId}
         </p>
       </div>
-      <div className="flex justify-between p-4 text-sm font-medium text-gray-500">
-        <p className="col-span-2 ">Buyer</p>
-        <p className="text-center ">Redeemed units</p>
-        <p className="col-span-2 text-right">Date</p>
+      <div className="grid items-center justify-between grid-cols-5 p-4 text-sm font-medium text-gray-500">
+        <p className="">#</p>
+        <p className="col-span-3 text-center ">Redeemed units</p>
+        <p className="text-right">Date</p>
       </div>
       <ul className="space-y-4">
-        {orderedSubmissions.map((submission) => (
-          <SubmissionBlock key={submission.id} submission={submission} />
+        {orderedSubmissions.map((submission, index) => (
+          <SubmissionBlock
+            key={submission.id}
+            submission={submission}
+            index={index}
+          />
         ))}
       </ul>
     </>

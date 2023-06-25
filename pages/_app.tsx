@@ -13,28 +13,32 @@ import {
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { infuraProvider } from "wagmi/providers/infura"
 import { publicProvider } from "wagmi/providers/public"
-import { createClient, configureChains, WagmiConfig } from "wagmi"
+import { createConfig, configureChains, WagmiConfig } from "wagmi"
 import { mainnet, goerli } from "wagmi/chains"
 import "@rainbow-me/rainbowkit/styles.css"
 
-const defaultChains =
-  process.env.NEXT_PUBLIC_CHAIN_ID === "5" ? [goerli] : [mainnet]
+const alchemyId = String(process.env.NEXT_PUBLIC_ALCHEMY_ID)
+const infuraId = String(process.env.NEXT_PUBLIC_INFURA_ID)
 
-const { chains, provider } = configureChains(defaultChains, [
-  infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID }),
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+const customChains = [
+  process.env.NEXT_PUBLIC_CHAIN_ID === "5" ? goerli : mainnet
+]
+const { chains, publicClient } = configureChains(customChains, [
+  infuraProvider({ apiKey: infuraId }),
+  alchemyProvider({ apiKey: alchemyId }),
   publicProvider()
 ])
 
 const { connectors } = getDefaultWallets({
   appName: "Slice Redeem",
+  projectId: "d3fea506303b8d4b4d9a441d9786886a",
   chains
 })
 
-const wagmiClient = createClient({
+const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
-  provider
+  publicClient
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -46,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         storageKey="nightwind-mode"
         defaultTheme="system"
       >
-        <WagmiConfig client={wagmiClient}>
+        <WagmiConfig config={wagmiConfig}>
           <RainbowKitProvider
             chains={chains}
             theme={

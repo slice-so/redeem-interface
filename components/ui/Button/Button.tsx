@@ -100,7 +100,7 @@ const Button: FC<ButtonProps> = (props) => {
       )}
       {double && !disabled && (
         <div
-          className={`${className} w-full shadow-light-random opacity-80 absolute top-0 translate-x-[0.6rem] translate-y-[0.6rem] bg-gradient-to-br from-random1-300 to-random2-300 nightwind-prevent text-transparent peer-hover:translate-x-0 peer-hover:translate-y-0 peer-focus:translate-x-0 peer-focus:translate-y-0 transition-all duration-150 animate-pulse-slow`}
+          className={`${className} -z-10 w-full shadow-light-random opacity-80 absolute top-0 translate-x-[0.6rem] translate-y-[0.6rem] bg-gradient-to-br from-random1-300 to-random2-300 nightwind-prevent text-transparent peer-hover:translate-x-0 peer-hover:translate-y-0 peer-focus:translate-x-0 peer-focus:translate-y-0 transition-all duration-150 animate-pulse-slow`}
         />
       )}
     </div>

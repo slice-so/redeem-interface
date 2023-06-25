@@ -1,7 +1,7 @@
 import { colorList, darkColorList } from "@utils/colorList"
 import { createContext, useContext, useEffect, useState } from "react"
 import { View } from "@lib/content/modals"
-import { useAccount, useNetwork, useProvider } from "wagmi"
+import { useAccount, useNetwork, usePublicClient } from "wagmi"
 
 const AppContext = createContext<any>({
   provider: null,
@@ -20,7 +20,7 @@ const AppContext = createContext<any>({
 
 export function AppWrapper({ children }) {
   const [modalView, setModalView] = useState<View>({ name: "" })
-  const provider = useProvider()
+  const provider = usePublicClient()
   const { chain } = useNetwork()
 
   const { address: account } = useAccount()

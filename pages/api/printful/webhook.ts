@@ -9,8 +9,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { type, data } = req.body
       let message = ""
 
-      console.log(req.body)
-
       const items = data.order.items
         .map((item) => item.quantity + " x " + item.name)
         .join("\n- ")

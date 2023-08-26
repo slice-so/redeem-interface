@@ -14,7 +14,7 @@ export default function Products() {
             <DoubleText
               inactive
               size="text-3xl sm:text-4xl"
-              logoText="Your forms"
+              logoText="My forms"
             />
           </h1>
           <VerifiedBlock

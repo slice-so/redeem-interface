@@ -39,7 +39,7 @@ function DropdownMenu({ setShowDropdown }: Props) {
       <DropdownMenuElement
         href={`https://${getSliceSubdomain()}slice.so/profile`}
         image={<Logo className="w-5 h-5" />}
-        label="My slicers"
+        label="Slicers"
         onClick={() => setShowDropdown(false)}
       />
       <DropdownMenuElement
@@ -61,7 +61,7 @@ function DropdownMenu({ setShowDropdown }: Props) {
             <FileText />
           </div>
         }
-        label="Your forms"
+        label="Forms"
         onClick={() => setShowDropdown(false)}
       />
       {/* <DropdownMenuElement

@@ -1,4 +1,4 @@
-export const getSubdomain = () => {
+export const getSliceSubdomain = () => {
   switch (process.env.NEXT_PUBLIC_CHAIN_ID) {
     case "5":
       return "testnet."

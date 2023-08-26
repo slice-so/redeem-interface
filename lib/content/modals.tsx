@@ -18,35 +18,35 @@ export const NETWORK_VIEW = () => {
     case 1:
       chainData = {
         label: "Ethereum Mainnet",
-        url: "https://testnet.slice.so",
+        url: "https://testnet.redeem.slice.so",
         altLabel: "Ethereum Goerli (testnet)"
       }
       break
     case 5:
       chainData = {
         label: "Ethereum Goerli (testnet)",
-        url: "https://slice.so",
+        url: "https://redeem.slice.so",
         altLabel: "Ethereum Mainnet"
       }
       break
     case 10:
       chainData = {
         label: "Optimism",
-        url: "https://slice.so",
+        url: "https://redeem.slice.so",
         altLabel: "Ethereum Mainnet"
       }
       break
     case 8453:
       chainData = {
         label: "Base",
-        url: "https://slice.so",
+        url: "https://redeem.slice.so",
         altLabel: "Ethereum Mainnet"
       }
       break
     case 84531:
       chainData = {
         label: "Base Goerli (testnet)",
-        url: "https://base.slice.so",
+        url: "https://base.redeem.slice.so",
         altLabel: "Base Mainnet"
       }
       break

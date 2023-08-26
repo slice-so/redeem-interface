@@ -10,34 +10,83 @@ export type View = {
 type ViewNames = "" | "NETWORK_VIEW" | "SUBMISSIONS_VIEW"
 
 export const NETWORK_VIEW = () => {
-  const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
+  const chainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
+
+  let chainData
+
+  switch (chainId) {
+    case 1:
+      chainData = {
+        label: "Ethereum Mainnet",
+        url: "https://testnet.slice.so",
+        altLabel: "Ethereum Goerli (testnet)"
+      }
+      break
+    case 5:
+      chainData = {
+        label: "Ethereum Goerli (testnet)",
+        url: "https://slice.so",
+        altLabel: "Ethereum Mainnet"
+      }
+      break
+    case 10:
+      chainData = {
+        label: "Optimism",
+        url: "https://slice.so",
+        altLabel: "Ethereum Mainnet"
+      }
+      break
+    case 8453:
+      chainData = {
+        label: "Base",
+        url: "https://slice.so",
+        altLabel: "Ethereum Mainnet"
+      }
+      break
+    case 84531:
+      chainData = {
+        label: "Base Goerli (testnet)",
+        url: "https://base.slice.so",
+        altLabel: "Base Mainnet"
+      }
+      break
+  }
 
   return (
-    <>
-      <div className="text-center">
-        <h1 className="text-2xl sm:text-3xl">Pick the right chain</h1>
-        <div className="py-8">
-          <p>
-            Connect to the{" "}
-            <b>{chainId === "5" ? "Goerli Testnet" : "Ethereum Mainnet"}</b>{" "}
-            Network
-          </p>
-        </div>
-        <div
-          className="flex justify-center"
-          onClick={() => saEvent("connect_wallet_attempt")}
-        >
-          <ConnectButton
-            accountStatus={{
-              smallScreen: "address",
-              largeScreen: "full"
-            }}
-            chainStatus="full"
-            showBalance={false}
-          />
-        </div>
+    <div className="text-center">
+      <div className="pb-6">
+        <DoubleText inactive logoText="Pick the right chain" />
       </div>
-    </>
+      <p className="text-lg">
+        Connect to the <span className="font-black">{chainData.label}</span>{" "}
+        Network
+      </p>
+      <div
+        className="flex justify-center pt-6"
+        onClick={() => saEvent("connect_wallet_attempt")}
+      >
+        <ConnectButton
+          accountStatus={{
+            smallScreen: "address",
+            largeScreen: "full"
+          }}
+          chainStatus="full"
+          showBalance={false}
+        />
+      </div>
+
+      <p className="pt-6 text-gray-600">
+        Or go to{" "}
+        <a
+          href={chainData.url}
+          target="_blank"
+          rel="noreferrer"
+          className="highlight"
+        >
+          {chainData.altLabel}
+        </a>
+      </p>
+    </div>
   )
 }
 

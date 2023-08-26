@@ -86,7 +86,7 @@ const CreateFormPrintful = ({
                 <p>
                   You can change this behaviour anytime by editing the form.
                 </p>
-                {process.env.NEXT_PUBLIC_CHAIN_ID == "5" && (
+                {process.env.NEXT_PUBLIC_ENV == "testnet" && (
                   <p className="text-yellow-600">
                     Note: This feature can only be enabled on mainnet.
                   </p>
@@ -98,7 +98,7 @@ const CreateFormPrintful = ({
           <MySwitch
             enabled={externalSettings["instantOrder"]}
             setEnabled={handleSetInstantOrder}
-            disabled={process.env.NEXT_PUBLIC_CHAIN_ID == "5"}
+            disabled={process.env.NEXT_PUBLIC_ENV == "testnet"}
           />
         </div>
       )}

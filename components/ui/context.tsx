@@ -71,7 +71,7 @@ export function AppWrapper({ children }) {
     if (
       account &&
       chain &&
-      Number(chain.id).toString(16) !== process.env.NEXT_PUBLIC_CHAIN_ID
+      Number(chain.id) !== Number(process.env.NEXT_PUBLIC_CHAIN_ID)
     ) {
       setModalView({ cross: false, name: "NETWORK_VIEW" })
     } else {

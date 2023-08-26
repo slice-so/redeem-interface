@@ -1,4 +1,5 @@
 import getBlurImageUrl from "@utils/getBlurImageUrl"
+import { getSubdomain } from "@utils/getSubdomain"
 import { useProductData } from "@utils/useProductData"
 import Image from "next/future/image"
 import productDefault from "public/product_default.png"
@@ -17,9 +18,7 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
         <>
           <a
             className="font-semibold"
-            href={`https://${
-              process.env.NEXT_PUBLIC_CHAIN_ID == "5" ? "testnet." : ""
-            }slice.so/slicer/${slicerId}?product=${productId}`}
+            href={`https://${getSubdomain()}slice.so/slicer/${slicerId}?product=${productId}`}
             target="_blank"
             rel="noreferrer"
           >

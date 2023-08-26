@@ -13,17 +13,30 @@ import {
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { infuraProvider } from "wagmi/providers/infura"
 import { publicProvider } from "wagmi/providers/public"
-import { createConfig, configureChains, WagmiConfig } from "wagmi"
-import { mainnet, goerli } from "wagmi/chains"
+import { createConfig, configureChains, WagmiConfig, Chain } from "wagmi"
+import { baseGoerli, goerli, mainnet, optimism } from "wagmi/chains"
 import "@rainbow-me/rainbowkit/styles.css"
+import { base } from "utils/chains"
 
 const alchemyId = String(process.env.NEXT_PUBLIC_ALCHEMY_ID)
 const infuraId = String(process.env.NEXT_PUBLIC_INFURA_ID)
 
-const customChains = [
-  process.env.NEXT_PUBLIC_CHAIN_ID === "5" ? goerli : mainnet
-]
-const { chains, publicClient } = configureChains(customChains, [
+const chainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
+const customChains: () => Chain[] = () => {
+  if (chainId == 1) {
+    return [mainnet]
+  } else if (chainId == 5) {
+    return [goerli]
+  } else if (chainId == 10) {
+    return [optimism]
+  } else if (chainId == 8453) {
+    return [base]
+  } else if (chainId == 84531) {
+    return [baseGoerli]
+  }
+}
+
+const { chains, publicClient } = configureChains(customChains(), [
   infuraProvider({ apiKey: infuraId }),
   alchemyProvider({ apiKey: alchemyId }),
   publicProvider()

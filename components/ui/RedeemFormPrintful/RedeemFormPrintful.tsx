@@ -31,7 +31,7 @@ const RedeemFormPrintful = ({
 
   const deliveryQuestions: QuestionValue[] = [
     {
-      question: "Name",
+      question: "Full name",
       hint: ""
     },
     { question: "Address", hint: "" },

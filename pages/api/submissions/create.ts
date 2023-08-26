@@ -60,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const body = {
           body: JSON.stringify({
             recipient: {
-              name: answers["Name"],
+              name: answers["Full name"],
               address1: answers["Address"],
               city: answers["City"],
               state_code: answers["State"],

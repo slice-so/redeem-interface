@@ -41,6 +41,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
         })
       } else {
+        // Check if user exists
+        const user = await prisma.user.findUnique({
+          where: {
+            id: String(creator)
+          }
+        })
+        // If user doesn't exist, create it
+        if (!user) {
+          await prisma.user.create({
+            data: {
+              id: String(creator)
+            }
+          })
+        }
+
         data = await prisma.form.create({
           data: {
             slicerId: Number(slicerId),

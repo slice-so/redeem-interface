@@ -7,6 +7,7 @@ import { Container, DropdownMenu } from "@components/ui"
 import { useAppContext } from "../context"
 import { useEffect, useRef, useState } from "react"
 import saEvent from "@utils/saEvent"
+import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 
 const Navbar = () => {
   const { isConnected } = useAppContext()
@@ -30,12 +31,13 @@ const Navbar = () => {
   return (
     <header className="shadow-sm">
       <Container>
-        <nav className="relative px-3 sm:px-6 h-[4.25rem] items-center mx-auto flex justify-between">
-          <div className="relative z-10 flex items-center space-x-7 sm:space-x-10">
-            <Link href="/">
-              <a aria-label="Slice logo">
-                <Logo className="w-6 h-6" />
-              </a>
+        <nav className="relative px-3 sm:px-6 h-20 items-center mx-auto flex justify-between">
+          <div className="z-10 flex items-center space-x-6 sm:space-x-8">
+            <Link href="/" aria-label="Slice logo">
+              <Logo className="w-6 h-6" />
+            </Link>
+            <Link href={`https://${getSliceSubdomain()}slice.so/slicer`}>
+              <a className="text-[0.925rem] font-medium">Explore</a>
             </Link>
           </div>
           <div className="relative z-10 flex items-center space-x-6">
@@ -67,7 +69,6 @@ const Navbar = () => {
           )}
         </nav>
       </Container>
-      <hr className="w-full border-gray-200" />
     </header>
   )
 }

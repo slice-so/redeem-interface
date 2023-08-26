@@ -3,6 +3,9 @@ import { Dispatch, SetStateAction } from "react"
 import { DropdownMenuElement } from ".."
 import File from "@components/icons/File"
 import FileText from "@components/icons/FileText"
+import ShoppingBag from "@components/icons/ShoppingBag"
+import Banknotes from "@components/icons/Banknotes"
+import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 type Props = {
   setShowDropdown: Dispatch<SetStateAction<boolean>>
 }
@@ -31,11 +34,26 @@ function DropdownMenu({ setShowDropdown }: Props) {
 
   return (
     <div
-      className={`z-20 absolute text-sm top-0 right-0 w-56 mt-20 border border-gray-200 space-y-1 bg-white rounded-md overflow-hidden shadow-base nightwind-prevent-block`}
-      // ${
-      //   showDropdown ? " opacity-100" : "-z-10 opacity-0"
-      // }
+      className={`z-20 absolute top-0 right-0 w-56 p-1.5 mt-20 border border-opacity-80 border-gray-200 space-y-1 bg-white rounded-lg shadow-base transition-opacity duration-200 nightwind-prevent-block`}
     >
+      <DropdownMenuElement
+        href={`https://${getSliceSubdomain()}slice.so/profile`}
+        image={<Logo className="w-5 h-5" />}
+        label="My slicers"
+        onClick={() => setShowDropdown(false)}
+      />
+      <DropdownMenuElement
+        href={`https://${getSliceSubdomain()}slice.so/earnings`}
+        image={<Banknotes className="w-5 h-5" />}
+        label="Earnings"
+        onClick={() => setShowDropdown(false)}
+      />
+      <DropdownMenuElement
+        href={`https://${getSliceSubdomain()}slice.so/purchases`}
+        image={<ShoppingBag strokeWidth="1.5" className="w-5 h-5" />}
+        label="Purchases"
+        onClick={() => setShowDropdown(false)}
+      />
       <DropdownMenuElement
         href="/forms"
         image={

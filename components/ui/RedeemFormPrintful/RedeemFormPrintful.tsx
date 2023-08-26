@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
 import Input from "../Input"
+import { useAccount } from "wagmi"
 
 type Props = {
   linkedProducts: LinkedProducts
@@ -30,7 +31,7 @@ const RedeemFormPrintful = ({
 
   const deliveryQuestions: QuestionValue[] = [
     {
-      question: "Name",
+      question: "Full name",
       hint: ""
     },
     { question: "Address", hint: "" },
@@ -57,6 +58,12 @@ const RedeemFormPrintful = ({
     { question: "Email", hint: "" }
   ]
 
+  const { connector } = useAccount()
+  const isCoinbaseWallet = connector?.id == "coinbaseWallet"
+  if (isCoinbaseWallet) {
+    deliveryQuestions.pop()
+  }
+
   const handleSetChosenProduct = (externalId: string) => {
     const product = linkedProducts.find(
       ({ product }) => product.external_id == externalId
@@ -75,136 +82,144 @@ const RedeemFormPrintful = ({
   }, [answers])
 
   return (
-    linkedProducts.length != 0 && (
-      <div className="mb-6">
-        <div className="flex justify-center">
-          <Image
-            src={product.thumbnail_url}
-            width={260}
-            height={260}
-            alt={product.name + " image"}
-            className="rounded-lg"
-          />
-        </div>
-        {linkedProducts.length == 1 ? (
-          <p className="py-6 font-medium">{product.name}</p>
-        ) : (
-          <div className="py-6">
-            <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
-              Product to redeem
-            </p>
-            <div className="relative">
-              <select
-                className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200"
-                value={chosenProduct.product.external_id}
-                onChange={(e) => {
-                  handleSetChosenProduct(e.target.value)
-                }}
-                required
-              >
-                {linkedProducts.map(({ product }) => (
-                  <option key={product.id} value={product.external_id}>
-                    {product.name}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-                <Chevron />
-              </div>
-            </div>
+    <>
+      {linkedProducts.length != 0 && (
+        <div className="mb-6">
+          <div className="flex justify-center">
+            <Image
+              src={product.thumbnail_url}
+              width={260}
+              height={260}
+              alt={product.name + " image"}
+              className="rounded-lg"
+            />
           </div>
-        )}
-        {(variants.length != 1 ||
-          variants[0].name.split(product.name + " - ")[1]) && (
-          <>
-            <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
-              Color / size
-            </p>
-            <div className="relative">
-              <select
-                className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
-                value={selectedProduct}
-                onChange={(e) => setSelectedProduct(e.target.value)}
-                disabled={variants.length == 1}
-                required
-              >
-                <option value="">Pick option...</option>
-                {variants.map((variant) => (
-                  <option key={variant.id} value={variant.external_id}>
-                    {(variants.length == 1 ? "Unique" : "") +
-                      (variants.length == 1 &&
-                      variant.name.split(product.name + " - ")[1]
-                        ? " - "
-                        : "") +
-                      (variant.name.split(product.name + " - ")[1]
-                        ? variant.name.split(product.name + " - ")[1]
-                        : "")}
-                  </option>
-                ))}
-              </select>
-              {variants.length != 1 && (
+          {linkedProducts.length == 1 ? (
+            <p className="py-6 font-medium">{product.name}</p>
+          ) : (
+            <div className="py-6">
+              <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
+                Product to redeem
+              </p>
+              <div className="relative">
+                <select
+                  className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200"
+                  value={chosenProduct.product.external_id}
+                  onChange={(e) => {
+                    handleSetChosenProduct(e.target.value)
+                  }}
+                  required
+                >
+                  {linkedProducts.map(({ product }) => (
+                    <option key={product.id} value={product.external_id}>
+                      {product.name}
+                    </option>
+                  ))}
+                </select>
                 <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
                   <Chevron />
                 </div>
-              )}
+              </div>
             </div>
-          </>
-        )}
-
-        <div className="px-2 py-6 my-6 text-left rounded-md shadow-lg bg-gray-50 sm:px-4">
-          <div className="pb-4">
-            <p className="font-medium">Delivery info</p>
-            <p className="text-sm">
-              The item will be delivered to the address specified below.
-            </p>
-          </div>
-          {deliveryQuestions.map(({ question, hint, options }, key) => {
-            const handleSetAnswer = (answer: string) => {
-              setAnswers((prev) => ({ ...prev, [question]: answer }))
-            }
-
-            return (
-              <div key={key}>
-                {options ? (
-                  options.length != 0 && (
-                    <>
-                      <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
-                        {question}
-                      </p>
-                      <div className="relative mb-4">
-                        <select
-                          className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
-                          value={answers[question]}
-                          onChange={(e) => handleSetAnswer(e.target.value)}
-                          required
-                        >
-                          <option value="">Pick option...</option>
-                          {options.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.name}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-                          <Chevron />
-                        </div>
-                      </div>
-                    </>
-                  )
-                ) : (
-                  <Input
-                    label={question}
-                    value={answers[question] || ""}
-                    onChange={handleSetAnswer}
-                    required
-                  />
+          )}
+          {(variants.length != 1 ||
+            variants[0].name.split(product.name + " - ")[1]) && (
+            <>
+              <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
+                Color / size
+              </p>
+              <div className="relative">
+                <select
+                  className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
+                  value={selectedProduct}
+                  onChange={(e) => setSelectedProduct(e.target.value)}
+                  disabled={variants.length == 1}
+                  required
+                >
+                  <option value="">Pick option...</option>
+                  {variants.map((variant) => (
+                    <option key={variant.id} value={variant.external_id}>
+                      {(variants.length == 1 ? "Unique" : "") +
+                        (variants.length == 1 &&
+                        variant.name.split(product.name + " - ")[1]
+                          ? " - "
+                          : "") +
+                        (variant.name.split(product.name + " - ")[1]
+                          ? variant.name.split(product.name + " - ")[1]
+                          : "")}
+                    </option>
+                  ))}
+                </select>
+                {variants.length != 1 && (
+                  <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
+                    <Chevron />
+                  </div>
                 )}
               </div>
-            )
-          })}
+            </>
+          )}
+
+          <div className="px-2 py-6 my-6 text-left rounded-md shadow-lg bg-gray-50 sm:px-4">
+            <div className="pb-4">
+              <p className="font-medium">Delivery info</p>
+              <p className="text-sm">
+                The item will be delivered to the address specified below.
+              </p>
+            </div>
+            {deliveryQuestions.map(({ question, hint, options }, key) => {
+              const handleSetAnswer = (answer: string) => {
+                setAnswers((prev) => ({ ...prev, [question]: answer }))
+              }
+
+              return (
+                <div key={key}>
+                  {options ? (
+                    options.length != 0 && (
+                      <>
+                        <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
+                          {question}
+                        </p>
+                        <div className="relative mb-4">
+                          <select
+                            className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
+                            value={answers[question]}
+                            onChange={(e) => handleSetAnswer(e.target.value)}
+                            required
+                          >
+                            <option value="">Pick option...</option>
+                            {options.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.name}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
+                            <Chevron />
+                          </div>
+                        </div>
+                      </>
+                    )
+                  ) : (
+                    <Input
+                      label={question}
+                      value={answers[question] || ""}
+                      onChange={handleSetAnswer}
+                      required
+                    />
+                  )}
+                </div>
+              )
+            })}
+          </div>
         </div>
-      </div>
-    )
+      )}
+      {isCoinbaseWallet && (
+        <p className="pt-4 text-sm text-blue-600">
+          Order details and tracking information will be notifyed on your <br />{" "}
+          <strong>Coinbase Wallet</strong>
+        </p>
+      )}
+    </>
   )
 }
 

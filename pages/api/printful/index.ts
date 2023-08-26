@@ -3,6 +3,7 @@ import corsMiddleware from "@utils/corsMiddleware"
 import { prisma } from "@lib/prisma"
 import fetcher from "@utils/fetcher"
 import { clientId } from "@components/ui/CreateFormPrintful/CreateFormPrintful"
+import setPrintfulWebhooks from "@utils/setPrintfulWebhooks"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
@@ -71,6 +72,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             token_type
           }
         }))
+
+        storesData.result?.forEach((store) =>
+          // Set Printful webhook
+          setPrintfulWebhooks(access_token, store.id)
+        )
 
         // Check if user exists
         const user = await prisma.user.findUnique({

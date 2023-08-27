@@ -1,5 +1,5 @@
 import { NextSeo } from "next-seo"
-import { Container, HomeRedeem } from "@components/ui"
+import { Container, HomeRedeem, VerifiedBlock } from "@components/ui"
 import {
   defaultDescription,
   defaultTitle,
@@ -28,7 +28,20 @@ export default function Home() {
       />
       <Container page={true} size="max-w-screen-xs">
         <main>
-          <HomeRedeem />
+          <VerifiedBlock
+            beforeConnect={
+              <p className="pb-6 font-semibold text-yellow-600">
+                Connect your wallet to redeem
+              </p>
+            }
+            beforeSign={
+              <p className="pb-6 font-semibold text-yellow-600">
+                Sign the message to verify ownership of your address
+              </p>
+            }
+          >
+            <HomeRedeem />
+          </VerifiedBlock>
         </main>
       </Container>
     </>

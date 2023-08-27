@@ -1,21 +1,35 @@
 import { supabase } from "@lib/supabase"
 import { useEffect, useState } from "react"
 
-export const useProductData = (slicerId: number, productId: number) => {
+type Props = {
+  slicerId: number
+  productId: number
+}
+
+export const useProductData = (purchases: Props[]) => {
   const [productData, setProductData] = useState(null)
 
-  const getProduct = async (slicerId: number, productId: number) => {
-    const { data } = await supabase
+  const getProduct = async (purchases: Props[]) => {
+    const orConditions = purchases
+      .map(
+        (pair) =>
+          `slicer_id.eq.${pair.slicerId},product_id.eq.${pair.productId}`
+      )
+      .join("|")
+
+    const { data, error } = await supabase
       .from("Product")
       .select()
-      .eq("slicer_id", slicerId)
-      .eq("product_id", productId)
-      .select("name,image,shortDescription")
-    setProductData(data[0])
+      .or(orConditions)
+      .select("name,image,shortDescription,Slicer(id,name)")
+
+    if (error) console.log(error)
+    console.log(data)
+    // setProductData(data)
   }
 
   useEffect(() => {
-    getProduct(slicerId, productId)
+    getProduct(purchases)
   }, [])
 
   return productData

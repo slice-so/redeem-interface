@@ -1,4 +1,5 @@
 import getBlurImageUrl from "@utils/getBlurImageUrl"
+import { Purchase } from "@utils/getPurchases"
 import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 import { useProductData } from "@utils/useProductData"
 import Image from "next/future/image"
@@ -10,11 +11,12 @@ type Props = {
 }
 
 const ProductPreview = ({ slicerId, productId }: Props) => {
-  const productData = useProductData(slicerId, productId)
+  const productDataArray = useProductData([{ slicerId, productId }])
+  // const productData = productDataArray[0]
 
   return (
     <div className="mb-6 text-center">
-      {productData ? (
+      {/* {productData ? (
         <>
           <a
             className="font-semibold"
@@ -42,7 +44,7 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
           <div className="h-48 mx-auto mt-2 mb-4 bg-gray-400 rounded-lg w-72 animate-pulse" />
           <div className="w-64 h-5 mx-auto bg-gray-400 rounded-md animate-pulse" />
         </>
-      )}
+      )} */}
     </div>
   )
 }

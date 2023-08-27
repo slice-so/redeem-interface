@@ -1,1 +1,1 @@
-export { default } from "./HomeRedeem"
+export { default } from "./HomeRedeem_old"

@@ -11,7 +11,24 @@ type Props = {
   beforeSign?: JSX.Element
 }
 
-const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
+const beforeConnectDefault = (
+  <p className="pb-6 font-semibold text-yellow-600">
+    Connect your wallet to proceed
+  </p>
+)
+
+const beforeSignDefault = (
+  <p className="pb-6 font-semibold text-yellow-600">
+    Verify ownership of the connected address by signing a message in your
+    wallet
+  </p>
+)
+
+const VerifiedBlock = ({
+  beforeConnect = beforeConnectDefault,
+  beforeSign = beforeSignDefault,
+  children
+}: Props) => {
   const [timestamp] = useState(Date.now())
   const message = `Sign this message to prove you have access to this wallet in order to sign in to redeem.slice.so.
 
@@ -44,7 +61,7 @@ const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
       <div>
         <Button
           wrapperClassName="mb-6"
-          label="Sign message"
+          label="Verify address"
           loading={isLoading}
           onClick={() => signMessage()}
         />

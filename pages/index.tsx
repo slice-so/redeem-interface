@@ -28,18 +28,7 @@ export default function Home() {
       />
       <Container page={true} size="max-w-screen-xs">
         <main>
-          <VerifiedBlock
-            beforeConnect={
-              <p className="pb-6 font-semibold text-yellow-600">
-                Connect your wallet to redeem
-              </p>
-            }
-            beforeSign={
-              <p className="pb-6 font-semibold text-yellow-600">
-                Sign the message to verify ownership of your address
-              </p>
-            }
-          >
+          <VerifiedBlock>
             <HomeRedeem />
           </VerifiedBlock>
         </main>

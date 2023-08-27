@@ -1,16 +1,10 @@
-import { Dispatch, SetStateAction } from "react"
-
 export type Purchase = {
   slicerId: string
   productId: string
   totalQuantity: string
 }
 
-export const getPurchases = async (
-  buyer: string,
-  setPurchases: Dispatch<SetStateAction<Purchase[]>>
-) => {
-  console.log("getPurchase")
+export const getPurchases = async (buyer: string) => {
   const client = (await import("@utils/apollo-client")).default
   const { gql } = await import("@apollo/client")
 
@@ -31,6 +25,7 @@ export const getPurchases = async (
   })
   const payeePurchases = data?.payee?.purchases
   let purchasesList: Purchase[] = []
+
   payeePurchases?.map((p) => {
     const id = p.id.split("-")
     const slicerId = parseInt(id[0], 16).toString()
@@ -42,5 +37,6 @@ export const getPurchases = async (
       totalQuantity: p.totalQuantity
     })
   })
-  setPurchases(purchasesList)
+
+  return purchasesList
 }

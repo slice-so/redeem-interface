@@ -7,7 +7,7 @@ type Props = {
   totalQuantity?: number
 }
 
-type ProductData = {
+export type ProductData = {
   product_id: number
   Slicer: { id: number; name: string; image: string }
   image: string

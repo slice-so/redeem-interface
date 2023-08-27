@@ -39,7 +39,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       })
 
-      const productsToRedeem = forms.flatMap((form) => {
+      const productsToRedeem = {}
+
+      forms.forEach((form) => {
         const product = products.find(
           (product) =>
             product.Slicer.id === form.slicerId &&
@@ -67,15 +69,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const quantityToRedeem =
           Number(purchase.totalQuantity) - quantityRedeemed
 
-        if (quantityToRedeem == 0) return []
+        if (quantityToRedeem != 0) {
+          if (!productsToRedeem[slicerId]) {
+            productsToRedeem[slicerId] = []
+          }
 
-        return {
-          ...product,
-          quantityToRedeem
+          productsToRedeem[slicerId].push({
+            ...product,
+            quantityToRedeem
+          })
         }
       })
 
-      res.status(200).json({ data: productsToRedeem })
+      res.status(200).json(productsToRedeem)
     } catch (err) {
       console.log(err)
 

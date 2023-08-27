@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import corsMiddleware from "@utils/corsMiddleware"
+import { prisma } from "@lib/prisma"
+import sendBaseMessage from "@utils/sendBaseMessage"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
@@ -51,6 +53,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             orderUpdated.estimated_fulfillment
           ).toDateString()}\n\nItems:\n- ${items}`
           break
+      }
+
+      const submissions = await prisma.submission.findMany({
+        where: {
+          orderId: data.order.id,
+          orderProvider: "Printful"
+        },
+        select: {
+          buyer: true
+        }
+      })
+
+      const buyer = submissions[0]?.buyer
+
+      if (buyer) {
+        sendBaseMessage(message, buyer)
       }
 
       res.status(200).send("OK")

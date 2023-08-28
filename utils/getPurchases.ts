@@ -10,7 +10,7 @@ export const getPurchases = async (buyer: string) => {
 
   const tokensQuery = /* GraphQL */ `
     payee (id: "${buyer.toLowerCase()}") {
-      purchases (orderBy: "lastPurchasedAtTimestamp", orderDirection: "desc") {
+      purchases {
         id
         totalQuantity
       }
@@ -21,7 +21,8 @@ export const getPurchases = async (buyer: string) => {
       query {
         ${tokensQuery}
       }
-    `
+    `,
+    fetchPolicy: "no-cache"
   })
   const payeePurchases = data?.payee?.purchases
   let purchasesList: Purchase[] = []

@@ -11,12 +11,6 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import Spinner from "@components/icons/Spinner"
 
-export type LinkedProducts = {
-  accountId: string
-  product: any
-  variants: any[]
-}[]
-
 const HomeRedeem = () => {
   const router = useRouter()
   const { slicer, product } = router.query

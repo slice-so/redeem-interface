@@ -4,8 +4,13 @@ import { Account } from "@prisma/client"
 import fetcher from "@utils/fetcher"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Items } from "../CreateFormPrintful/CreateFormPrintful"
-import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
 import PrintfulItem from "../PrintfulItem"
+
+export type LinkedProducts = {
+  accountId: string
+  product: any
+  variants: any[]
+}[]
 
 type Props = {
   account: Account

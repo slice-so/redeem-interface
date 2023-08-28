@@ -1,10 +1,21 @@
 import { Dispatch, SetStateAction, useState } from "react"
-import { useAppContext } from "../context"
 import { ProductDataExpanded, RedeemData } from "../HomeRedeem/HomeRedeem"
 import { SelectedProducts } from "../SelectRedeems/SelectRedeems"
-import RedeemFormPrintful from "../RedeemFormPrintful"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
-import CreateFormInputRedeem from "../CreateFormInputRedeem"
+import {
+  RedeemFormDelivery,
+  RedeemFormInputRedeem,
+  RedeemFormPrintful
+} from "../"
+
+export type Answers = {
+  deliveryInfo?: {
+    [key: string]: string
+  }
+  [id: string]: {
+    questionAnswers?: string[]
+  }
+}
 
 type Props = {
   productData: RedeemData
@@ -17,7 +28,7 @@ const RedeemForm = ({
   selectedProducts,
   setIsFormView
 }: Props) => {
-  const [answers, setAnswers] = useState({})
+  const [answers, setAnswers] = useState<Answers>({})
 
   const formsSelectedProducts: ProductDataExpanded[] = Object.keys(
     selectedProducts
@@ -43,46 +54,55 @@ const RedeemForm = ({
 
   const submit = () => {}
 
+  console.log(answers)
+
   return (
     <form onSubmit={submit}>
-      {showDeliveryForm && (
-        <>
-          {/*  <RedeemFormPrintful
-               linkedProducts={linkedProducts}
-               selectedProduct={selectedProduct}
-               setSelectedProduct={setSelectedProduct}
-               answers={answers}
-               setAnswers={setAnswers}
-             /> */}
-        </>
-      )}
-      {formsSelectedProducts.map(({ product, form }, key) => {
+      {/* TODO: fix unique key prop bug */}
+      {formsSelectedProducts.map(({ product, form }) => {
         const { id: slicerId, name: slicerName } = product.Slicer
         const { name: productName, product_id: productId } = product
         const questions = form.questions as QuestionValue[]
 
         return (
-          <div key={key}>
+          <div key={`${slicerId}-${[productId]}`}>
             <h2 className="pb-3.5 pl-4 text-lg sm:text-xl flex text-gray-600 pt-2 font-medium items-center">
               {slicerName} / {productName}
             </h2>
             {questions.length &&
               questions.map((question, key) => {
                 return (
-                  <CreateFormInputRedeem
-                    key={key}
-                    slicerId={slicerId}
-                    productId={productId}
-                    questionNumber={key}
-                    questionValue={question}
-                    answers={answers}
-                    setAnswers={setAnswers}
-                  />
+                  <>
+                    {/*  <RedeemFormPrintful
+               linkedProducts={linkedProducts}
+               selectedProduct={selectedProduct}
+               setSelectedProduct={setSelectedProduct}
+               answers={answers}
+               setAnswers={setAnswers}
+             /> */}
+                    <RedeemFormInputRedeem
+                      key={key}
+                      slicerId={slicerId}
+                      productId={productId}
+                      questionNumber={key}
+                      questionValue={question}
+                      answers={answers}
+                      setAnswers={setAnswers}
+                    />
+                  </>
                 )
               })}
           </div>
         )
       })}
+      {showDeliveryForm && (
+        <div>
+          <h2 className="pb-3.5 pl-4 text-lg sm:text-xl flex text-gray-600 pt-2 font-medium items-center">
+            Delivery info
+          </h2>
+          <RedeemFormDelivery answers={answers} setAnswers={setAnswers} />
+        </div>
+      )}
       <a className="highlight" onClick={() => setIsFormView(false)}>
         Go back
       </a>

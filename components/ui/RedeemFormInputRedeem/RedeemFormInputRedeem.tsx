@@ -2,17 +2,18 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Input } from "@components/ui"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 import markdownToHtml from "@lib/markdownToHtml"
+import { Answers } from "../RedeemForm/RedeemForm"
 
 type Props = {
   questionNumber: number
   slicerId: number
   productId: number
-  answers: { [id: string]: string[] }
-  setAnswers: Dispatch<SetStateAction<{ [question: string]: string[] }>>
+  answers: Answers
+  setAnswers: Dispatch<SetStateAction<Answers>>
   questionValue: QuestionValue
 }
 
-const CreateFormInputRedeem = ({
+const RedeemFormInputRedeem = ({
   questionNumber,
   slicerId,
   productId,
@@ -28,10 +29,11 @@ const CreateFormInputRedeem = ({
   }
 
   const handleSetAnswer = (value: string) => {
-    const answer = answers[`${slicerId}-${productId}`] || []
-    answer[questionNumber] = value
+    const answer = answers[`${slicerId}-${productId}`] || {}
+    const questionAnswers = answer.questionAnswers || []
+    questionAnswers[questionNumber] = value
 
-    setAnswers({ ...answers, [`${slicerId}-${productId}`]: answer })
+    setAnswers((prev) => ({ ...prev, [`${slicerId}-${productId}`]: answer }))
   }
 
   useEffect(() => {
@@ -63,4 +65,4 @@ const CreateFormInputRedeem = ({
   )
 }
 
-export default CreateFormInputRedeem
+export default RedeemFormInputRedeem

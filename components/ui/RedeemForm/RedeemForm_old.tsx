@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useAppContext } from "../context"
 import {
-  CreateFormInputRedeem,
+  RedeemFormInputRedeem,
   Button,
   Input,
   RedeemFormPrintful
@@ -137,7 +137,7 @@ const RedeemForm = ({
               <div>
                 <p className="py-4 font-medium">Additional questions</p>
                 {[...Array(questions.length)].map((i, key) => (
-                  <CreateFormInputRedeem
+                  <RedeemFormInputRedeem
                     key={key}
                     questionNumber={key + 1}
                     questionValue={questions[key]}

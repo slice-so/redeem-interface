@@ -1,11 +1,7 @@
 import Chevron from "@components/icons/Chevron"
-import { countryCodes } from "@lib/countryCodes"
 import Image from "next/image"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 import { LinkedProducts } from "../HomeRedeem/HomeRedeem_old"
-import Input from "../Input"
-import { useAccount } from "wagmi"
 
 type Props = {
   linkedProducts: LinkedProducts
@@ -29,41 +25,6 @@ const RedeemFormPrintful = ({
   const product = chosenProduct?.product
   const variants = chosenProduct?.variants
 
-  const deliveryQuestions: QuestionValue[] = [
-    {
-      question: "Full name",
-      hint: ""
-    },
-    { question: "Address", hint: "" },
-    { question: "City", hint: "" },
-    {
-      question: "Country",
-      hint: "",
-      options: countryCodes
-        .map(({ name, code }) => ({ name, value: code }))
-        .sort((a, b) => a.name.localeCompare(b.name))
-    },
-    {
-      question: "State",
-      hint: "",
-      options:
-        (answers["Country"] &&
-          countryCodes
-            .find(({ code }) => code == answers["Country"])
-            .states?.map(({ name, code }) => ({ name, value: code }))
-            .sort((a, b) => a.name.localeCompare(b.name))) ||
-        []
-    },
-    { question: "Postal code", hint: "" },
-    { question: "Email", hint: "" }
-  ]
-
-  const { connector } = useAccount()
-  const isCoinbaseWallet = connector?.id == "coinbaseWallet"
-  if (isCoinbaseWallet) {
-    deliveryQuestions.pop()
-  }
-
   const handleSetChosenProduct = (externalId: string) => {
     const product = linkedProducts.find(
       ({ product }) => product.external_id == externalId
@@ -74,12 +35,6 @@ const RedeemFormPrintful = ({
   useEffect(() => {
     if (variants?.length == 1) setSelectedProduct(variants[0].external_id)
   }, [variants, setSelectedProduct])
-
-  useEffect(() => {
-    if (answers["State"] && deliveryQuestions[4].options.length == 0) {
-      setAnswers((prev) => ({ ...prev, ["State"]: "" }))
-    }
-  }, [answers])
 
   return (
     <>
@@ -166,57 +121,7 @@ const RedeemFormPrintful = ({
                 The item will be delivered to the address specified below.
               </p>
             </div>
-            {deliveryQuestions.map(({ question, hint, options }, key) => {
-              const handleSetAnswer = (answer: string) => {
-                setAnswers((prev) => ({ ...prev, [question]: answer }))
-              }
-
-              return (
-                <div key={key}>
-                  {options ? (
-                    options.length != 0 && (
-                      <>
-                        <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
-                          {question}
-                        </p>
-                        <div className="relative mb-4">
-                          <select
-                            className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
-                            value={answers[question]}
-                            onChange={(e) => handleSetAnswer(e.target.value)}
-                            required
-                          >
-                            <option value="">Pick option...</option>
-                            {options.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.name}
-                              </option>
-                            ))}
-                          </select>
-                          <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-                            <Chevron />
-                          </div>
-                        </div>
-                      </>
-                    )
-                  ) : (
-                    <Input
-                      label={question}
-                      value={answers[question] || ""}
-                      onChange={handleSetAnswer}
-                      required
-                    />
-                  )}
-                </div>
-              )
-            })}
           </div>
-          {isCoinbaseWallet && (
-            <p className="pt-4 text-sm text-blue-600">
-              Order details and tracking information will be notifyed on your{" "}
-              <br /> <strong>Coinbase Wallet</strong>
-            </p>
-          )}
         </div>
       )}
     </>

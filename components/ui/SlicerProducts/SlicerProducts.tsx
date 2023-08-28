@@ -5,6 +5,7 @@ import Check from "@components/icons/Check"
 import productDefault from "public/product_default.png"
 import Minus from "@components/icons/Minus"
 import Plus from "@components/icons/Plus"
+import ShoppingBag from "@components/icons/ShoppingBag"
 
 type Props = {
   slicerId: number
@@ -49,12 +50,29 @@ const SlicerProducts = ({
               return (
                 <div className="flex-shrink-0 w-40 pb-4" key={productId}>
                   <div className="relative group">
+                    <span
+                      title="Purchases"
+                      className="absolute text-sm z-10 flex items-center nightwind-prevent bg-white bg-opacity-75 backdrop-blur-sm shadow-md h-[32px] cursor-pointer top-0 left-0 rounded-br-xl rounded-tl-lg px-[18px] text-indigo-600"
+                      onClick={() =>
+                        updateProductQuantity(
+                          slicerId,
+                          productId,
+                          quantityToRedeem,
+                          quantitySelected ? 0 : quantityToRedeem
+                        )
+                      }
+                    >
+                      <p className="mr-[5px]">{quantityToRedeem}</p>
+                      <ShoppingBag className="mb-[1px] w-[15px] h-[15px]" />
+                    </span>
                     <Image
                       src={image || productDefault}
                       width={200}
                       height={150}
                       alt={name + " image"}
-                      className="rounded-lg h-full img-background cursor-pointer object-cover"
+                      className={`rounded-lg h-full img-background cursor-pointer object-cover duration-100 ${
+                        quantitySelected ? "opacity-100" : "opacity-80"
+                      }`}
                       onClick={() =>
                         updateProductQuantity(
                           slicerId,
@@ -120,7 +138,7 @@ const SlicerProducts = ({
                       </button>
                     </div>
                     <div
-                      className={`absolute top-[8px] rounded-full nightwind-prevent p-[3px] right-[8px] text-white w-[22px] h-[22px] cursor-pointer border border-white ${
+                      className={`absolute top-[8px] rounded-full nightwind-prevent p-[3px] right-[8px] text-white w-5 h-5 cursor-pointer border border-white ${
                         quantitySelected ? "bg-green-500" : "bg-gray-400"
                       }`}
                       onClick={() =>

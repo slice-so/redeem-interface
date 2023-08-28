@@ -19,8 +19,7 @@ const beforeConnectDefault = (
 
 const beforeSignDefault = (
   <p className="pb-6 font-semibold text-yellow-600">
-    Verify ownership of the connected address by signing a message in your
-    wallet
+    Verify ownership of the connected address
   </p>
 )
 
@@ -61,7 +60,7 @@ const VerifiedBlock = ({
       <div>
         <Button
           wrapperClassName="mb-6"
-          label="Verify address"
+          label="Sign message"
           loading={isLoading}
           onClick={() => signMessage()}
         />

@@ -1,6 +1,5 @@
 import { ProductData } from "@utils/useProductData"
 import SlicerProducts from "../SlicerProducts"
-import DoubleText from "../DoubleText"
 import Button from "../Button"
 import { RedeemData } from "../HomeRedeem/HomeRedeem"
 
@@ -8,10 +7,14 @@ export type ProductDataExpanded = ProductData & {
   quantityToRedeem: number
 }
 
+type SelectedProducts = {
+  [id: string]: number
+}
+
 type Props = {
   productData: RedeemData
-  selectedProducts: {}
-  setSelectedProducts: React.Dispatch<React.SetStateAction<{}>>
+  selectedProducts: SelectedProducts
+  setSelectedProducts: React.Dispatch<React.SetStateAction<SelectedProducts>>
   setIsFormView: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -21,21 +24,17 @@ const SelectRedeems = ({
   setSelectedProducts,
   setIsFormView
 }: Props) => {
+  const totalToRedeem = Object.values(selectedProducts).reduce(
+    (acc, curr) => acc + curr,
+    0
+  )
+
   return (
-    <div className="space-y-12">
-      <div>
-        <h1 className="pb-8">
-          <DoubleText
-            inactive
-            size="text-3xl sm:text-4xl"
-            logoText="Redeem Products"
-          />
-        </h1>
-        <p className="text-lg leading-8 text-gray-600">
-          Select the quantity of each Slice product to redeem
-        </p>
-      </div>
-      <ul className="pb-4 space-y-12">
+    <div>
+      <p className="text-lg leading-8 pb-12 text-gray-600">
+        Select how many products you wish to redeem
+      </p>
+      <ul className="pb-16 space-y-12">
         {Object.entries(productData).map(([slicerId, val]) => {
           return (
             <SlicerProducts
@@ -50,7 +49,7 @@ const SelectRedeems = ({
       </ul>
       <Button
         label="Redeem products"
-        disabled={Object.keys(selectedProducts).length === 0}
+        disabled={totalToRedeem === 0}
         onClick={() => setIsFormView(true)}
       />
     </div>

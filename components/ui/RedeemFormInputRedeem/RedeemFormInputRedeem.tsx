@@ -33,7 +33,10 @@ const RedeemFormInputRedeem = ({
     const questionAnswers = answer.questionAnswers || []
     questionAnswers[questionNumber] = value
 
-    setAnswers((prev) => ({ ...prev, [`${slicerId}-${productId}`]: answer }))
+    setAnswers((prev) => ({
+      ...prev,
+      [`${slicerId}-${productId}`]: { questionAnswers }
+    }))
   }
 
   useEffect(() => {

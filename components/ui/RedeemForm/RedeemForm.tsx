@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, Fragment, SetStateAction, useState } from "react"
 import { ProductDataExpanded, RedeemData } from "../HomeRedeem/HomeRedeem"
 import { SelectedProducts } from "../SelectRedeems/SelectRedeems"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
@@ -50,36 +50,31 @@ const RedeemForm = ({
     ({ form }) => !!form.linkedProducts
   )
 
-  const formsToDisplay = {}
-
   const submit = () => {}
-
-  console.log(answers)
 
   return (
     <form onSubmit={submit}>
-      {/* TODO: fix unique key prop bug */}
       {formsSelectedProducts.map(({ product, form }) => {
         const { id: slicerId, name: slicerName } = product.Slicer
         const { name: productName, product_id: productId } = product
         const questions = form.questions as QuestionValue[]
 
         return (
-          <div key={`${slicerId}-${[productId]}`}>
+          <Fragment key={`${slicerId}-${[productId]}`}>
             <h2 className="pb-3.5 pl-4 text-lg sm:text-xl flex text-gray-600 pt-2 font-medium items-center">
               {slicerName} / {productName}
             </h2>
             {questions.length != 0 &&
               questions.map((question, key) => {
                 return (
-                  <>
+                  <div key={key}>
                     {/*  <RedeemFormPrintful
-               linkedProducts={linkedProducts}
-               selectedProduct={selectedProduct}
-               setSelectedProduct={setSelectedProduct}
-               answers={answers}
-               setAnswers={setAnswers}
-             /> */}
+                      linkedProducts={linkedProducts}
+                      selectedProduct={selectedProduct}
+                      setSelectedProduct={setSelectedProduct}
+                      answers={answers}
+                      setAnswers={setAnswers}
+                    /> */}
                     <RedeemFormInputRedeem
                       key={key}
                       slicerId={slicerId}
@@ -89,10 +84,10 @@ const RedeemForm = ({
                       answers={answers}
                       setAnswers={setAnswers}
                     />
-                  </>
+                  </div>
                 )
               })}
-          </div>
+          </Fragment>
         )
       })}
       {showDeliveryForm && (

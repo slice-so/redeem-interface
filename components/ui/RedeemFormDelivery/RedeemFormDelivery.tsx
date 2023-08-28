@@ -13,6 +13,7 @@ type Props = {
 
 const RedeemForm = ({ answers, setAnswers }: Props) => {
   const { connector } = useAccount()
+  const deliveryInfo = answers?.deliveryInfo
 
   const deliveryQuestions: QuestionValue[] = [
     {
@@ -32,11 +33,12 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
       question: "State",
       hint: "",
       options:
-        (answers["Country"] &&
+        (deliveryInfo &&
+          deliveryInfo["Country"] &&
           countryCodes
-            .find(({ code }) => code == answers["Country"])
-            .states?.map(({ name, code }) => ({ name, value: code }))
-            .sort((a, b) => a.name.localeCompare(b.name))) ||
+            .find(({ code }) => code == answers.deliveryInfo["Country"])
+            ?.states?.map(({ name, code }) => ({ name, value: code }))
+            ?.sort((a, b) => a.name.localeCompare(b.name))) ||
         []
     },
     { question: "Postal code", hint: "" },
@@ -47,32 +49,28 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
     deliveryQuestions.pop()
   }
 
-  const deliveryInfo = answers?.deliveryInfo
+  useEffect(() => {
+    if (deliveryInfo?.State && deliveryQuestions[4].options.length == 0) {
+      const newDeliveryInfo = deliveryInfo || {}
+      newDeliveryInfo["State"] = ""
 
-  // useEffect(() => {
-  //   if (deliveryInfo["State"] && deliveryQuestions[4].options.length == 0) {
-  //     setAnswers((prev) => ({
-  //       ...prev,
-  //       deliveryInfo: { ...prev.deliveryInfo, [`State`]: "" }
-  //     }))
-  //   }
-  // }, [answers])
+      setAnswers((prev) => ({
+        ...prev,
+        deliveryInfo: newDeliveryInfo
+      }))
+    }
+  }, [answers])
 
   const handleSetAnswer = (question: string, value: string) => {
-    // const answer = answers || {}
-    // const deliveryInfo = answer.deliveryInfo || []
-    // deliveryInfo[question] = value
-    const deliveryInfo = answers?.deliveryInfo || {}
-    deliveryInfo[`${question}`] = value
+    const newDeliveryInfo = deliveryInfo || {}
+    newDeliveryInfo[`${question}`] = value
 
-    console.log({ question, value })
-
-    setAnswers((prev) => ({ ...prev, deliveryInfo }))
+    setAnswers((prev) => ({ ...prev, deliveryInfo: newDeliveryInfo }))
   }
 
   return (
     <>
-      {deliveryQuestions.map(({ question, hint, options }, key) => {
+      {deliveryQuestions.map(({ question, options }, key) => {
         return (
           <div key={key}>
             {options ? (

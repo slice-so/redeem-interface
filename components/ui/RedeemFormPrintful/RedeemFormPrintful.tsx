@@ -2,13 +2,14 @@ import Chevron from "@components/icons/Chevron"
 import Image from "next/image"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { LinkedProducts } from "../HomeRedeem/HomeRedeem_old"
+import { Answers } from "../RedeemForm/RedeemForm"
 
 type Props = {
   linkedProducts: LinkedProducts
   selectedProduct: string
   setSelectedProduct: Dispatch<SetStateAction<string>>
-  answers: { [question: string]: string }
-  setAnswers: Dispatch<SetStateAction<{ [question: string]: string }>>
+  answers: Answers
+  setAnswers: Dispatch<SetStateAction<Answers>>
 }
 
 const RedeemFormPrintful = ({

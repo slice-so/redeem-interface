@@ -15,7 +15,7 @@
     "@headlessui/react": "^1.6.4",
     "@prisma/client": "^5.2.0",
     "@rainbow-me/rainbowkit": "^1.0.3",
-    "@supabase/supabase-js": "^1.35.7",
+    "@supabase/supabase-js": "^2.33.1",
     "@types/node": "^20.5.7",
     "@types/react": "^18.2.21",
     "@xmtp/xmtp-js": "^10.2.0",

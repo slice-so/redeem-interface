@@ -71,7 +71,7 @@ const SlicerProducts = ({
                     src={image || productDefault}
                     alt={name + " image"}
                     className={`rounded-lg h-32 sm:h-36 img-background cursor-pointer object-cover duration-100 ${
-                      quantitySelected ? "opacity-100" : "opacity-70"
+                      quantitySelected ? "opacity-100" : "opacity-80"
                     }`}
                     onClick={() =>
                       updateProductQuantity(

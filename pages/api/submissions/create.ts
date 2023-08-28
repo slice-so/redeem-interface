@@ -4,7 +4,7 @@ import { prisma } from "@lib/prisma"
 import { encryptTexts } from "@utils/crypto"
 import fetcher from "@utils/fetcher"
 import getRefreshedAccessToken from "@utils/getRefreshedAccessToken"
-import { LinkedProducts } from "@components/ui/HomeRedeem/HomeRedeem"
+import { LinkedProducts } from "@components/ui/HomeRedeem/HomeRedeem_old"
 import { Prisma } from "@prisma/client"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

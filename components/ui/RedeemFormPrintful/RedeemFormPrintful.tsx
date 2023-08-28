@@ -3,7 +3,7 @@ import { countryCodes } from "@lib/countryCodes"
 import Image from "next/image"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
-import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
+import { LinkedProducts } from "../HomeRedeem/HomeRedeem_old"
 import Input from "../Input"
 import { useAccount } from "wagmi"
 

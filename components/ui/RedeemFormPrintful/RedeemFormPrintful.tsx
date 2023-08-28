@@ -211,13 +211,13 @@ const RedeemFormPrintful = ({
               )
             })}
           </div>
+          {isCoinbaseWallet && (
+            <p className="pt-4 text-sm text-blue-600">
+              Order details and tracking information will be notifyed on your{" "}
+              <br /> <strong>Coinbase Wallet</strong>
+            </p>
+          )}
         </div>
-      )}
-      {isCoinbaseWallet && (
-        <p className="pt-4 text-sm text-blue-600">
-          Order details and tracking information will be notifyed on your <br />{" "}
-          <strong>Coinbase Wallet</strong>
-        </p>
       )}
     </>
   )

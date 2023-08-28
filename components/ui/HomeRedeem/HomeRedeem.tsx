@@ -6,10 +6,12 @@ import Spinner from "@components/icons/Spinner"
 import { useState } from "react"
 import SelectRedeems from "../SelectRedeems/SelectRedeems"
 import { Purchase } from "@utils/getPurchases"
-import { Submission } from "@prisma/client"
+import { Form, Submission } from "@prisma/client"
+import RedeemForm from "../RedeemForm"
 
 export type ProductDataExpanded = {
   product: ProductData
+  form: Form
   purchase: Purchase
   submissionsForProduct: Submission[]
   quantityToRedeem: number
@@ -18,6 +20,9 @@ export type ProductDataExpanded = {
 export type RedeemData = {
   [slicerId: string]: ProductDataExpanded[]
 }
+export type SelectedProducts = {
+  [id: string]: number
+}
 
 const HomeRedeem = () => {
   const { account } = useAppContext()
@@ -25,7 +30,7 @@ const HomeRedeem = () => {
   const { data } = useSWR(account ? `/api/products/${account}` : null, fetcher)
   const productData = data as RedeemData
 
-  const [selectedProducts, setSelectedProducts] = useState({})
+  const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({})
   const [isFormView, setIsFormView] = useState(false)
 
   return data ? (
@@ -38,7 +43,11 @@ const HomeRedeem = () => {
           setIsFormView={setIsFormView}
         />
       ) : (
-        <div>FORM</div>
+        <RedeemForm
+          productData={productData}
+          selectedProducts={selectedProducts}
+          setIsFormView={setIsFormView}
+        />
       )}
     </>
   ) : (

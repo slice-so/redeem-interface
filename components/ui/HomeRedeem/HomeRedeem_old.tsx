@@ -3,10 +3,10 @@ import {
   Button,
   Input,
   VerifiedBlock,
-  RedeemForm,
   DoubleText,
   ProductPreview
 } from "@components/ui"
+import RedeemForm from "@components/ui/RedeemForm/RedeemForm_old"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Spinner from "@components/icons/Spinner"

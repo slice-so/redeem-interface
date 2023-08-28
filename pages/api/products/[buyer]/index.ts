@@ -76,6 +76,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
           productsToRedeem[slicerId].push({
             product,
+            form,
             purchase,
             submissionsForProduct,
             quantityToRedeem

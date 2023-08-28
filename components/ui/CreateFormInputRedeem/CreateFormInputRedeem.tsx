@@ -5,18 +5,21 @@ import markdownToHtml from "@lib/markdownToHtml"
 
 type Props = {
   questionNumber: number
-  answers: { [question: string]: string }
-  setAnswers: Dispatch<SetStateAction<{ [question: string]: string }>>
+  slicerId: number
+  productId: number
+  answers: { [id: string]: string[] }
+  setAnswers: Dispatch<SetStateAction<{ [question: string]: string[] }>>
   questionValue: QuestionValue
 }
 
 const CreateFormInputRedeem = ({
   questionNumber,
+  slicerId,
+  productId,
   answers,
   setAnswers,
   questionValue
 }: Props) => {
-  const [answer, setAnswer] = useState("")
   const [htmlContent, setHtmlContent] = useState("")
   const { question, hint } = questionValue
 
@@ -24,15 +27,16 @@ const CreateFormInputRedeem = ({
     setHtmlContent(await markdownToHtml(hint))
   }
 
+  const handleSetAnswer = (value: string) => {
+    const answer = answers[`${slicerId}-${productId}`] || []
+    answer[questionNumber] = value
+
+    setAnswers({ ...answers, [`${slicerId}-${productId}`]: answer })
+  }
+
   useEffect(() => {
     handleShowPreview()
   }, [])
-
-  useEffect(() => {
-    const updatedAnswers = { ...answers }
-    updatedAnswers[question] = answer
-    setAnswers(updatedAnswers)
-  }, [answer])
 
   return (
     <>
@@ -47,7 +51,14 @@ const CreateFormInputRedeem = ({
           ></div>
         )}
       </div>
-      <Input value={answer} onChange={setAnswer} required />
+      <Input
+        value={
+          answers[`${slicerId}-${productId}`] &&
+          answers[`${slicerId}-${productId}`][questionNumber]
+        }
+        onChange={handleSetAnswer}
+        required
+      />
     </>
   )
 }

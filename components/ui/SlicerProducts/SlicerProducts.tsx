@@ -3,6 +3,8 @@ import { ProductDataExpanded } from "../HomeRedeem/HomeRedeem"
 import { Dispatch, SetStateAction, useState } from "react"
 import Check from "@components/icons/Check"
 import productDefault from "public/product_default.png"
+import Minus from "@components/icons/Minus"
+import Plus from "@components/icons/Plus"
 
 type Props = {
   slicerId: number
@@ -19,108 +21,123 @@ const SlicerProducts = ({
 }: Props) => {
   const slicerName = products[0].Slicer.name
 
-  const handleSelectProduct = (
-    slicerId: number,
-    productId: number,
-    quantityToRedeem: number
-  ) => {
-    if (!selectedProducts[`${slicerId}-${productId}`]) {
-      setSelectedProducts({
-        ...selectedProducts,
-        [`${slicerId}-${productId}`]: quantityToRedeem
-      })
-    } else {
-      setSelectedProducts({
-        ...selectedProducts,
-        [`${slicerId}-${productId}`]: 0
-      })
-    }
-  }
-
   const updateProductQuantity = (
     slicerId: number,
     productId: number,
     maxQuantity: number,
     amount: number
   ) => {
-    if (
-      amount > 0
-        ? selectedProducts[`${slicerId}-${productId}`] < maxQuantity
-        : selectedProducts[`${slicerId}-${productId}`] > 0
-    ) {
-      setSelectedProducts({
-        ...selectedProducts,
-        [`${slicerId}-${productId}`]:
-          selectedProducts[`${slicerId}-${productId}`] + amount
-      })
-    }
+    if (amount < 0) amount = 0
+    if (amount > maxQuantity) amount = maxQuantity
+    setSelectedProducts({
+      ...selectedProducts,
+      [`${slicerId}-${productId}`]: amount
+    })
   }
 
   return (
-    <li className="rounded-md shadow-md bg-gray-50">
-      <div
-        className={`flex items-center justify-between cursor-pointer py-3.5 px-4 group`}
-      >
-        <div className="flex items-center">
-          <p>{slicerName}</p>
-        </div>
-      </div>
-      <div className="flex gap-2 px-4 overflow-y-hidden">
-        {products.map(
-          ({ product_id: productId, name, quantityToRedeem, image }) => {
-            const quantitySelected =
-              selectedProducts[`${slicerId}-${productId}`]
-            return (
-              <div className="flex-shrink-0 w-40 pb-4" key={productId}>
-                <div className="relative group">
-                  <Image
-                    src={image || productDefault}
-                    width={200}
-                    height={200}
-                    alt={name + " image"}
-                    className="rounded-md cursor-pointer"
-                    onClick={() =>
-                      handleSelectProduct(slicerId, productId, quantityToRedeem)
-                    }
-                  />
-                  <p>{name}</p>
-                  <div className="pt-2 flex justify-around">
-                    <button
+    <li>
+      <h2 className="pb-3.5 pl-4 text-lg flex text-gray-600 pt-2 font-medium items-center">
+        {slicerName}
+      </h2>
+      <div className="rounded-md pt-6 shadow-md bg-gray-50">
+        <div className="flex gap-6 px-4 overflow-y-hidden">
+          {products.map(
+            ({ product_id: productId, name, quantityToRedeem, image }) => {
+              const quantitySelected =
+                selectedProducts[`${slicerId}-${productId}`]
+              return (
+                <div className="flex-shrink-0 w-40 pb-4" key={productId}>
+                  <div className="relative group">
+                    <Image
+                      src={image || productDefault}
+                      width={200}
+                      height={150}
+                      alt={name + " image"}
+                      className="rounded-lg h-full img-background cursor-pointer object-cover"
                       onClick={() =>
                         updateProductQuantity(
                           slicerId,
                           productId,
                           quantityToRedeem,
-                          -1
+                          quantitySelected ? 0 : quantityToRedeem
                         )
                       }
-                    >
-                      -
-                    </button>
-                    <p>{quantitySelected}</p>
-                    <button
-                      onClick={() =>
-                        updateProductQuantity(
-                          slicerId,
-                          productId,
-                          quantityToRedeem,
-                          1
-                        )
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-                  {quantitySelected ? (
-                    <div className="absolute top-[8px] rounded-full nightwind-prevent bg-blue-600 p-[3px] right-[8px] text-white w-5 h-5">
-                      <Check />
+                    />
+                    <p className="text-sm py-3 font-medium text-gray-500">
+                      {name}
+                    </p>
+                    <div className="relative z-10 grid items-center justify-center w-full grid-cols-4 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">
+                      <button
+                        className={`flex items-center justify-center h-8 transition-colors duration-150 ${
+                          quantitySelected && quantitySelected != 0
+                            ? "text-red-500 hover:bg-red-500 hover:text-white"
+                            : "text-white bg-gray-400 cursor-default"
+                        }`}
+                        onClick={() =>
+                          updateProductQuantity(
+                            slicerId,
+                            productId,
+                            quantityToRedeem,
+                            quantitySelected - 1
+                          )
+                        }
+                      >
+                        <Minus className="w-[17px] h-[17px]" />
+                      </button>
+                      <div className="flex items-center justify-center col-span-2 pl-3 text-sm text-black border-l border-r border-gray-200 cursor-default h-8">
+                        <input
+                          value={quantitySelected || 0}
+                          type="number"
+                          max={quantityToRedeem}
+                          className="w-full text-center bg-transparent border-none outline-none focus:ring-0 form-input"
+                          onChange={(e) => {
+                            updateProductQuantity(
+                              slicerId,
+                              productId,
+                              quantityToRedeem,
+                              Number(e.target.value)
+                            )
+                          }}
+                        />
+                      </div>
+                      <button
+                        className={`flex items-center justify-center h-8 transition-colors duration-150 ${
+                          quantityToRedeem != quantitySelected
+                            ? "text-green-500 hover:bg-green-500 hover:text-white"
+                            : "text-white bg-gray-400 cursor-default"
+                        }`}
+                        onClick={() =>
+                          updateProductQuantity(
+                            slicerId,
+                            productId,
+                            quantityToRedeem,
+                            (quantitySelected || 0) + 1
+                          )
+                        }
+                      >
+                        <Plus className="w-[17px] h-[17px]" />
+                      </button>
                     </div>
-                  ) : null}
+                    <div
+                      className="absolute top-[8px] rounded-full nightwind-prevent bg-blue-500 p-[3px] right-[8px] text-white w-5 h-5 cursor-pointer"
+                      onClick={() =>
+                        updateProductQuantity(
+                          slicerId,
+                          productId,
+                          quantityToRedeem,
+                          quantitySelected ? 0 : quantityToRedeem
+                        )
+                      }
+                    >
+                      {quantitySelected ? <Check /> : null}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )
-          }
-        )}
+              )
+            }
+          )}
+        </div>{" "}
       </div>
     </li>
   )

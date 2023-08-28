@@ -25,18 +25,20 @@ const HomeRedeem = () => {
   const [selectedProducts, setSelectedProducts] = useState({})
 
   return data ? (
-    <div className="space-y-16">
+    <div className="space-y-12">
       <div>
         <h1 className="pb-8">
           <DoubleText
             inactive
             size="text-3xl sm:text-4xl"
-            logoText="Products to redeem"
+            logoText="Redeem Products"
           />
         </h1>
-        <p>Select the products to redeem</p>
+        <p className="text-lg leading-8 text-gray-600">
+          Select the quantity of each Slice product to redeem
+        </p>
       </div>
-      <ul className="space-y-12">
+      <ul className="space-y-12 pb-4">
         {Object.entries(productData).map(([slicerId, val]) => {
           return (
             <SlicerProducts

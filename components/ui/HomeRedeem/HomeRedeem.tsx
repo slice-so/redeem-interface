@@ -5,8 +5,13 @@ import { ProductData } from "@utils/useProductData"
 import Spinner from "@components/icons/Spinner"
 import { useState } from "react"
 import SelectRedeems from "../SelectRedeems/SelectRedeems"
+import { Purchase } from "@utils/getPurchases"
+import { Submission } from "@prisma/client"
 
-export type ProductDataExpanded = ProductData & {
+export type ProductDataExpanded = {
+  product: ProductData
+  purchase: Purchase
+  submissionsForProduct: Submission[]
   quantityToRedeem: number
 }
 

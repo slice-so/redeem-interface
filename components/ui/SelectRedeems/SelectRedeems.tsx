@@ -1,21 +1,17 @@
-import { ProductData } from "@utils/useProductData"
 import SlicerProducts from "../SlicerProducts"
 import Button from "../Button"
 import { RedeemData } from "../HomeRedeem/HomeRedeem"
+import { Dispatch, SetStateAction } from "react"
 
-export type ProductDataExpanded = ProductData & {
-  quantityToRedeem: number
-}
-
-type SelectedProducts = {
+export type SelectedProducts = {
   [id: string]: number
 }
 
 type Props = {
   productData: RedeemData
   selectedProducts: SelectedProducts
-  setSelectedProducts: React.Dispatch<React.SetStateAction<SelectedProducts>>
-  setIsFormView: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedProducts: Dispatch<SetStateAction<SelectedProducts>>
+  setIsFormView: Dispatch<SetStateAction<boolean>>
 }
 
 const SelectRedeems = ({

@@ -75,7 +75,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
 
           productsToRedeem[slicerId].push({
-            ...product,
+            product,
+            purchase,
+            submissionsForProduct,
             quantityToRedeem
           })
         }

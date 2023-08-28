@@ -33,8 +33,13 @@ const Navbar = () => {
       <Container>
         <nav className="relative px-3 sm:px-6 h-20 items-center mx-auto flex justify-between">
           <div className="z-10 flex items-center space-x-6 sm:space-x-8">
-            <Link href="/" aria-label="Slice logo">
-              <Logo className="w-6 h-6" />
+            <Link
+              href={`https://${getSliceSubdomain()}slice.so`}
+              aria-label="Slice logo"
+            >
+              <a>
+                <Logo className="w-6 h-6" />
+              </a>
             </Link>
             <Link href={`https://${getSliceSubdomain()}slice.so/slicer`}>
               <a className="text-[0.925rem] font-medium">Explore</a>

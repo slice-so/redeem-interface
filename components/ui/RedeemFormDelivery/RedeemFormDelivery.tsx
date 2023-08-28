@@ -53,19 +53,19 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
   //   if (deliveryInfo["State"] && deliveryQuestions[4].options.length == 0) {
   //     setAnswers((prev) => ({
   //       ...prev,
-  //       deliveryInfo: { ...prev.deliveryInfo, [State]: "" }
+  //       deliveryInfo: { ...prev.deliveryInfo, [`State`]: "" }
   //     }))
   //   }
   // }, [answers])
 
-  const handleSetAnswer = (key: string, value: string) => {
+  const handleSetAnswer = (question: string, value: string) => {
     // const answer = answers || {}
     // const deliveryInfo = answer.deliveryInfo || []
-    // deliveryInfo[key] = value
+    // deliveryInfo[question] = value
     const deliveryInfo = answers?.deliveryInfo || {}
-    deliveryInfo[`${key}`] = value
+    deliveryInfo[`${question}`] = value
 
-    console.log({ key, value })
+    console.log({ question, value })
 
     setAnswers((prev) => ({ ...prev, deliveryInfo }))
   }
@@ -107,7 +107,9 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
               <Input
                 label={question}
                 value={(deliveryInfo && deliveryInfo[question]) || ""}
-                onChange={handleSetAnswer}
+                handleOnChangeCustom={(e) =>
+                  handleSetAnswer(question, e.target.value)
+                }
                 required
               />
             )}

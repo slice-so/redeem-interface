@@ -69,7 +69,7 @@ const RedeemForm = ({
             <h2 className="pb-3.5 pl-4 text-lg sm:text-xl flex text-gray-600 pt-2 font-medium items-center">
               {slicerName} / {productName}
             </h2>
-            {questions.length &&
+            {questions.length != 0 &&
               questions.map((question, key) => {
                 return (
                   <>

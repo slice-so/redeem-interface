@@ -39,8 +39,8 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
-    "@typescript-eslint/eslint-plugin": "^6.4.2-alpha.12",
-    "@typescript-eslint/parser": "^6.4.2-alpha.12",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
     "eslint": "^8.48.0",
     "eslint-config-next": "^13.4.19",
     "nightwind": "^1.1.13",

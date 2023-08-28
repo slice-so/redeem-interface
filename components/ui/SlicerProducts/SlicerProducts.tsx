@@ -120,7 +120,9 @@ const SlicerProducts = ({
                       </button>
                     </div>
                     <div
-                      className="absolute top-[8px] rounded-full nightwind-prevent bg-blue-500 p-[3px] right-[8px] text-white w-5 h-5 cursor-pointer"
+                      className={`absolute top-[8px] rounded-full nightwind-prevent p-[3px] right-[8px] text-white w-[22px] h-[22px] cursor-pointer border border-white ${
+                        quantitySelected ? "bg-green-500" : "bg-gray-400"
+                      }`}
                       onClick={() =>
                         updateProductQuantity(
                           slicerId,

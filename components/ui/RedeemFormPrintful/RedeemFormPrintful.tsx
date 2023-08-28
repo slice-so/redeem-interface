@@ -1,27 +1,29 @@
 import Chevron from "@components/icons/Chevron"
 import Image from "next/image"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { LinkedProducts } from "../HomeRedeem/HomeRedeem_old"
+import { LinkedProducts } from "../PrintfulStore/PrintfulStore"
 import { Answers } from "../RedeemForm/RedeemForm"
 
 type Props = {
   linkedProducts: LinkedProducts
-  selectedProduct: string
-  setSelectedProduct: Dispatch<SetStateAction<string>>
   answers: Answers
   setAnswers: Dispatch<SetStateAction<Answers>>
+  slicerId: number
+  productId: number
 }
 
 const RedeemFormPrintful = ({
   linkedProducts,
-  selectedProduct,
-  setSelectedProduct,
   answers,
-  setAnswers
+  setAnswers,
+  slicerId,
+  productId
 }: Props) => {
   const [chosenProduct, setChosenProduct] = useState(
     linkedProducts.length != 0 ? linkedProducts[0] : null
   )
+
+  const id = `${slicerId}-${productId}`
 
   const product = chosenProduct?.product
   const variants = chosenProduct?.variants
@@ -32,6 +34,9 @@ const RedeemFormPrintful = ({
     )
     setChosenProduct(product)
   }
+
+  console.log(answers)
+  console.log()
 
   useEffect(() => {
     if (variants?.length == 1) setSelectedProduct(variants[0].external_id)
@@ -85,7 +90,7 @@ const RedeemFormPrintful = ({
                 Color / size
               </p>
               <div className="relative">
-                <select
+                {/* <select
                   className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
                   value={selectedProduct}
                   onChange={(e) => setSelectedProduct(e.target.value)}
@@ -105,7 +110,7 @@ const RedeemFormPrintful = ({
                           : "")}
                     </option>
                   ))}
-                </select>
+                </select> */}
                 {variants.length != 1 && (
                   <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
                     <Chevron />

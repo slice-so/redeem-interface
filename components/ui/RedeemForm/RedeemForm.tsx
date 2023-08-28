@@ -7,6 +7,7 @@ import {
   RedeemFormInputRedeem,
   RedeemFormPrintful
 } from "../"
+import { LinkedProducts } from "../PrintfulStore/PrintfulStore"
 
 export type Answers = {
   deliveryInfo?: {
@@ -14,6 +15,7 @@ export type Answers = {
   }
   [id: string]: {
     questionAnswers?: string[]
+    choosenVariants?: { quantity: number; variantId: string }[]
   }
 }
 
@@ -67,14 +69,14 @@ const RedeemForm = ({
             {questions.length != 0 &&
               questions.map((question, key) => {
                 return (
-                  <div key={key}>
-                    {/*  <RedeemFormPrintful
-                      linkedProducts={linkedProducts}
-                      selectedProduct={selectedProduct}
-                      setSelectedProduct={setSelectedProduct}
+                  <Fragment key={key}>
+                    <RedeemFormPrintful
+                      linkedProducts={form.linkedProducts as LinkedProducts}
                       answers={answers}
                       setAnswers={setAnswers}
-                    /> */}
+                      slicerId={slicerId}
+                      productId={productId}
+                    />
                     <RedeemFormInputRedeem
                       key={key}
                       slicerId={slicerId}
@@ -84,7 +86,7 @@ const RedeemForm = ({
                       answers={answers}
                       setAnswers={setAnswers}
                     />
-                  </div>
+                  </Fragment>
                 )
               })}
           </Fragment>

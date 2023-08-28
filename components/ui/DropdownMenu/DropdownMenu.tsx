@@ -6,6 +6,7 @@ import FileText from "@components/icons/FileText"
 import ShoppingBag from "@components/icons/ShoppingBag"
 import Banknotes from "@components/icons/Banknotes"
 import { getSliceSubdomain } from "@utils/getSliceSubdomain"
+import Package from "@components/icons/Package"
 type Props = {
   setShowDropdown: Dispatch<SetStateAction<boolean>>
 }
@@ -52,6 +53,16 @@ function DropdownMenu({ setShowDropdown }: Props) {
         href={`https://${getSliceSubdomain()}slice.so/purchases`}
         image={<ShoppingBag strokeWidth="1.5" className="w-5 h-5" />}
         label="Purchases"
+        onClick={() => setShowDropdown(false)}
+      />
+      <DropdownMenuElement
+        href="/"
+        image={
+          <div className="w-5">
+            <Package />
+          </div>
+        }
+        label="Redeem"
         onClick={() => setShowDropdown(false)}
       />
       <DropdownMenuElement

@@ -69,7 +69,7 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
   }
 
   return (
-    <>
+    <div className="space-y-6">
       {deliveryQuestions.map(({ question, options }, key) => {
         return (
           <div key={key}>
@@ -121,7 +121,7 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
           <strong>Coinbase Wallet</strong>
         </p>
       )}
-    </>
+    </div>
   )
 }
 

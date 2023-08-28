@@ -28,7 +28,7 @@ const SelectRedeems = ({
   return (
     <div>
       <p className="text-lg leading-8 pb-12 text-gray-600">
-        Select how many products you wish to redeem
+        Select the products to redeem
       </p>
       <ul className="pb-16 space-y-12">
         {Object.entries(productData).map(([slicerId, val]) => {
@@ -44,7 +44,7 @@ const SelectRedeems = ({
         })}
       </ul>
       <Button
-        label="Redeem products"
+        label="Continue"
         disabled={totalToRedeem === 0}
         onClick={() => setIsFormView(true)}
       />

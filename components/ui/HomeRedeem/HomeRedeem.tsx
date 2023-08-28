@@ -1,5 +1,5 @@
 import { useAppContext } from "../context"
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 import fetcher from "@utils/fetcher"
 import { ProductData } from "@utils/useProductData"
 import Spinner from "@components/icons/Spinner"
@@ -27,7 +27,10 @@ export type SelectedProducts = {
 const HomeRedeem = () => {
   const { account } = useAppContext()
 
-  const { data } = useSWR(account ? `/api/products/${account}` : null, fetcher)
+  const { data } = useSWRImmutable(
+    account ? `/api/products/${account}` : null,
+    fetcher
+  )
   const productData = data as RedeemData
 
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({})

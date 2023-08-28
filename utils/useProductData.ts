@@ -44,7 +44,7 @@ export const useProduct = (slicerId: number, productId: number) => {
   const [data, setData] = useState(null)
 
   useEffect(() => {
-    if (slicerId && productId) {
+    if (String(slicerId) && String(productId)) {
       getProducts([{ slicerId, productId }], setData)
     }
   }, [slicerId, productId])

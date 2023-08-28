@@ -1,8 +1,7 @@
 import getBlurImageUrl from "@utils/getBlurImageUrl"
-import { Purchase } from "@utils/getPurchases"
 import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 import { useProduct } from "@utils/useProductData"
-import Image from "next/future/image"
+import Image from "next/image"
 import productDefault from "public/product_default.png"
 
 type Props = {
@@ -29,8 +28,10 @@ const ProductPreview = ({ slicerId, productId }: Props) => {
             <Image
               src={productData.image || productDefault}
               alt={`${productData.name || "placeholder"} image`}
-              blurDataURL={getBlurImageUrl(productData.image)}
-              className="object-cover rounded-lg"
+              blurDataURL={
+                productData.image && getBlurImageUrl(productData.image)
+              }
+              className="rounded-lg img-background object-cover"
               placeholder="blur"
               fill={true}
             />

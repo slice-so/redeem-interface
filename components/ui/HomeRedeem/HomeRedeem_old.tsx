@@ -107,8 +107,11 @@ const HomeRedeem = () => {
               </p>
               <p>
                 If you own the product{" "}
-                <Link href={`/create?slicer=${slicerId}&product=${productId}`}>
-                  <a className="highlight">click here to set up a form</a>
+                <Link
+                  href={`/create?slicer=${slicerId}&product=${productId}`}
+                  className="highlight"
+                >
+                  click here to set up a form
                 </Link>
               </p>
             </div>

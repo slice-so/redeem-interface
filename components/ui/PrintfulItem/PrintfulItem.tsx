@@ -1,5 +1,5 @@
 import Check from "@components/icons/Check"
-import Image from "next/future/image"
+import Image from "next/image"
 import { Dispatch, SetStateAction } from "react"
 
 type Props = {

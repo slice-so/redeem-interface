@@ -152,7 +152,6 @@ const CreateRedeemForm = () => {
         <>
           <div className="pb-12">
             <ProductPreview slicerId={slicerId} productId={productId} />
-
             <a
               className="text-sm highlight"
               onClick={() => setProductCreator(null)}

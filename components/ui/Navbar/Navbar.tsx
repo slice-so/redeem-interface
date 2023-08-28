@@ -37,12 +37,13 @@ const Navbar = () => {
               href={`https://${getSliceSubdomain()}slice.so`}
               aria-label="Slice logo"
             >
-              <a>
-                <Logo className="w-6 h-6" />
-              </a>
+              <Logo className="w-6 h-6" />
             </Link>
-            <Link href={`https://${getSliceSubdomain()}slice.so/slicer`}>
-              <a className="text-[0.925rem] font-medium">Explore</a>
+            <Link
+              href={`https://${getSliceSubdomain()}slice.so/slicer`}
+              className="text-[0.925rem] font-medium"
+            >
+              Explore
             </Link>
           </div>
           <div className="relative z-10 flex items-center space-x-6">

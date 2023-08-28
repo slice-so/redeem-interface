@@ -1,6 +1,6 @@
 import Chevron from "@components/icons/Chevron"
 import { countryCodes } from "@lib/countryCodes"
-import Image from "next/future/image"
+import Image from "next/image"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 import { LinkedProducts } from "../HomeRedeem/HomeRedeem"

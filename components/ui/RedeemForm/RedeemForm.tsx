@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { ProductDataExpanded, RedeemData } from "../HomeRedeem/HomeRedeem"
 import { SelectedProducts } from "../SelectRedeems/SelectRedeems"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
@@ -9,6 +9,7 @@ import {
   RedeemFormPrintful
 } from "../"
 import { LinkedProducts } from "../PrintfulStore/PrintfulStore"
+import { useAppContext } from "../context"
 
 export type Answers = {
   deliveryInfo?: {
@@ -24,14 +25,18 @@ type Props = {
   productData: RedeemData
   selectedProducts: SelectedProducts
   setIsFormView: Dispatch<SetStateAction<boolean>>
+  setSuccess: Dispatch<SetStateAction<boolean>>
 }
 
 const RedeemForm = ({
   productData,
   selectedProducts,
-  setIsFormView
+  setIsFormView,
+  setSuccess
 }: Props) => {
+  const { account } = useAppContext()
   const [answers, setAnswers] = useState<Answers>({})
+  const [loading, setLoading] = useState(false)
 
   const formsSelectedProducts: ProductDataExpanded[] = Object.keys(
     selectedProducts
@@ -55,7 +60,26 @@ const RedeemForm = ({
     ({ form }) => !!form.linkedProducts
   )
 
-  const submit = () => {}
+  const submit = async (e) => {
+    e.preventDefault()
+
+    try {
+      // setLoading(true)
+      const response = await fetch("/api/submissions/create", {
+        method: "POST",
+        body: JSON.stringify({ account, answers })
+      })
+      if (response.ok) {
+        // setSuccess(true)
+      }
+      // setLoading(false)
+
+      const data = await response.json()
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <form onSubmit={submit}>
@@ -121,7 +145,7 @@ const RedeemForm = ({
       )}
 
       <div className="pt-4 pb-8">
-        <Button label="Continue" type="submit" />
+        <Button label="Continue" type="submit" loading={loading} />
       </div>
       <a className="highlight" onClick={() => setIsFormView(false)}>
         Go back

@@ -8,6 +8,9 @@ import SelectRedeems from "../SelectRedeems/SelectRedeems"
 import { Purchase } from "@utils/getPurchases"
 import { Form, Submission } from "@prisma/client"
 import RedeemForm from "../RedeemForm"
+import { getSliceSubdomain } from "@utils/getSliceSubdomain"
+import Button from "../Button"
+import { useRouter } from "next/router"
 
 export type ProductDataExpanded = {
   product: ProductData
@@ -26,6 +29,7 @@ export type SelectedProducts = {
 
 const HomeRedeem = () => {
   const { account } = useAppContext()
+  const router = useRouter()
 
   const { data } = useSWRImmutable(
     account ? `/api/products/${account}` : null,
@@ -35,22 +39,40 @@ const HomeRedeem = () => {
 
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({})
   const [isFormView, setIsFormView] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   return data ? (
     <>
-      {!isFormView ? (
-        <SelectRedeems
-          productData={productData}
-          selectedProducts={selectedProducts}
-          setSelectedProducts={setSelectedProducts}
-          setIsFormView={setIsFormView}
-        />
+      {!success ? (
+        !isFormView ? (
+          <SelectRedeems
+            productData={productData}
+            selectedProducts={selectedProducts}
+            setSelectedProducts={setSelectedProducts}
+            setIsFormView={setIsFormView}
+          />
+        ) : (
+          <RedeemForm
+            productData={productData}
+            selectedProducts={selectedProducts}
+            setIsFormView={setIsFormView}
+            setSuccess={setSuccess}
+          />
+        )
       ) : (
-        <RedeemForm
-          productData={productData}
-          selectedProducts={selectedProducts}
-          setIsFormView={setIsFormView}
-        />
+        <div>
+          <h2 className="text-2xl">Products redeemed successfully!</h2>
+          <div className="py-8">
+            <Button
+              label="Go back to Slice"
+              href={`https://${getSliceSubdomain()}slice.so/slicer`}
+            />
+          </div>
+
+          <a className="highlight" onClick={() => router.reload()}>
+            Redeem more products
+          </a>
+        </div>
       )}
     </>
   ) : (

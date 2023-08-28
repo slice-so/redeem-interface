@@ -7,108 +7,124 @@ import getRefreshedAccessToken from "@utils/getRefreshedAccessToken"
 import { LinkedProducts } from "@components/ui/HomeRedeem/HomeRedeem_old"
 import { Prisma } from "@prisma/client"
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
 
   if (req.method === "POST") {
     try {
-      const { formId, buyer, redeemedUnits, answers, selectedProduct } =
-        JSON.parse(req.body)
-      let orderId: number
-      let orderProvider: string
+      const { account, answers } = JSON.parse(req.body)
 
-      const encryptedAnswers = await encryptTexts(
-        formId,
-        redeemedUnits,
-        answers
+      const productsToRedeem = await fetcher(
+        `${appUrl}/api/products/${account}`
       )
 
-      const { linkedProducts, externalSettings } =
-        (await prisma.form.findUnique({
-          where: {
-            id: Number(formId)
-          },
-          select: {
-            linkedProducts: true,
-            externalSettings: true
-          }
-        })) as {
-          linkedProducts: LinkedProducts
-          externalSettings: Prisma.JsonValue
-        }
+      // input validations
 
-      if (selectedProduct) {
-        const endpoint = `https://api.printful.com/orders?confirm=${
-          externalSettings["instantOrder"] || false
-        }`
+      // For each product
+      // - submission
 
-        const { accountId } = linkedProducts?.find(
-          (product) =>
-            product.variants.findIndex(
-              (variant) => variant.external_id == selectedProduct
-            ) != -1
-        )
+      // For each store
+      // - a printful order
 
-        if (!accountId) {
-          throw Error("Invalid product")
-        }
+      // const { formId, buyer, redeemedUnits, answers, selectedProduct } =
+      //   JSON.parse(req.body)
+      // let orderId: number
+      // let orderProvider: string
 
-        const { access_token } = await getRefreshedAccessToken(
-          String(accountId)
-        )
+      // const encryptedAnswers = await encryptTexts(
+      //   formId,
+      //   redeemedUnits,
+      //   answers
+      // )
 
-        const body = {
-          body: JSON.stringify({
-            recipient: {
-              name: answers["Full name"],
-              address1: answers["Address"],
-              city: answers["City"],
-              state_code: answers["State"],
-              country_code: answers["Country"],
-              zip: answers["Postal code"],
-              email: answers["Email"]
-            },
-            items: [
-              {
-                external_variant_id: selectedProduct,
-                quantity: redeemedUnits
-              }
-            ]
-          }),
-          headers: { Authorization: `Bearer ${access_token}` },
-          method: "POST"
-        }
+      // const { linkedProducts, externalSettings } =
+      //   (await prisma.form.findUnique({
+      //     where: {
+      //       id: Number(formId)
+      //     },
+      //     select: {
+      //       linkedProducts: true,
+      //       externalSettings: true
+      //     }
+      //   })) as {
+      //     linkedProducts: LinkedProducts
+      //     externalSettings: Prisma.JsonValue
+      //   }
 
-        const order = await fetcher(endpoint, body)
-        orderProvider = "Printful"
-        orderId = order.result.id
+      // if (selectedProduct) {
+      //   const endpoint = `https://api.printful.com/orders?confirm=${
+      //     externalSettings["instantOrder"] || false
+      //   }`
 
-        if (!orderId) throw Error(order.error.message)
-      }
+      //   const { accountId } = linkedProducts?.find(
+      //     (product) =>
+      //       product.variants.findIndex(
+      //         (variant) => variant.external_id == selectedProduct
+      //       ) != -1
+      //   )
 
-      // Create user if it doesn't exist
-      await prisma.user.upsert({
-        where: {
-          id: buyer
-        },
-        update: {},
-        create: {
-          id: buyer
-        }
-      })
+      //   if (!accountId) {
+      //     throw Error("Invalid product")
+      //   }
 
-      const data = await prisma.submission.create({
-        data: {
-          formId: Number(formId),
-          buyer,
-          redeemedUnits: Number(redeemedUnits),
-          answers: encryptedAnswers,
-          orderId: orderId || null,
-          orderProvider: orderProvider || null
-        }
-      })
+      //   const { access_token } = await getRefreshedAccessToken(
+      //     String(accountId)
+      //   )
 
-      res.status(200).json({ data })
+      //   const body = {
+      //     body: JSON.stringify({
+      //       recipient: {
+      //         name: answers["Full name"],
+      //         address1: answers["Address"],
+      //         city: answers["City"],
+      //         state_code: answers["State"],
+      //         country_code: answers["Country"],
+      //         zip: answers["Postal code"],
+      //         email: answers["Email"]
+      //       },
+      //       items: [
+      //         {
+      //           external_variant_id: selectedProduct,
+      //           quantity: redeemedUnits
+      //         }
+      //       ]
+      //     }),
+      //     headers: { Authorization: `Bearer ${access_token}` },
+      //     method: "POST"
+      //   }
+
+      //   const order = await fetcher(endpoint, body)
+      //   orderProvider = "Printful"
+      //   orderId = order.result.id
+
+      //   if (!orderId) throw Error(order.error.message)
+      // }
+
+      // // Create user if it doesn't exist
+      // await prisma.user.upsert({
+      //   where: {
+      //     id: buyer
+      //   },
+      //   update: {},
+      //   create: {
+      //     id: buyer
+      //   }
+      // })
+
+      // const data = await prisma.submission.create({
+      //   data: {
+      //     formId: Number(formId),
+      //     buyer,
+      //     redeemedUnits: Number(redeemedUnits),
+      //     answers: encryptedAnswers,
+      //     orderId: orderId || null,
+      //     orderProvider: orderProvider || null
+      //   }
+      // })
+
+      // res.status(200).json({ data })
     } catch (error) {
       res.status(500).json({ error: error.message })
     }

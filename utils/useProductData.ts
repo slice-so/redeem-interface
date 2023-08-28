@@ -26,14 +26,14 @@ export const getProductsQuery = async (purchases: Props[]) => {
   const { data, error } = await supabase
     .from("Product")
     .select()
-    .select("name,product_id,image,shortDescription,Slicer(id,name,image)")
     .or(orConditions)
+    .select("name,product_id,image,shortDescription,Slicer(id,name,image)")
 
   if (error) {
     throw error
   }
 
-  return data as ProductData[]
+  return data as unknown as ProductData[]
 }
 
 const getProducts = async (purchases: Props[], setData) => {

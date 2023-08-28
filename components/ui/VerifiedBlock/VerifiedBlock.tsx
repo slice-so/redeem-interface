@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { useSignMessage } from "wagmi"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { verifyMessage } from "ethers/lib/utils"
 import { Button } from "@components/ui"
 import { useAppContext } from "@components/ui/context"
+import { verifyMessage } from "ethers"
 
 type Props = {
   children: JSX.Element

@@ -38,7 +38,7 @@ const SlicerProducts = ({
 
   return (
     <li>
-      <h2 className="pb-3.5 pl-4 text-lg flex text-gray-600 pt-2 font-medium items-center">
+      <h2 className="pb-3.5 pl-4 text-lg sm:text-xl flex text-gray-600 pt-2 font-medium items-center">
         {slicerName}
       </h2>
       <div className="rounded-md pt-6 shadow-md bg-gray-50">
@@ -48,7 +48,10 @@ const SlicerProducts = ({
               const quantitySelected =
                 selectedProducts[`${slicerId}-${productId}`]
               return (
-                <div className="flex-shrink-0 w-40 pb-4" key={productId}>
+                <div
+                  className="flex-shrink-0 w-40 sm:w-48 pb-4"
+                  key={productId}
+                >
                   <div className="relative group">
                     <span
                       title="Purchases"
@@ -71,7 +74,7 @@ const SlicerProducts = ({
                       height={150}
                       alt={name + " image"}
                       className={`rounded-lg h-full img-background cursor-pointer object-cover duration-100 ${
-                        quantitySelected ? "opacity-100" : "opacity-80"
+                        quantitySelected ? "opacity-100" : "opacity-70"
                       }`}
                       onClick={() =>
                         updateProductQuantity(
@@ -82,7 +85,7 @@ const SlicerProducts = ({
                         )
                       }
                     />
-                    <p className="text-sm py-3 font-medium text-gray-500">
+                    <p className="text-sm pt-2.5 pb-3 font-medium text-gray-500 truncate">
                       {name}
                     </p>
                     <div className="relative z-10 grid items-center justify-center w-full grid-cols-4 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">

@@ -31,7 +31,7 @@ export default function Home() {
           ]
         }}
       />
-      <Container page={true} size="max-w-screen-xs">
+      <Container page={true} size="max-w-screen-md">
         <main>
           <div>
             <h1 className="pb-12">

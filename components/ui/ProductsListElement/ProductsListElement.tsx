@@ -30,8 +30,11 @@ const ProductsListElement = ({ product }: Props) => {
         >
           #{slicerId}/{productId}
         </a>
-        <Link href={`/create?slicer=${slicerId}&product=${productId}`}>
-          <a className="ml-4 text-gray-500">Edit form</a>
+        <Link
+          href={`/create?slicer=${slicerId}&product=${productId}`}
+          className="ml-4 text-gray-500"
+        >
+          Edit form
         </Link>
       </div>
       {submissions.length != 0 && (

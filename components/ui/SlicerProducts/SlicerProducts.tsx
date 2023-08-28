@@ -69,10 +69,8 @@ const SlicerProducts = ({
                   </span>
                   <Image
                     src={image || productDefault}
-                    width={200}
-                    height={150}
                     alt={name + " image"}
-                    className={`rounded-lg h-full img-background cursor-pointer object-cover duration-100 ${
+                    className={`rounded-lg h-32 sm:h-36 img-background cursor-pointer object-cover duration-100 ${
                       quantitySelected ? "opacity-100" : "opacity-70"
                     }`}
                     onClick={() =>
@@ -84,7 +82,7 @@ const SlicerProducts = ({
                       )
                     }
                   />
-                  <p className="text-sm pt-2.5 pb-3 font-medium text-gray-500 truncate">
+                  <p className="text-sm py-3 font-medium text-gray-500 truncate">
                     {name}
                   </p>
                   <div className="relative z-10 grid items-center justify-center w-full grid-cols-4 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">

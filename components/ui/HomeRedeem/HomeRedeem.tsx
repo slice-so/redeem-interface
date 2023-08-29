@@ -2,7 +2,7 @@ import { useAppContext } from "../context"
 import fetcher from "@utils/fetcher"
 import { ProductData } from "@utils/useProductData"
 import Spinner from "@components/icons/Spinner"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import SelectRedeems from "../SelectRedeems/SelectRedeems"
 import { Purchase } from "@utils/getPurchases"
 import { Form } from "@prisma/client"
@@ -29,15 +29,71 @@ export type SelectedProducts = {
 const HomeRedeem = () => {
   const { account } = useAppContext()
   const router = useRouter()
+  const { slicerId, productId } = router.query
 
   const { data } = useSWR(account ? `/api/products/${account}` : null, fetcher)
-  const productData = data as RedeemData
+  let productData = data as RedeemData
 
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({})
   const [isFormView, setIsFormView] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  return data ? (
+  const preloadSelectedProducts = () => {
+    const slicerIds = []
+    const productIds = []
+    if (typeof slicerId == "string") {
+      slicerIds.push(slicerId)
+    } else {
+      slicerIds.push(...slicerId)
+    }
+    if (typeof productId == "string") {
+      productIds.push(productId)
+    } else {
+      productIds.push(...productId)
+    }
+
+    if (slicerIds.length != productIds.length || slicerIds.length == 0) return
+
+    const newSelectedProducts = {}
+    let productRedeemed = 0
+    slicerIds.forEach((slicerId, index) => {
+      const productId = productIds[index]
+      const products = productData[slicerId]
+      const quantityToRedeem = products?.find(
+        (product) => product.product.product_id == Number(productId)
+      )?.quantityToRedeem
+
+      if (quantityToRedeem) {
+        productRedeemed++
+        newSelectedProducts[`${slicerId}-${productId}`] = quantityToRedeem
+      }
+    })
+
+    if (Object.keys(newSelectedProducts).length == 0) return
+
+    const totalProductsToRedeem = Object.values(productData).flatMap(
+      (products) => products.map((product) => product.product.product_id)
+    ).length
+
+    setSelectedProducts(newSelectedProducts)
+
+    if (productRedeemed == totalProductsToRedeem) {
+      setIsFormView(true)
+    }
+  }
+
+  useEffect(() => {
+    if (
+      Object.keys(selectedProducts).length == 0 &&
+      slicerId &&
+      productId &&
+      data
+    ) {
+      preloadSelectedProducts()
+    }
+  }, [slicerId, productId, data])
+
+  return productData ? (
     <>
       {!success ? (
         !isFormView ? (

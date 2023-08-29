@@ -10,9 +10,11 @@ import {
   RainbowKitProvider,
   lightTheme
 } from "@rainbow-me/rainbowkit"
-import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth"
+import {
+  GetSiweMessageOptions,
+  RainbowKitSiweNextAuthProvider
+} from "@rainbow-me/rainbowkit-siwe-next-auth"
 import { SessionProvider } from "next-auth/react"
-import type { Session } from "next-auth"
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { infuraProvider } from "wagmi/providers/infura"
 import { publicProvider } from "wagmi/providers/public"
@@ -57,6 +59,10 @@ const wagmiConfig = createConfig({
   publicClient
 })
 
+const getSiweMessageOptions: GetSiweMessageOptions = () => ({
+  statement: "Sign in to Slice"
+})
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -68,7 +74,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <WagmiConfig config={wagmiConfig}>
           <SessionProvider refetchInterval={0} session={pageProps.session}>
-            <RainbowKitSiweNextAuthProvider>
+            <RainbowKitSiweNextAuthProvider
+              getSiweMessageOptions={getSiweMessageOptions}
+            >
               <RainbowKitProvider
                 chains={chains}
                 theme={

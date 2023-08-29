@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react"
-import { useSignMessage } from "wagmi"
+import { useEffect } from "react"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { Button } from "@components/ui"
 import { useAppContext } from "@components/ui/context"
-import { verifyMessage } from "ethers"
 import { preload } from "swr"
 import fetcher from "@utils/fetcher"
+import { useSession } from "next-auth/react"
 
 type Props = {
   children: JSX.Element
@@ -32,24 +30,8 @@ const VerifiedBlock = ({
   preloadUrl,
   children
 }: Props) => {
-  const [timestamp] = useState(Date.now())
-  const message = `Sign this message to prove you have access to this wallet in order to sign in to redeem.slice.so.
-
-  This won't cost you any Ether.
-  
-  Timestamp: ${timestamp}`
-
-  const { account, isConnected, isSigned, setIsSigned } = useAppContext()
-  const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
-    message
-  })
-
-  useEffect(() => {
-    if (isSuccess) {
-      setIsSigned(verifyMessage(message, data) == account)
-      localStorage.setItem("isSigned", account)
-    }
-  }, [isSuccess])
+  const { account, isConnected } = useAppContext()
+  const { status } = useSession()
 
   useEffect(() => {
     if (preloadUrl && account) {
@@ -57,24 +39,11 @@ const VerifiedBlock = ({
     }
   }, [account])
 
-  return !isConnected ? (
+  return !isConnected || status != "authenticated" ? (
     <>
-      {beforeConnect}
+      {isConnected ? beforeSign : beforeConnect}
       <div className="flex justify-center">
-        <ConnectButton />
-      </div>
-    </>
-  ) : !isSigned ? (
-    <>
-      {beforeSign}
-      <div>
-        <Button
-          wrapperClassName="mb-6"
-          label="Sign message"
-          loading={isLoading}
-          onClick={() => signMessage()}
-        />
-        {isError && <p className="text-red-500">Error signing message</p>}
+        <ConnectButton label={isConnected ? "Sign message" : undefined} />
       </div>
     </>
   ) : (

@@ -10,6 +10,9 @@ import {
   RainbowKitProvider,
   lightTheme
 } from "@rainbow-me/rainbowkit"
+import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth"
+import { SessionProvider } from "next-auth/react"
+import type { Session } from "next-auth"
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { infuraProvider } from "wagmi/providers/infura"
 import { publicProvider } from "wagmi/providers/public"
@@ -64,32 +67,36 @@ function MyApp({ Component, pageProps }: AppProps) {
         defaultTheme="system"
       >
         <WagmiConfig config={wagmiConfig}>
-          <RainbowKitProvider
-            chains={chains}
-            theme={
-              // isDark
-              //   ? midnightTheme({
-              //       accentColor: "#2563eb",
-              //       accentColorForeground: "white",
-              //       borderRadius: "medium"
-              //     })
-              //   :
-              lightTheme({
-                accentColor: "#2563eb",
-                accentColorForeground: "white",
-                borderRadius: "medium"
-              })
-            }
-            showRecentTransactions={true}
-            coolMode
-          >
-            <AppWrapper>
-              <Layout>
-                <Background />
-                <Component {...pageProps} />
-              </Layout>
-            </AppWrapper>
-          </RainbowKitProvider>
+          <SessionProvider refetchInterval={0} session={pageProps.session}>
+            <RainbowKitSiweNextAuthProvider>
+              <RainbowKitProvider
+                chains={chains}
+                theme={
+                  // isDark
+                  //   ? midnightTheme({
+                  //       accentColor: "#2563eb",
+                  //       accentColorForeground: "white",
+                  //       borderRadius: "medium"
+                  //     })
+                  //   :
+                  lightTheme({
+                    accentColor: "#2563eb",
+                    accentColorForeground: "white",
+                    borderRadius: "medium"
+                  })
+                }
+                showRecentTransactions={true}
+                coolMode
+              >
+                <AppWrapper>
+                  <Layout>
+                    <Background />
+                    <Component {...pageProps} />
+                  </Layout>
+                </AppWrapper>
+              </RainbowKitProvider>
+            </RainbowKitSiweNextAuthProvider>
+          </SessionProvider>
         </WagmiConfig>
       </ThemeProvider>
     </>

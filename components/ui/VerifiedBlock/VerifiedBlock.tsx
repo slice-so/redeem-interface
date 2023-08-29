@@ -4,6 +4,7 @@ import { useAppContext } from "@components/ui/context"
 import { preload } from "swr"
 import fetcher from "@utils/fetcher"
 import { useSession } from "next-auth/react"
+import { useDisconnect } from "wagmi"
 
 type Props = {
   children: JSX.Element
@@ -31,13 +32,19 @@ const VerifiedBlock = ({
   children
 }: Props) => {
   const { account, isConnected } = useAppContext()
-  const { status } = useSession()
+  const { disconnect } = useDisconnect()
+  const { data: session, status } = useSession()
+  const authenticatedAddress = session?.["address"]
 
   useEffect(() => {
-    if (preloadUrl && account) {
-      preload(preloadUrl + account, fetcher)
+    if (authenticatedAddress && authenticatedAddress != account) {
+      disconnect()
+    } else {
+      if (preloadUrl && account) {
+        preload(preloadUrl + account, fetcher)
+      }
     }
-  }, [account])
+  }, [authenticatedAddress, account])
 
   return !isConnected || status != "authenticated" ? (
     <>

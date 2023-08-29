@@ -116,7 +116,7 @@ const HomeRedeem = () => {
           <h2 className="text-2xl">Products redeemed successfully!</h2>
           <div className="py-8">
             <Button
-              label="Go back to Slice"
+              label="Go to Slice"
               href={`https://${getSliceSubdomain()}slice.so/slicer`}
             />
           </div>

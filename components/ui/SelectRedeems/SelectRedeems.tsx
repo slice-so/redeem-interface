@@ -2,6 +2,7 @@ import SlicerProducts from "../SlicerProducts"
 import Button from "../Button"
 import { RedeemData } from "../HomeRedeem/HomeRedeem"
 import { Dispatch, SetStateAction } from "react"
+import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 
 export type SelectedProducts = {
   [id: string]: number
@@ -25,7 +26,7 @@ const SelectRedeems = ({
     0
   )
 
-  return (
+  return Object.keys(productData).length != 0 ? (
     <div>
       <p className="text-lg leading-8 pb-12 text-gray-600">
         Select the products to redeem
@@ -47,6 +48,16 @@ const SelectRedeems = ({
         label="Continue"
         disabled={totalToRedeem === 0}
         onClick={() => setIsFormView(true)}
+      />
+    </div>
+  ) : (
+    <div>
+      <p className="text-lg leading-8 pb-12 text-gray-600">
+        You have no products to redeem
+      </p>
+      <Button
+        label="Go to Slice"
+        href={`https://${getSliceSubdomain()}slice.so/slicer`}
       />
     </div>
   )

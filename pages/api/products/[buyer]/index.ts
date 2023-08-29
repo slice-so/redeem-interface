@@ -14,6 +14,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const purchases = await getPurchases(buyerAddress)
 
+      if (purchases.length === 0) {
+        res.status(200).json({})
+        return
+      }
+
       const products = await getProductsQuery(
         purchases.map((p) => ({
           slicerId: Number(p.slicerId),
@@ -29,6 +34,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }))
         }
       })
+
+      if (forms.length === 0) {
+        res.status(200).json({})
+        return
+      }
 
       const submissions = await prisma.submission.findMany({
         where: {

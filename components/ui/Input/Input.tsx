@@ -18,6 +18,7 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   prefixAction?: (...args: any[]) => any
   onClick?: (...args: any[]) => any
   onChange?: (...args: any[]) => any
+  handleOnChangeCustom?: (...args: any[]) => any
 }
 
 const Input: React.FC<Props> = (props) => {
@@ -38,6 +39,7 @@ const Input: React.FC<Props> = (props) => {
     onClick,
     onClickLabel,
     onChange,
+    handleOnChangeCustom,
     ...rest
   } = props
 
@@ -111,7 +113,11 @@ const Input: React.FC<Props> = (props) => {
         )}
         <input
           className={rootClassName}
-          onChange={handleOnChange}
+          onChange={
+            handleOnChangeCustom
+              ? (e: any) => handleOnChangeCustom(e)
+              : handleOnChange
+          }
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"

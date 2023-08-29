@@ -42,7 +42,7 @@ export default function Home() {
               />
             </h1>
           </div>
-          <VerifiedBlock>
+          <VerifiedBlock preloadUrl="/api/products/">
             <HomeRedeem />
           </VerifiedBlock>
         </main>

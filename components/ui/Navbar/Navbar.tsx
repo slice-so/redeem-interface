@@ -52,6 +52,7 @@ const Navbar = () => {
             </div>
             <div onClick={() => saEvent("connect_wallet_attempt")}>
               <ConnectButton
+                label={isConnected ? "Sign message" : undefined}
                 chainStatus="none"
                 accountStatus={{
                   smallScreen: "avatar",

@@ -1,224 +1,175 @@
-import Chevron from "@components/icons/Chevron"
-import { countryCodes } from "@lib/countryCodes"
-import Image from "next/image"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { QuestionValue } from "../CreateFormInput/CreateFormInput"
-import { LinkedProducts } from "../HomeRedeem/HomeRedeem_old"
-import Input from "../Input"
-import { useAccount } from "wagmi"
+import { LinkedProducts } from "../PrintfulStore/PrintfulStore"
+import { Answers } from "../RedeemForm/RedeemForm"
+import ListElement from "../ListElement"
+import Minus from "@components/icons/Minus"
+import Plus from "@components/icons/Plus"
 
 type Props = {
+  slicerId: number
+  productId: number
+  quantityToRedeem: number
   linkedProducts: LinkedProducts
-  selectedProduct: string
-  setSelectedProduct: Dispatch<SetStateAction<string>>
-  answers: { [question: string]: string }
-  setAnswers: Dispatch<SetStateAction<{ [question: string]: string }>>
+  answers: Answers
+  setAnswers: Dispatch<SetStateAction<Answers>>
 }
 
 const RedeemFormPrintful = ({
+  slicerId,
+  productId,
+  quantityToRedeem,
   linkedProducts,
-  selectedProduct,
-  setSelectedProduct,
   answers,
   setAnswers
 }: Props) => {
-  const [chosenProduct, setChosenProduct] = useState(
-    linkedProducts.length != 0 ? linkedProducts[0] : null
-  )
+  const allVariants = linkedProducts.map(({ variants }) => variants).flat()
+  const id = `${slicerId}-${productId}`
+  const choosenVariants = answers?.[id]?.choosenVariants || []
 
-  const product = chosenProduct?.product
-  const variants = chosenProduct?.variants
-
-  const deliveryQuestions: QuestionValue[] = [
-    {
-      question: "Full name",
-      hint: ""
-    },
-    { question: "Address", hint: "" },
-    { question: "City", hint: "" },
-    {
-      question: "Country",
-      hint: "",
-      options: countryCodes
-        .map(({ name, code }) => ({ name, value: code }))
-        .sort((a, b) => a.name.localeCompare(b.name))
-    },
-    {
-      question: "State",
-      hint: "",
-      options:
-        (answers["Country"] &&
-          countryCodes
-            .find(({ code }) => code == answers["Country"])
-            .states?.map(({ name, code }) => ({ name, value: code }))
-            .sort((a, b) => a.name.localeCompare(b.name))) ||
-        []
-    },
-    { question: "Postal code", hint: "" },
-    { question: "Email", hint: "" }
-  ]
-
-  const { connector } = useAccount()
-  const isCoinbaseWallet = connector?.id == "coinbaseWallet"
-  if (isCoinbaseWallet) {
-    deliveryQuestions.pop()
-  }
-
-  const handleSetChosenProduct = (externalId: string) => {
-    const product = linkedProducts.find(
-      ({ product }) => product.external_id == externalId
-    )
-    setChosenProduct(product)
-  }
+  const totalQuantitySelected =
+    choosenVariants?.reduce((acc, { quantity }) => acc + quantity, 0) || 0
 
   useEffect(() => {
-    if (variants?.length == 1) setSelectedProduct(variants[0].external_id)
-  }, [variants, setSelectedProduct])
+    if (allVariants?.length == 1) {
+      const answer = answers[id] || {}
+      const choosenVariants = answer.choosenVariants || []
+      choosenVariants[0] = {
+        quantity: quantityToRedeem,
+        variantId: allVariants[0].external_id
+      }
 
-  useEffect(() => {
-    if (answers["State"] && deliveryQuestions[4].options.length == 0) {
-      setAnswers((prev) => ({ ...prev, ["State"]: "" }))
+      setAnswers((prev) => ({
+        ...prev,
+        [id]: { questionAnswers: answer.questionAnswers, choosenVariants }
+      }))
     }
-  }, [answers])
+  }, [allVariants])
+
+  const updateProductQuantity = (
+    index: number,
+    variantId: string,
+    maxQuantity: number,
+    amount: number
+  ) => {
+    if (amount < 0) amount = 0
+    if (amount > maxQuantity) amount = maxQuantity
+
+    const answer = answers[id] || {}
+    const choosenVariants = answer.choosenVariants || []
+
+    if (index == -1) {
+      choosenVariants.push({ quantity: amount, variantId })
+    } else {
+      choosenVariants[index] = {
+        quantity: amount,
+        variantId
+      }
+    }
+
+    setAnswers((prev) => ({
+      ...prev,
+      [id]: { questionAnswers: answer.questionAnswers, choosenVariants }
+    }))
+  }
 
   return (
     <>
-      {linkedProducts.length != 0 && (
-        <div className="mb-6">
-          <div className="flex justify-center">
-            <Image
-              src={product.thumbnail_url}
-              width={260}
-              height={260}
-              alt={product.name + " image"}
-              className="rounded-lg"
-            />
-          </div>
-          {linkedProducts.length == 1 ? (
-            <p className="py-6 font-medium">{product.name}</p>
-          ) : (
-            <div className="py-6">
-              <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
-                Product to redeem
-              </p>
-              <div className="relative">
-                <select
-                  className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200"
-                  value={chosenProduct.product.external_id}
-                  onChange={(e) => {
-                    handleSetChosenProduct(e.target.value)
-                  }}
-                  required
-                >
-                  {linkedProducts.map(({ product }) => (
-                    <option key={product.id} value={product.external_id}>
-                      {product.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-                  <Chevron />
-                </div>
-              </div>
-            </div>
-          )}
-          {(variants.length != 1 ||
-            variants[0].name.split(product.name + " - ")[1]) && (
-            <>
-              <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
-                Color / size
-              </p>
-              <div className="relative">
-                <select
-                  className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
-                  value={selectedProduct}
-                  onChange={(e) => setSelectedProduct(e.target.value)}
-                  disabled={variants.length == 1}
-                  required
-                >
-                  <option value="">Pick option...</option>
-                  {variants.map((variant) => (
-                    <option key={variant.id} value={variant.external_id}>
-                      {(variants.length == 1 ? "Unique" : "") +
-                        (variants.length == 1 &&
-                        variant.name.split(product.name + " - ")[1]
-                          ? " - "
-                          : "") +
-                        (variant.name.split(product.name + " - ")[1]
-                          ? variant.name.split(product.name + " - ")[1]
-                          : "")}
-                    </option>
-                  ))}
-                </select>
-                {variants.length != 1 && (
-                  <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-                    <Chevron />
-                  </div>
-                )}
-              </div>
-            </>
-          )}
+      <div className="rounded-md pt-6 shadow-sm bg-gray-50">
+        <div className="flex gap-6 px-4 overflow-y-hidden">
+          {allVariants.map(({ product, variant_id: variantId }, key) => {
+            const { image, name } = product
 
-          <div className="px-2 py-6 my-6 text-left rounded-md shadow-lg bg-gray-50 sm:px-4">
-            <div className="pb-4">
-              <p className="font-medium">Delivery info</p>
-              <p className="text-sm">
-                The item will be delivered to the address specified below.
-              </p>
-            </div>
-            {deliveryQuestions.map(({ question, hint, options }, key) => {
-              const handleSetAnswer = (answer: string) => {
-                setAnswers((prev) => ({ ...prev, [question]: answer }))
-              }
+            const index = choosenVariants.findIndex(
+              ({ variantId: chosenVariantId }) => chosenVariantId == variantId
+            )
+            const variant = choosenVariants?.[index]
+            const quantitySelected = variant?.quantity || 0
+            const quantityLeft = quantityToRedeem - totalQuantitySelected
+            const disabled = quantityLeft == 0 && quantitySelected == 0
 
-              return (
-                <div key={key}>
-                  {options ? (
-                    options.length != 0 && (
-                      <>
-                        <p className="pb-1 pr-1 text-sm font-medium text-left text-gray-500">
-                          {question}
-                        </p>
-                        <div className="relative mb-4">
-                          <select
-                            className="w-full py-2 pl-5 pr-4 text-black transition-shadow duration-150 ease-in-out bg-white border-blue-300 rounded-sm appearance-none focus:outline-none shadow-light-focusable focus:border-blue-200 disabled:text-gray-500 disabled:border-blue-100 disabled:bg-gray-50"
-                            value={answers[question]}
-                            onChange={(e) => handleSetAnswer(e.target.value)}
-                            required
-                          >
-                            <option value="">Pick option...</option>
-                            {options.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.name}
-                              </option>
-                            ))}
-                          </select>
-                          <div className="absolute top-0 right-[16px] w-4 h-full -rotate-90">
-                            <Chevron />
-                          </div>
-                        </div>
-                      </>
-                    )
-                  ) : (
-                    <Input
-                      label={question}
-                      value={answers[question] || ""}
-                      onChange={handleSetAnswer}
-                      required
+            return (
+              <ListElement
+                image={image}
+                name={name}
+                isSelected={quantitySelected != 0}
+                onClick={() =>
+                  updateProductQuantity(
+                    index,
+                    variantId,
+                    quantitySelected + quantityLeft,
+                    quantitySelected == 0 ? quantitySelected + quantityLeft : 0
+                  )
+                }
+                key={product.variant_id}
+                width={260}
+                height={260}
+                truncate={false}
+              >
+                <div className="relative z-10 mb-6 grid items-center justify-center w-full grid-cols-4 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">
+                  <button
+                    type="button"
+                    className={`flex items-center justify-center h-8 transition-colors duration-150 ${
+                      quantitySelected != 0
+                        ? "text-red-500 hover:bg-red-500 hover:text-white"
+                        : "text-white bg-gray-400 cursor-default"
+                    }`}
+                    onClick={() =>
+                      updateProductQuantity(
+                        index,
+                        variantId,
+                        quantitySelected + quantityLeft,
+                        quantitySelected - 1
+                      )
+                    }
+                  >
+                    <Minus className="w-[17px] h-[17px]" />
+                  </button>
+                  <div
+                    className={`flex items-center justify-center col-span-2 pl-3 text-sm text-black border-l border-r border-gray-200 cursor-default h-8 ${
+                      disabled ? "bg-gray-400" : ""
+                    }`}
+                  >
+                    <input
+                      value={quantitySelected || ""}
+                      placeholder="0"
+                      type="number"
+                      max={quantityToRedeem}
+                      className="w-full text-center bg-transparent border-none outline-none focus:ring-0 form-input disabled:bg-gray-400"
+                      onChange={(e) =>
+                        updateProductQuantity(
+                          index,
+                          variantId,
+                          quantitySelected + quantityLeft,
+                          Number(e.target.value)
+                        )
+                      }
+                      disabled={disabled}
                     />
-                  )}
+                  </div>
+                  <button
+                    type="button"
+                    className={`flex items-center justify-center h-8 transition-colors duration-150 ${
+                      quantityLeft != 0
+                        ? "text-green-500 hover:bg-green-500 hover:text-white"
+                        : "text-white bg-gray-400 cursor-default"
+                    }`}
+                    onClick={() =>
+                      updateProductQuantity(
+                        index,
+                        variantId,
+                        quantitySelected + quantityLeft,
+                        quantitySelected + 1
+                      )
+                    }
+                  >
+                    <Plus className="w-[17px] h-[17px]" />
+                  </button>
                 </div>
-              )
-            })}
-          </div>
+              </ListElement>
+            )
+          })}
         </div>
-      )}
-      {isCoinbaseWallet && (
-        <p className="pt-4 text-sm text-blue-600">
-          Order details and tracking information will be notifyed on your <br />{" "}
-          <strong>Coinbase Wallet</strong>
-        </p>
-      )}
+      </div>
     </>
   )
 }

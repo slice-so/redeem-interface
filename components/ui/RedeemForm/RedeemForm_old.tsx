@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useAppContext } from "../context"
 import {
-  CreateFormInputRedeem,
+  RedeemFormInputRedeem,
   Button,
   Input,
   RedeemFormPrintful
@@ -133,11 +133,11 @@ const RedeemForm = ({
               answers={answers}
               setAnswers={setAnswers}
             />
-            {questions.length != 0 && (
+            {/* {questions.length != 0 && (
               <div>
                 <p className="py-4 font-medium">Additional questions</p>
                 {[...Array(questions.length)].map((i, key) => (
-                  <CreateFormInputRedeem
+                  <RedeemFormInputRedeem
                     key={key}
                     questionNumber={key + 1}
                     questionValue={questions[key]}
@@ -146,7 +146,7 @@ const RedeemForm = ({
                   />
                 ))}
               </div>
-            )}
+            )} */}
 
             <p className="pt-8 text-sm text-yellow-600">
               Your Ethereum address is only used to validate onchain purchases.

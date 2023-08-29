@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     if (req.method === "GET") {
-      const { slicerId, productId } = req.query
+      const { slicerId, productId } = JSON.parse(req.body)
       const data = await prisma.form.findFirst({
         where: {
           AND: [

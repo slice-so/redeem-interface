@@ -1,5 +1,4 @@
 import { useAppContext } from "../context"
-import useSWRImmutable from "swr/immutable"
 import fetcher from "@utils/fetcher"
 import { ProductData } from "@utils/useProductData"
 import Spinner from "@components/icons/Spinner"
@@ -11,6 +10,7 @@ import RedeemForm from "../RedeemForm"
 import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 import Button from "../Button"
 import { useRouter } from "next/router"
+import useSWR from "swr"
 
 export type ProductDataExpanded = {
   product: ProductData
@@ -31,10 +31,7 @@ const HomeRedeem = () => {
   const { account } = useAppContext()
   const router = useRouter()
 
-  const { data } = useSWRImmutable(
-    account ? `/api/products/${account}` : null,
-    fetcher
-  )
+  const { data } = useSWR(account ? `/api/products/${account}` : null, fetcher)
   const productData = data as RedeemData
 
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({})

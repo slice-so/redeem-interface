@@ -4,11 +4,14 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { Button } from "@components/ui"
 import { useAppContext } from "@components/ui/context"
 import { verifyMessage } from "ethers"
+import { preload } from "swr"
+import fetcher from "@utils/fetcher"
 
 type Props = {
   children: JSX.Element
   beforeConnect?: JSX.Element
   beforeSign?: JSX.Element
+  preloadUrl?: string
 }
 
 const beforeConnectDefault = (
@@ -26,6 +29,7 @@ const beforeSignDefault = (
 const VerifiedBlock = ({
   beforeConnect = beforeConnectDefault,
   beforeSign = beforeSignDefault,
+  preloadUrl,
   children
 }: Props) => {
   const [timestamp] = useState(Date.now())
@@ -46,6 +50,12 @@ const VerifiedBlock = ({
       localStorage.setItem("isSigned", account)
     }
   }, [isSuccess])
+
+  useEffect(() => {
+    if (preloadUrl && account) {
+      preload(preloadUrl + account, fetcher)
+    }
+  }, [account])
 
   return !isConnected ? (
     <>

@@ -78,7 +78,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             product,
             form,
             purchase,
-            submissionsForProduct,
             quantityToRedeem
           })
         }

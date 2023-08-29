@@ -5,7 +5,7 @@ import Spinner from "@components/icons/Spinner"
 import { useState } from "react"
 import SelectRedeems from "../SelectRedeems/SelectRedeems"
 import { Purchase } from "@utils/getPurchases"
-import { Form, Submission } from "@prisma/client"
+import { Form } from "@prisma/client"
 import RedeemForm from "../RedeemForm"
 import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 import Button from "../Button"
@@ -16,7 +16,6 @@ export type ProductDataExpanded = {
   product: ProductData
   form: Form
   purchase: Purchase
-  submissionsForProduct: Submission[]
   quantityToRedeem: number
 }
 

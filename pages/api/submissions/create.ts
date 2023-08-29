@@ -6,6 +6,7 @@ import fetcher from "@utils/fetcher"
 import getRefreshedAccessToken from "@utils/getRefreshedAccessToken"
 import { LinkedProducts } from "@components/ui/HomeRedeem/HomeRedeem_old"
 import { Prisma } from "@prisma/client"
+import { isUserAuthenticated } from "@utils/isUserAuthenticated"
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
@@ -13,12 +14,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
 
   if (req.method === "POST") {
+    const { account, answers } = JSON.parse(req.body)
     try {
-      const { account, answers } = JSON.parse(req.body)
+      const isAuth = await isUserAuthenticated(req, account)
 
-      const productsToRedeem = await fetcher(
-        `${appUrl}/api/products/${account}`
-      )
+      console.log({ account, isAuth })
+
+      if (!isAuth) return res.status(401).json({ error: "Unauthorized" })
+
+      // const productsToRedeem = await fetcher(
+      //   `${appUrl}/api/products/${account}`
+      // )
 
       // input validations
 

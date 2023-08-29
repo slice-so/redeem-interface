@@ -35,7 +35,10 @@ const RedeemFormInputRedeem = ({
 
     setAnswers((prev) => ({
       ...prev,
-      [`${slicerId}-${productId}`]: { questionAnswers }
+      [`${slicerId}-${productId}`]: {
+        questionAnswers,
+        choosenVariants: answer.choosenVariants
+      }
     }))
   }
 

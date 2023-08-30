@@ -58,7 +58,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const submissions = await prisma.submission.findMany({
         where: {
           orderId: data.order.id,
-          orderProvider: "Printful"
+          orderProvider: "printful"
         },
         select: {
           buyer: true

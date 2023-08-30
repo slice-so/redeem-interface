@@ -4,25 +4,32 @@ import { Answers } from "../RedeemForm/RedeemForm"
 import ListElement from "../ListElement"
 import Minus from "@components/icons/Minus"
 import Plus from "@components/icons/Plus"
+import { ProductData } from "@utils/useProductData"
 
 type Props = {
   slicerId: number
   productId: number
   quantityToRedeem: number
   linkedProducts: LinkedProducts
+  product: ProductData
   answers: Answers
   setAnswers: Dispatch<SetStateAction<Answers>>
 }
 
-const RedeemFormPrintful = ({
+const RedeemFormSelectProduct = ({
   slicerId,
   productId,
   quantityToRedeem,
   linkedProducts,
+  product,
   answers,
   setAnswers
 }: Props) => {
-  const allVariants = linkedProducts.map(({ variants }) => variants).flat()
+  const isPrintful = linkedProducts.length > 0
+  const allVariants = isPrintful
+    ? linkedProducts.map(({ variants }) => variants).flat()
+    : [{ external_id: `${product.Slicer.id}-${product.Slicer.name}`, product }]
+
   const id = `${slicerId}-${productId}`
   const choosenVariants = answers?.[id]?.choosenVariants || []
 
@@ -43,7 +50,7 @@ const RedeemFormPrintful = ({
         [id]: { questionAnswers: answer.questionAnswers, choosenVariants }
       }))
     }
-  }, [allVariants])
+  }, [])
 
   const updateProductQuantity = (
     index: number,
@@ -74,9 +81,9 @@ const RedeemFormPrintful = ({
 
   return (
     <>
-      <div className="rounded-md pt-6 shadow-sm bg-gray-50">
+      <div className="pt-6 rounded-md shadow-sm bg-gray-50">
         <div className="flex gap-6 px-4 overflow-y-hidden">
-          {allVariants.map(({ product, variant_id: variantId }, key) => {
+          {allVariants.map(({ product, external_id: variantId }, key) => {
             const { image, name } = product
 
             const index = choosenVariants.findIndex(
@@ -100,12 +107,12 @@ const RedeemFormPrintful = ({
                     quantitySelected == 0 ? quantitySelected + quantityLeft : 0
                   )
                 }
-                key={product.variant_id}
+                key={variantId}
                 width={260}
                 height={260}
                 truncate={false}
               >
-                <div className="relative z-10 mb-6 grid items-center justify-center w-full grid-cols-4 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">
+                <div className="relative z-10 grid items-center justify-center w-full grid-cols-4 mb-6 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">
                   <button
                     type="button"
                     className={`flex items-center justify-center h-8 transition-colors duration-150 ${
@@ -144,6 +151,7 @@ const RedeemFormPrintful = ({
                         )
                       }
                       disabled={disabled}
+                      required={totalQuantitySelected == 0}
                     />
                   </div>
                   <button
@@ -174,4 +182,4 @@ const RedeemFormPrintful = ({
   )
 }
 
-export default RedeemFormPrintful
+export default RedeemFormSelectProduct

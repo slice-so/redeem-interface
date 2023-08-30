@@ -11,6 +11,7 @@ import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 import Button from "../Button"
 import { useRouter } from "next/router"
 import useSWR from "swr"
+import { error } from "console"
 
 export type ProductDataExpanded = {
   product: ProductData
@@ -37,6 +38,7 @@ const HomeRedeem = () => {
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({})
   const [isFormView, setIsFormView] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [error, setError] = useState("")
 
   const preloadSelectedProducts = () => {
     const slicerIds = []
@@ -109,6 +111,8 @@ const HomeRedeem = () => {
             selectedProducts={selectedProducts}
             setIsFormView={setIsFormView}
             setSuccess={setSuccess}
+            error={error}
+            setError={setError}
           />
         )
       ) : (
@@ -120,6 +124,9 @@ const HomeRedeem = () => {
               href={`https://${getSliceSubdomain()}slice.so/slicer`}
             />
           </div>
+          {error && (
+            <p className="pb-6 text-sm font-semibold text-red-500">{error}</p>
+          )}
 
           <a className="highlight" onClick={() => router.reload()}>
             Redeem more products

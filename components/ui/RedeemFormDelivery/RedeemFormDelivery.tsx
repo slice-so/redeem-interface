@@ -45,9 +45,6 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
     { question: "Email", hint: "" }
   ]
   const isCoinbaseWallet = connector?.id == "coinbaseWallet"
-  if (isCoinbaseWallet) {
-    deliveryQuestions.pop()
-  }
 
   useEffect(() => {
     if (deliveryInfo?.State && deliveryQuestions[4].options.length == 0) {
@@ -108,19 +105,19 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
                 handleOnChangeCustom={(e) =>
                   handleSetAnswer(question, e.target.value)
                 }
-                required
+                required={
+                  question === "Email" && isCoinbaseWallet ? false : true
+                }
+                helpText={
+                  question === "Email" && isCoinbaseWallet
+                    ? "Email is not required. Order details and tracking information will be sent via messages on your Coinbase Wallet"
+                    : null
+                }
               />
             )}
           </div>
         )
       })}
-
-      {isCoinbaseWallet && (
-        <p className="pt-4 text-sm text-blue-600">
-          Order details and tracking information will be notifyed on your <br />{" "}
-          <strong>Coinbase Wallet</strong>
-        </p>
-      )}
     </div>
   )
 }

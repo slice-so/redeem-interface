@@ -6,7 +6,7 @@ import {
   DoubleText,
   ProductPreview
 } from "@components/ui"
-import RedeemForm from "@components/ui/RedeemForm/RedeemForm_old"
+// import RedeemForm from "@components/ui/RedeemForm/RedeemForm_old"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Spinner from "@components/icons/Spinner"
@@ -137,12 +137,12 @@ const HomeRedeem = () => {
           </div>
           <hr className="w-20 mx-auto mb-12 border-gray-300" />
           <VerifiedBlock>
-            <RedeemForm
+            {/* <RedeemForm
               slicerId={slicerId}
               productId={productId}
               questions={productData.questions}
               linkedProducts={productData.linkedProducts}
-            />
+            /> */}
           </VerifiedBlock>
         </>
       )}

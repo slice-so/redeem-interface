@@ -1,54 +1,56 @@
-import { useEffect, useState } from "react"
-import { useSignMessage } from "wagmi"
+import { useEffect } from "react"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { verifyMessage } from "ethers/lib/utils"
-import { Button } from "@components/ui"
 import { useAppContext } from "@components/ui/context"
+import { preload } from "swr"
+import fetcher from "@utils/fetcher"
+import { useSession } from "next-auth/react"
+import { useDisconnect } from "wagmi"
 
 type Props = {
   children: JSX.Element
   beforeConnect?: JSX.Element
   beforeSign?: JSX.Element
+  preloadUrl?: string
 }
 
-const VerifiedBlock = ({ beforeConnect, beforeSign, children }: Props) => {
-  const [timestamp] = useState(Date.now())
-  const message = `Sign this message to prove you have access to this wallet in order to sign in to redeem.slice.so.
+const beforeConnectDefault = (
+  <p className="pb-6 font-semibold text-yellow-600">
+    Connect your wallet to proceed
+  </p>
+)
 
-  This won't cost you any Ether.
-  
-  Timestamp: ${timestamp}`
+const beforeSignDefault = (
+  <p className="pb-6 font-semibold text-yellow-600">
+    Verify ownership of the connected address
+  </p>
+)
 
-  const { account, isConnected, isSigned, setIsSigned } = useAppContext()
-  const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
-    message
-  })
+const VerifiedBlock = ({
+  beforeConnect = beforeConnectDefault,
+  beforeSign = beforeSignDefault,
+  preloadUrl,
+  children
+}: Props) => {
+  const { account, isConnected } = useAppContext()
+  const { disconnect } = useDisconnect()
+  const { data: session, status } = useSession()
+  const authenticatedAddress = session?.["address"]
 
   useEffect(() => {
-    if (isSuccess) {
-      setIsSigned(verifyMessage(message, data) == account)
-      localStorage.setItem("isSigned", account)
+    if (authenticatedAddress && authenticatedAddress != account) {
+      disconnect()
+    } else {
+      if (preloadUrl && account) {
+        preload(preloadUrl + account, fetcher)
+      }
     }
-  }, [isSuccess])
+  }, [authenticatedAddress, account])
 
-  return !isConnected ? (
+  return !isConnected || status != "authenticated" ? (
     <>
-      {beforeConnect}
+      {isConnected ? beforeSign : beforeConnect}
       <div className="flex justify-center">
-        <ConnectButton />
-      </div>
-    </>
-  ) : !isSigned ? (
-    <>
-      {beforeSign}
-      <div>
-        <Button
-          wrapperClassName="mb-6"
-          label="Sign message"
-          loading={isLoading}
-          onClick={() => signMessage()}
-        />
-        {isError && <p className="text-red-500">Error signing message</p>}
+        <ConnectButton label={isConnected ? "Sign message" : undefined} />
       </div>
     </>
   ) : (

@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Prisma, Form } from "@prisma/client"
 import Chevron from "@components/icons/Chevron"
 import { useAppContext } from "../context"
-import { getSubdomain } from "@utils/getSubdomain"
+import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 
 export type ProductFormSubmissions = Form & {
   submissions: Prisma.JsonValue[]
@@ -24,14 +24,17 @@ const ProductsListElement = ({ product }: Props) => {
     <div className="flex items-center justify-between w-full">
       <div className="text-sm text-left">
         <a
-          href={`https://${getSubdomain()}slice.so/slicer/${slicerId}?product=${productId}`}
+          href={`https://${getSliceSubdomain()}slice.so/slicer/${slicerId}?product=${productId}`}
           target="_blank"
           rel="noreferrer"
         >
           #{slicerId}/{productId}
         </a>
-        <Link href={`/create?slicer=${slicerId}&product=${productId}`}>
-          <a className="ml-4 text-gray-500">Edit form</a>
+        <Link
+          href={`/create?slicer=${slicerId}&product=${productId}`}
+          className="ml-4 text-gray-500"
+        >
+          Edit form
         </Link>
       </div>
       {submissions.length != 0 && (

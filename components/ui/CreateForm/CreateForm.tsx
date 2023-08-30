@@ -95,8 +95,8 @@ const CreateForm = ({
               <div className="text-sm text-yellow-600">
                 <p>
                   In order to process the order,{" "}
-                  <span className="font-bold">email and delivery info</span>{" "}
-                  (name, address, city, state, country, zip) will be added
+                  <span className="font-bold">delivery info</span> (name,
+                  address, city, state, country, zip) will be added
                   automatically to the form.
                 </p>
                 {linkedProducts.length != 1 && (

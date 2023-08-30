@@ -10,6 +10,11 @@ import {
   RainbowKitProvider,
   lightTheme
 } from "@rainbow-me/rainbowkit"
+import {
+  GetSiweMessageOptions,
+  RainbowKitSiweNextAuthProvider
+} from "@rainbow-me/rainbowkit-siwe-next-auth"
+import { SessionProvider } from "next-auth/react"
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { infuraProvider } from "wagmi/providers/infura"
 import { publicProvider } from "wagmi/providers/public"
@@ -54,6 +59,10 @@ const wagmiConfig = createConfig({
   publicClient
 })
 
+const getSiweMessageOptions: GetSiweMessageOptions = () => ({
+  statement: "Sign in to Slice"
+})
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -64,32 +73,38 @@ function MyApp({ Component, pageProps }: AppProps) {
         defaultTheme="system"
       >
         <WagmiConfig config={wagmiConfig}>
-          <RainbowKitProvider
-            chains={chains}
-            theme={
-              // isDark
-              //   ? midnightTheme({
-              //       accentColor: "#2563eb",
-              //       accentColorForeground: "white",
-              //       borderRadius: "medium"
-              //     })
-              //   :
-              lightTheme({
-                accentColor: "#2563eb",
-                accentColorForeground: "white",
-                borderRadius: "medium"
-              })
-            }
-            showRecentTransactions={true}
-            coolMode
-          >
-            <AppWrapper>
-              <Layout>
-                <Background />
-                <Component {...pageProps} />
-              </Layout>
-            </AppWrapper>
-          </RainbowKitProvider>
+          <SessionProvider refetchInterval={0} session={pageProps.session}>
+            <RainbowKitSiweNextAuthProvider
+              getSiweMessageOptions={getSiweMessageOptions}
+            >
+              <RainbowKitProvider
+                chains={chains}
+                theme={
+                  // isDark
+                  //   ? midnightTheme({
+                  //       accentColor: "#2563eb",
+                  //       accentColorForeground: "white",
+                  //       borderRadius: "medium"
+                  //     })
+                  //   :
+                  lightTheme({
+                    accentColor: "#2563eb",
+                    accentColorForeground: "white",
+                    borderRadius: "medium"
+                  })
+                }
+                showRecentTransactions={true}
+                coolMode
+              >
+                <AppWrapper>
+                  <Layout>
+                    <Background />
+                    <Component {...pageProps} />
+                  </Layout>
+                </AppWrapper>
+              </RainbowKitProvider>
+            </RainbowKitSiweNextAuthProvider>
+          </SessionProvider>
         </WagmiConfig>
       </ThemeProvider>
     </>

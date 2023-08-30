@@ -30,7 +30,7 @@ const Nightwind = ({ ...props }) => {
         r="70"
         fill="currentColor"
         className={`${props.moonColor || "text-blue-500"} 
-          ${props.moonColorNight || "dark:text-yellow-300"} ${
+          ${props.moonColorNight || "dark:text-yellow-600"} ${
           props.transition || ""
         } transition-colors duration-150`}
       />

@@ -1,114 +1,278 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import corsMiddleware from "@utils/corsMiddleware"
-import { prisma } from "@lib/prisma"
 import { encryptTexts } from "@utils/crypto"
 import fetcher from "@utils/fetcher"
 import getRefreshedAccessToken from "@utils/getRefreshedAccessToken"
-import { LinkedProducts } from "@components/ui/HomeRedeem/HomeRedeem"
-import { Prisma } from "@prisma/client"
+import { isUserAuthenticated } from "@utils/isUserAuthenticated"
+import { Answers } from "@components/ui/RedeemForm/RedeemForm"
+
+const appUrl = process.env.NEXT_PUBLIC_APP_URL
+
+type Body = {
+  account: string
+  answers: Answers
+}
+
+type PrintfulOrders = {
+  [id: string]: {
+    products: {
+      productId: number
+      slicerId: number
+      variants: { quantity: number; variantId: number }[]
+      isInstantOrder: boolean
+    }[]
+    success: boolean
+    error: string
+    orderId: number
+  }
+}
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
 
   if (req.method === "POST") {
     try {
-      const { formId, buyer, redeemedUnits, answers, selectedProduct } =
-        JSON.parse(req.body)
-      let orderId: number
-      let orderProvider: string
+      const { account, answers } = JSON.parse(req.body) as Body
 
-      const encryptedAnswers = await encryptTexts(
-        formId,
-        redeemedUnits,
-        answers
+      const isAuth = await isUserAuthenticated(req, account)
+      if (!isAuth) return res.status(401).json({ error: "Unauthorized" })
+
+      const productsToRedeem = await fetcher(
+        `${appUrl}/api/products/${account}`
       )
 
-      const { linkedProducts, externalSettings } =
-        (await prisma.form.findUnique({
-          where: {
-            id: Number(formId)
-          },
-          select: {
-            linkedProducts: true,
-            externalSettings: true
-          }
-        })) as {
-          linkedProducts: LinkedProducts
-          externalSettings: Prisma.JsonValue
-        }
+      let allProductRedeemed = true
+      const printfulOrders = {} as PrintfulOrders
+      const submissions = []
+      const answersEntries = Object.entries(answers)
+      const totalToRedeem = answersEntries.length - 1
 
-      if (selectedProduct) {
-        const endpoint = `https://api.printful.com/orders?confirm=${
-          externalSettings["instantOrder"] || false
-        }`
+      // check the user can redeem selected products and the quantities are correct
+      answersEntries.forEach(([id, answer]) => {
+        if (id === "deliveryInfo") return
 
-        const { accountId } = linkedProducts?.find(
-          (product) =>
-            product.variants.findIndex(
-              (variant) => variant.external_id == selectedProduct
-            ) != -1
+        const slicerId = Number(id.split("-")[0])
+        const productId = Number(id.split("-")[1])
+
+        const productInfo = productsToRedeem[slicerId]?.find(
+          (info) =>
+            info?.product?.product_id === productId &&
+            info?.product?.Slicer.id === slicerId
         )
 
-        if (!accountId) {
+        if (!productInfo) {
           throw Error("Invalid product")
         }
 
-        const { access_token } = await getRefreshedAccessToken(
-          String(accountId)
+        const { quantityToRedeem } = productInfo
+        const choosenVariants = answer.choosenVariants as unknown as {
+          quantity: number
+          variantId: number
+        }[]
+
+        const quantityRedeemed = choosenVariants.reduce(
+          (acc, curr) => acc + curr.quantity,
+          0
         )
+
+        if (quantityRedeemed > quantityToRedeem) {
+          throw Error("Invalid quantity")
+        }
+
+        const { linkedProducts, externalSettings } = productInfo.form
+        const isPrintful = linkedProducts.some((linkedProduct) =>
+          linkedProduct.accountId.includes("printful")
+        )
+
+        if (isPrintful) {
+          let cleanedVariants = []
+          // clean variants and check they are allowed
+          choosenVariants?.forEach((variant) => {
+            if (variant.quantity > 0) {
+              cleanedVariants.push(variant)
+            }
+
+            const isVariantAllowed = linkedProducts?.find(
+              (product) =>
+                product.variants.findIndex(
+                  (v) => v.external_id == variant.variantId
+                ) != -1
+            )
+
+            if (!isVariantAllowed) {
+              throw Error("Invalid variant")
+            }
+          })
+
+          const storeId = linkedProducts[0].accountId.split("printful")[1]
+          const isInstantOrder = !!externalSettings["instantOrder"] || false
+          const key = `${storeId}-${isInstantOrder}`
+          printfulOrders[key] = printfulOrders[key] || {
+            products: [],
+            success: false,
+            error: "",
+            orderId: null
+          }
+
+          printfulOrders[key].products.push({
+            productId,
+            slicerId,
+            variants: cleanedVariants || [],
+            isInstantOrder
+          })
+        }
+      })
+
+      // For each store and instantOrder combination create a printful order
+      for (const [key, value] of Object.entries(printfulOrders)) {
+        const [storeId, isInstantOrder] = key.split("-")
+        const { products } = value
+        const endpoint = `https://api.printful.com/orders?confirm=${isInstantOrder}`
+
+        const { access_token } = await getRefreshedAccessToken(
+          `printful${storeId}`
+        )
+
+        // array of items
+        let items = []
+        products.forEach((product) => {
+          const { variants } = product
+
+          variants.forEach((variant) => {
+            items.push({
+              external_variant_id: variant.variantId,
+              quantity: variant.quantity
+            })
+          })
+        })
 
         const body = {
           body: JSON.stringify({
             recipient: {
-              name: answers["Name"],
-              address1: answers["Address"],
-              city: answers["City"],
-              state_code: answers["State"],
-              country_code: answers["Country"],
-              zip: answers["Postal code"],
-              email: answers["Email"]
+              name: answers.deliveryInfo["Full name"],
+              address1: answers.deliveryInfo["Address"],
+              city: answers.deliveryInfo["City"],
+              state_code: answers.deliveryInfo["State"],
+              country_code: answers.deliveryInfo["Country"],
+              zip: answers.deliveryInfo["Postal code"],
+              email: answers.deliveryInfo["Email"]
             },
-            items: [
-              {
-                external_variant_id: selectedProduct,
-                quantity: redeemedUnits
-              }
-            ]
+            items
           }),
           headers: { Authorization: `Bearer ${access_token}` },
           method: "POST"
         }
 
         const order = await fetcher(endpoint, body)
-        orderProvider = "Printful"
-        orderId = order.result.id
+        printfulOrders[key].success = order.code === 200
+        printfulOrders[key].orderId = order.result.id
 
-        if (!orderId) throw Error(order.error.message)
+        if (order.code !== 200) {
+          allProductRedeemed = allProductRedeemed && false
+          printfulOrders[key].error = order.error.message
+
+          if (order.error.message.includes("ZIP code")) {
+            throw Error(order.error.message)
+          }
+        }
       }
 
-      // Create user if it doesn't exist
-      await prisma.user.upsert({
-        where: {
-          id: buyer
-        },
-        update: {},
-        create: {
-          id: buyer
-        }
-      })
+      // create submissions only for product correctly redeemed
+      for (const [id, value] of answersEntries) {
+        if (id === "deliveryInfo") continue
 
-      const data = await prisma.submission.create({
-        data: {
-          formId: Number(formId),
-          buyer,
-          redeemedUnits: Number(redeemedUnits),
-          answers: encryptedAnswers,
-          orderId: orderId || null,
-          orderProvider: orderProvider || null
-        }
-      })
+        const choosenVariants = value.choosenVariants as unknown as {
+          quantity: number
+          variantId: number
+        }[]
 
-      res.status(200).json({ data })
+        const quantityRedeemed = choosenVariants.reduce(
+          (acc, curr) => acc + curr.quantity,
+          0
+        )
+
+        if (quantityRedeemed === 0) continue
+
+        const slicerId = Number(id.split("-")[0])
+        const productId = Number(id.split("-")[1])
+        let orderId: number
+        let orderProvider: string
+
+        const productInfo = productsToRedeem[slicerId]?.find(
+          (info) =>
+            info?.product?.product_id === productId &&
+            info?.product?.Slicer.id === slicerId
+        )
+
+        const {
+          linkedProducts,
+          id: formId,
+          questions,
+          externalSettings
+        } = productInfo.form
+
+        const isPrintful = linkedProducts.some((linkedProduct) =>
+          linkedProduct.accountId.includes("printful")
+        )
+
+        if (isPrintful) {
+          const storeId = linkedProducts[0].accountId.split("printful")[1]
+          const isInstantOrder = !!externalSettings["instantOrder"] || false
+          const key = `${storeId}-${isInstantOrder}`
+          orderId = printfulOrders[key].orderId
+
+          if (!printfulOrders[key].success) {
+            continue
+          } else {
+            orderId = printfulOrders[key].orderId
+            orderProvider = "printful"
+          }
+        }
+
+        const formattedQuestions = {}
+        questions.forEach((question: { question: string }, index) => {
+          formattedQuestions[question.question] = value.questionAnswers[index]
+        })
+
+        Object.entries(answers.deliveryInfo).forEach(([key, value]) => {
+          formattedQuestions[key] = value
+        })
+
+        const encryptedAnswers = await encryptTexts(
+          formId,
+          String(quantityRedeemed),
+          formattedQuestions
+        )
+
+        // Create user if it doesn't exist
+        await prisma.user.upsert({
+          where: {
+            id: account
+          },
+          update: {},
+          create: {
+            id: account
+          }
+        })
+
+        const data = await prisma.submission.create({
+          data: {
+            formId: Number(formId),
+            buyer: account,
+            redeemedUnits: Number(quantityRedeemed),
+            answers: encryptedAnswers,
+            orderId: orderId || null,
+            orderProvider: orderProvider || null
+          }
+        })
+        submissions.push(data)
+      }
+
+      if (submissions.length == 0) {
+        throw Error("Error during redemption")
+      }
+
+      res.status(200).json({ submissions, totalToRedeem })
     } catch (error) {
       res.status(500).json({ error: error.message })
     }

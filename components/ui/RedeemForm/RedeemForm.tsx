@@ -1,182 +1,185 @@
-import { useState } from "react"
-import { useAppContext } from "../context"
-import {
-  CreateFormInputRedeem,
-  Button,
-  Input,
-  RedeemFormPrintful
-} from "@components/ui"
-import useQuery from "@utils/subgraphQuery"
-import decimalToHex from "@utils/decimalToHex"
-import Spinner from "@components/icons/Spinner"
-import usePrismaQuery from "@utils/prismaQuery"
+import { Dispatch, SetStateAction, useState } from "react"
+import { ProductDataExpanded, RedeemData } from "../HomeRedeem/HomeRedeem"
+import { SelectedProducts } from "../SelectRedeems/SelectRedeems"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
-import { LinkedProducts } from "../HomeRedeem/HomeRedeem"
+import {
+  Button,
+  RedeemFormDelivery,
+  RedeemFormInputRedeem,
+  RedeemFormSelectProduct
+} from "../"
+import { LinkedProducts } from "../PrintfulStore/PrintfulStore"
+import { useAppContext } from "../context"
+
+export type Answers = {
+  deliveryInfo?: {
+    [key: string]: string
+  }
+  [id: string]: {
+    questionAnswers?: string[]
+    choosenVariants?: { quantity: number; variantId: string }[]
+  }
+}
 
 type Props = {
-  slicerId: number
-  productId: number
-  questions: QuestionValue[]
-  linkedProducts: LinkedProducts
+  productData: RedeemData
+  selectedProducts: SelectedProducts
+  setIsFormView: Dispatch<SetStateAction<boolean>>
+  setSuccess: Dispatch<SetStateAction<boolean>>
+  error: string
+  setError: Dispatch<SetStateAction<string>>
 }
 
 const RedeemForm = ({
-  questions,
-  slicerId,
-  productId,
-  linkedProducts
+  productData,
+  selectedProducts,
+  setIsFormView,
+  setSuccess,
+  error,
+  setError
 }: Props) => {
   const { account } = useAppContext()
-
-  const [units, setUnits] = useState(0)
-  const [answers, setAnswers] = useState({})
-  const [selectedProduct, setSelectedProduct] = useState("")
-  const [errors, setErrors] = useState([])
+  const [answers, setAnswers] = useState<Answers>({})
   const [loading, setLoading] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const hexId = `${decimalToHex(Number(slicerId))}-${decimalToHex(
-    Number(productId)
-  )}-${account?.toLowerCase()}`
 
-  const tokensQuery = /* GraphQL */ `
-      productPurchase (id: "${hexId}") {
-        totalQuantity
-      }
-    `
-  let subgraphData = useQuery(tokensQuery, [account])
-  const purchaseData = subgraphData?.productPurchase
-  const data = usePrismaQuery(
-    `/api/submissions?buyer=${account}&slicerId=${slicerId}&productId=${productId}`
-  )
+  const formsSelectedProducts: ProductDataExpanded[] = Object.keys(
+    selectedProducts
+  ).flatMap((id) => {
+    if (selectedProducts[id] == 0) return []
 
-  const formId = data?.formId
-  const submissions = data?.submissions as { redeemedUnits: number }[]
-  const redeemedUnits = submissions?.reduce(
-    (acc, val) => acc + val.redeemedUnits,
-    0
-  )
+    const slicerId = id.split("-")[0]
+    const productId = id.split("-")[1]
 
-  const submit = async (e: React.SyntheticEvent<EventTarget>) => {
-    e.preventDefault()
-    setLoading(true)
-    setErrors([])
-
-    try {
-      const fetcher = (await import("@utils/fetcher")).default
-
-      const body = {
-        body: JSON.stringify({
-          formId,
-          buyer: account,
-          redeemedUnits: units,
-          answers: answers,
-          selectedProduct
-        }),
-        method: "POST"
-      }
-
-      const data = await fetcher(`/api/submissions/create`, body)
-      if (data.error) {
-        setErrors(
-          data.error
-            .replaceAll("Recipient: ", "")
-            .replaceAll(
-              "Item 0: Sync variant not found",
-              "Product unavailable, contact seller for more info"
-            )
-            .split(";")
-            .map((el: string) =>
-              el.toLowerCase().includes("printful")
-                ? "Unknown error, contact seller for more info"
-                : el
-            )
-        )
-      } else {
-        setIsSuccess(true)
-      }
-    } catch (error) {
-      console.log(error)
+    const redeemData = {
+      ...productData[slicerId].find(
+        (product) => product.product.product_id == Number(productId)
+      )
     }
 
-    setLoading(false)
+    redeemData["quantityToRedeem"] = selectedProducts[id]
+    return redeemData
+  })
+
+  const showDeliveryForm = formsSelectedProducts.some(
+    ({ form }) => !!form.linkedProducts
+  )
+
+  const submit = async (e) => {
+    e.preventDefault()
+
+    if (!loading) {
+      try {
+        setLoading(true)
+        setError("")
+
+        const response = await fetch("/api/submissions/create", {
+          method: "POST",
+          body: JSON.stringify({ account, answers })
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+          setLoading(false)
+          const { submissions, totalToRedeem } = data
+          if (submissions.length != totalToRedeem) {
+            setError(
+              "Some products were not redeemed, please try again later or contact us"
+            )
+          }
+          setSuccess(true)
+        } else {
+          setError(
+            data.error
+              .replaceAll("Recipient: ", "")
+              .replaceAll(
+                "Item 0: Sync variant not found",
+                "Product unavailable, contact seller for more info"
+              )
+          )
+          setLoading(false)
+        }
+      } catch (error) {
+        console.log("in catch")
+        console.log(error)
+      }
+    }
   }
 
-  const maxUnits = purchaseData?.totalQuantity - redeemedUnits
+  return (
+    <form onSubmit={submit}>
+      <p className="pb-12 text-lg leading-8 text-gray-600">
+        Choose the products to redeem and fill in the required details
+      </p>
+      <div className="space-y-8">
+        {formsSelectedProducts.map(({ product, form, quantityToRedeem }) => {
+          const { id: slicerId, name: slicerName } = product.Slicer
+          const { name: productName, product_id: productId } = product
+          const questions = form.questions as QuestionValue[]
 
-  return !isSuccess ? (
-    !subgraphData || !submissions ? (
-      <div className="flex justify-center">
-        <Spinner className="w-16 h-16 text-random2-600" />
+          return (
+            <div key={`${slicerId}-${[productId]}`}>
+              <div className="text-left pb-3.5 pl-4 sm:flex sm:flex-wrap justify-between items-center">
+                <h2 className="flex items-center text-lg font-medium text-gray-600 sm:text-xl">
+                  {slicerName} / {productName}
+                </h2>
+                <p className="text-sm font-semibold text-gray-500">
+                  Redeem up to {quantityToRedeem}
+                </p>
+              </div>
+              <RedeemFormSelectProduct
+                slicerId={slicerId}
+                productId={productId}
+                quantityToRedeem={quantityToRedeem}
+                linkedProducts={form.linkedProducts as LinkedProducts}
+                answers={answers}
+                setAnswers={setAnswers}
+                product={product}
+              />
+              <div className="py-10">
+                {questions.length != 0 &&
+                  questions.map((question, key) => {
+                    return (
+                      <div key={key} className="space-y-12">
+                        <RedeemFormInputRedeem
+                          key={key}
+                          slicerId={slicerId}
+                          productId={productId}
+                          questionNumber={key}
+                          questionValue={question}
+                          answers={answers}
+                          setAnswers={setAnswers}
+                        />
+                      </div>
+                    )
+                  })}
+              </div>
+            </div>
+          )
+        })}
       </div>
-    ) : !purchaseData ? (
-      <p className="font-semibold text-yellow-600">
-        You haven&apos;t purchased this product yet
-      </p>
-    ) : maxUnits != 0 ? (
-      <>
-        <form onSubmit={(e) => submit(e)}>
-          <div className="space-y-8">
-            <Input
-              label="Units to redeem"
-              type="number"
-              value={units > 0 ? units : ""}
-              onChange={setUnits}
-              min={1}
-              max={maxUnits}
-              placeholder={`Up to ${maxUnits}`}
-              required
-            />
-            <RedeemFormPrintful
-              linkedProducts={linkedProducts}
-              selectedProduct={selectedProduct}
-              setSelectedProduct={setSelectedProduct}
-              answers={answers}
-              setAnswers={setAnswers}
-            />
-            {questions.length != 0 && (
-              <div>
-                <p className="py-4 font-medium">Additional questions</p>
-                {[...Array(questions.length)].map((i, key) => (
-                  <CreateFormInputRedeem
-                    key={key}
-                    questionNumber={key + 1}
-                    questionValue={questions[key]}
-                    answers={answers}
-                    setAnswers={setAnswers}
-                  />
-                ))}
-              </div>
-            )}
-
-            <p className="pt-8 text-sm text-yellow-600">
-              Your Ethereum address is only used to validate onchain purchases.
-              It is never shown or shared with anyone
-            </p>
-            <Button label="Redeem" loading={loading} type="submit" />
-            {errors.length != 0 && (
-              <div className="space-y-2">
-                {errors.map((error, i) => (
-                  <p className="text-red-600" key={i}>
-                    {error}
-                  </p>
-                ))}
-              </div>
-            )}
+      {showDeliveryForm && (
+        <>
+          <hr className="w-40 mx-auto my-6 border-gray-400 " />
+          <div className="py-10">
+            <h2 className="flex pb-4 text-xl font-medium text-gray-600 sm:text-2xl">
+              Delivery info
+            </h2>
+            <RedeemFormDelivery answers={answers} setAnswers={setAnswers} />
           </div>
-        </form>
-      </>
-    ) : (
-      <p className="font-semibold text-yellow-600">
-        You already redeemed all purchased units
-      </p>
-    )
-  ) : (
-    <>
-      <p>Product redeemed successfully! 🎉</p>
-      <p className="pt-4 text-sm text-gray-500">
-        For any question get in touch with the seller
-      </p>
-    </>
+        </>
+      )}
+
+      <div className="pt-4 pb-8">
+        {error && (
+          <p className="pb-6 text-sm font-semibold text-red-500">{error}</p>
+        )}
+        <Button label="Continue" type="submit" loading={loading} />
+      </div>
+      <a className="highlight" onClick={() => setIsFormView(false)}>
+        Go back
+      </a>
+    </form>
   )
 }
 

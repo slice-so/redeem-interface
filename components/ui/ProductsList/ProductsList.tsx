@@ -48,8 +48,8 @@ const ProductsList = () => {
           </div>
         ))}
         <div className="pt-2">
-          <Link href="/create">
-            <a className="text-sm highlight">Create new form</a>
+          <Link href="/create" className="text-sm highlight">
+            Create new form
           </Link>
         </div>
       </>

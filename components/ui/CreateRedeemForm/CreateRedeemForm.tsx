@@ -152,7 +152,6 @@ const CreateRedeemForm = () => {
         <>
           <div className="pb-12">
             <ProductPreview slicerId={slicerId} productId={productId} />
-
             <a
               className="text-sm highlight"
               onClick={() => setProductCreator(null)}
@@ -161,18 +160,7 @@ const CreateRedeemForm = () => {
             </a>
           </div>
           <hr className="w-20 mx-auto mb-12 border-gray-300" />
-          <VerifiedBlock
-            beforeConnect={
-              <p className="pb-6 font-semibold text-yellow-600">
-                Connect your wallet to proceed
-              </p>
-            }
-            beforeSign={
-              <p className="pb-6 font-semibold text-yellow-600">
-                Sign the message to verify ownership of your address
-              </p>
-            }
-          >
+          <VerifiedBlock>
             <div className="mx-auto">
               <CreateForm
                 id={`${slicerId}-${productId}`}

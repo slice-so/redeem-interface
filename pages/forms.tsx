@@ -14,21 +14,10 @@ export default function Products() {
             <DoubleText
               inactive
               size="text-3xl sm:text-4xl"
-              logoText="Your forms"
+              logoText="My forms"
             />
           </h1>
-          <VerifiedBlock
-            beforeConnect={
-              <p className="pb-6 font-semibold text-yellow-600">
-                Connect your wallet to proceed
-              </p>
-            }
-            beforeSign={
-              <p className="pb-6 font-semibold text-yellow-600">
-                Sign the message to verify ownership of your address
-              </p>
-            }
-          >
+          <VerifiedBlock>
             <div className="max-w-md mx-auto">
               <ProductsList />
             </div>

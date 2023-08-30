@@ -1,5 +1,10 @@
 import { NextSeo } from "next-seo"
-import { Container, HomeRedeem } from "@components/ui"
+import {
+  Container,
+  DoubleText,
+  HomeRedeem,
+  VerifiedBlock
+} from "@components/ui"
 import {
   defaultDescription,
   defaultTitle,
@@ -26,9 +31,20 @@ export default function Home() {
           ]
         }}
       />
-      <Container page={true} size="max-w-screen-xs">
+      <Container page={true} size="max-w-screen-md">
         <main>
-          <HomeRedeem />
+          <div>
+            <h1 className="pb-12">
+              <DoubleText
+                inactive
+                size="text-4xl sm:text-5xl"
+                logoText="Redeem Products"
+              />
+            </h1>
+          </div>
+          <VerifiedBlock preloadUrl="/api/products/">
+            <HomeRedeem />
+          </VerifiedBlock>
         </main>
       </Container>
     </>

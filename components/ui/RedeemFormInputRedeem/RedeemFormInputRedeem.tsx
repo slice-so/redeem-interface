@@ -2,21 +2,25 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Input } from "@components/ui"
 import { QuestionValue } from "../CreateFormInput/CreateFormInput"
 import markdownToHtml from "@lib/markdownToHtml"
+import { Answers } from "../RedeemForm/RedeemForm"
 
 type Props = {
   questionNumber: number
-  answers: { [question: string]: string }
-  setAnswers: Dispatch<SetStateAction<{ [question: string]: string }>>
+  slicerId: number
+  productId: number
+  answers: Answers
+  setAnswers: Dispatch<SetStateAction<Answers>>
   questionValue: QuestionValue
 }
 
-const CreateFormInputRedeem = ({
+const RedeemFormInputRedeem = ({
   questionNumber,
+  slicerId,
+  productId,
   answers,
   setAnswers,
   questionValue
 }: Props) => {
-  const [answer, setAnswer] = useState("")
   const [htmlContent, setHtmlContent] = useState("")
   const { question, hint } = questionValue
 
@@ -24,15 +28,23 @@ const CreateFormInputRedeem = ({
     setHtmlContent(await markdownToHtml(hint))
   }
 
+  const handleSetAnswer = (value: string) => {
+    const answer = answers[`${slicerId}-${productId}`] || {}
+    const questionAnswers = answer.questionAnswers || []
+    questionAnswers[questionNumber] = value
+
+    setAnswers((prev) => ({
+      ...prev,
+      [`${slicerId}-${productId}`]: {
+        questionAnswers,
+        choosenVariants: answer.choosenVariants
+      }
+    }))
+  }
+
   useEffect(() => {
     handleShowPreview()
   }, [])
-
-  useEffect(() => {
-    const updatedAnswers = { ...answers }
-    updatedAnswers[question] = answer
-    setAnswers(updatedAnswers)
-  }, [answer])
 
   return (
     <>
@@ -47,9 +59,16 @@ const CreateFormInputRedeem = ({
           ></div>
         )}
       </div>
-      <Input value={answer} onChange={setAnswer} required />
+      <Input
+        value={
+          answers[`${slicerId}-${productId}`] &&
+          answers[`${slicerId}-${productId}`][questionNumber]
+        }
+        onChange={handleSetAnswer}
+        required
+      />
     </>
   )
 }
 
-export default CreateFormInputRedeem
+export default RedeemFormInputRedeem

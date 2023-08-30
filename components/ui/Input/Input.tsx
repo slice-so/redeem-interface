@@ -6,6 +6,7 @@ import { Question } from ".."
 export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   className?: string
   label?: string
+  helpText?: string
   prefix?: string
   after?: string
   error?: boolean
@@ -18,12 +19,14 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   prefixAction?: (...args: any[]) => any
   onClick?: (...args: any[]) => any
   onChange?: (...args: any[]) => any
+  handleOnChangeCustom?: (...args: any[]) => any
 }
 
 const Input: React.FC<Props> = (props) => {
   const {
     className,
     label,
+    helpText,
     prefix = "",
     after,
     children,
@@ -38,6 +41,7 @@ const Input: React.FC<Props> = (props) => {
     onClick,
     onClickLabel,
     onChange,
+    handleOnChangeCustom,
     ...rest
   } = props
 
@@ -62,12 +66,17 @@ const Input: React.FC<Props> = (props) => {
     <label>
       {label && (
         <>
-          <div className="relative flex items-center pb-1">
-            <p className="pr-1 text-sm font-medium text-left text-gray-500">
-              {label}
-            </p>
-            {question && (
-              <Question position={questionPosition} text={question} />
+          <div className="pb-2">
+            <div className="relative flex items-center pb-1">
+              <p className="pr-1 text-sm font-medium text-left text-gray-500">
+                {label}
+              </p>
+              {question && (
+                <Question position={questionPosition} text={question} />
+              )}
+            </div>
+            {helpText && (
+              <p className="pb-2 text-sm text-left text-gray-600">{helpText}</p>
             )}
           </div>
         </>
@@ -111,7 +120,11 @@ const Input: React.FC<Props> = (props) => {
         )}
         <input
           className={rootClassName}
-          onChange={handleOnChange}
+          onChange={
+            handleOnChangeCustom
+              ? (e: any) => handleOnChangeCustom(e)
+              : handleOnChange
+          }
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"

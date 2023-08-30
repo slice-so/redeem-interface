@@ -13,7 +13,6 @@ interface ButtonProps {
   label?: string | JSX.Element
   loadingLabel?: string
   href?: string
-  external?: boolean
   targetBlank?: boolean
   disabled?: boolean
   onClick?: any
@@ -34,7 +33,6 @@ const Button: FC<ButtonProps> = (props) => {
     color = `text-white bg-black ${
       double ? "duration-150" : "hover:bg-random2-600 focus:bg-random2-600"
     }`,
-    external = false,
     targetBlank = true,
     disabled = false,
     saEventName = "",
@@ -47,36 +45,18 @@ const Button: FC<ButtonProps> = (props) => {
       onClick={() => (saEventName ? saEvent(saEventName) : null)}
     >
       {href ? (
-        !external ? (
-          <Link href={href} className="relative z-10 peer">
-            <button className={`${className} ${color}`}>
-              <div className="flex items-center justify-center">
-                <p>{label}</p>
-              </div>
-            </button>
-          </Link>
-        ) : targetBlank ? (
-          <a
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-            className="relative z-10 peer"
-          >
-            <button className={`${className} ${color}`}>
-              <div className="flex items-center justify-center">
-                <p>{label}</p>
-              </div>
-            </button>
-          </a>
-        ) : (
-          <a href={href} className="relative z-10 peer">
-            <button className={`${className} ${color}`}>
-              <div className="flex items-center justify-center">
-                <p>{label}</p>
-              </div>
-            </button>
-          </a>
-        )
+        <Link
+          href={href}
+          target={targetBlank ? "_blank" : ""}
+          rel={targetBlank ? "noreferrer" : ""}
+          className="relative z-10 peer"
+        >
+          <button className={`${className} ${color} hover:text-white`}>
+            <div className="flex items-center justify-center hover:text-white">
+              <p className="hover:text-white">{label}</p>
+            </div>
+          </button>
+        </Link>
       ) : (
         <button
           className={`peer relative z-10 ${className} ${

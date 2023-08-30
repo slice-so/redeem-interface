@@ -6,7 +6,7 @@ import {
   Button,
   RedeemFormDelivery,
   RedeemFormInputRedeem,
-  RedeemFormPrintful
+  RedeemFormSelectProduct
 } from "../"
 import { LinkedProducts } from "../PrintfulStore/PrintfulStore"
 import { useAppContext } from "../context"
@@ -26,13 +26,17 @@ type Props = {
   selectedProducts: SelectedProducts
   setIsFormView: Dispatch<SetStateAction<boolean>>
   setSuccess: Dispatch<SetStateAction<boolean>>
+  error: string
+  setError: Dispatch<SetStateAction<string>>
 }
 
 const RedeemForm = ({
   productData,
   selectedProducts,
   setIsFormView,
-  setSuccess
+  setSuccess,
+  error,
+  setError
 }: Props) => {
   const { account } = useAppContext()
   const [answers, setAnswers] = useState<Answers>({})
@@ -63,27 +67,48 @@ const RedeemForm = ({
   const submit = async (e) => {
     e.preventDefault()
 
-    try {
-      // setLoading(true)
-      const response = await fetch("/api/submissions/create", {
-        method: "POST",
-        body: JSON.stringify({ account, answers })
-      })
-      if (response.ok) {
-        // setSuccess(true)
-      }
-      // setLoading(false)
+    if (!loading) {
+      try {
+        setLoading(true)
+        setError("")
 
-      const data = await response.json()
-      console.log(data)
-    } catch (error) {
-      console.log(error)
+        const response = await fetch("/api/submissions/create", {
+          method: "POST",
+          body: JSON.stringify({ account, answers })
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+          setLoading(false)
+          const { submissions, totalToRedeem } = data
+          if (submissions.length != totalToRedeem) {
+            setError(
+              "Some products were not redeemed, please try again later or contact us"
+            )
+          }
+          setSuccess(true)
+        } else {
+          setError(
+            data.error
+              .replaceAll("Recipient: ", "")
+              .replaceAll(
+                "Item 0: Sync variant not found",
+                "Product unavailable, contact seller for more info"
+              )
+          )
+          setLoading(false)
+        }
+      } catch (error) {
+        console.log("in catch")
+        console.log(error)
+      }
     }
   }
 
   return (
     <form onSubmit={submit}>
-      <p className="text-lg leading-8 pb-12 text-gray-600">
+      <p className="pb-12 text-lg leading-8 text-gray-600">
         Choose the products to redeem and fill in the required details
       </p>
       <div className="space-y-8">
@@ -95,20 +120,21 @@ const RedeemForm = ({
           return (
             <div key={`${slicerId}-${[productId]}`}>
               <div className="text-left pb-3.5 pl-4 sm:flex sm:flex-wrap justify-between items-center">
-                <h2 className="text-lg sm:text-xl flex text-gray-600 font-medium items-center">
+                <h2 className="flex items-center text-lg font-medium text-gray-600 sm:text-xl">
                   {slicerName} / {productName}
                 </h2>
-                <p className="text-gray-500 font-semibold text-sm">
+                <p className="text-sm font-semibold text-gray-500">
                   Redeem up to {quantityToRedeem}
                 </p>
               </div>
-              <RedeemFormPrintful
+              <RedeemFormSelectProduct
                 slicerId={slicerId}
                 productId={productId}
                 quantityToRedeem={quantityToRedeem}
                 linkedProducts={form.linkedProducts as LinkedProducts}
                 answers={answers}
                 setAnswers={setAnswers}
+                product={product}
               />
               <div className="py-10">
                 {questions.length != 0 &&
@@ -136,7 +162,7 @@ const RedeemForm = ({
         <>
           <hr className="w-40 mx-auto my-6 border-gray-400 " />
           <div className="py-10">
-            <h2 className="pb-4 text-xl sm:text-2xl flex text-gray-600 font-medium">
+            <h2 className="flex pb-4 text-xl font-medium text-gray-600 sm:text-2xl">
               Delivery info
             </h2>
             <RedeemFormDelivery answers={answers} setAnswers={setAnswers} />
@@ -145,6 +171,9 @@ const RedeemForm = ({
       )}
 
       <div className="pt-4 pb-8">
+        {error && (
+          <p className="pb-6 text-sm font-semibold text-red-500">{error}</p>
+        )}
         <Button label="Continue" type="submit" loading={loading} />
       </div>
       <a className="highlight" onClick={() => setIsFormView(false)}>

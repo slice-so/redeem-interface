@@ -5,6 +5,7 @@ import fetcher from "@utils/fetcher"
 import getRefreshedAccessToken from "@utils/getRefreshedAccessToken"
 import { isUserAuthenticated } from "@utils/isUserAuthenticated"
 import { Answers } from "@components/ui/RedeemForm/RedeemForm"
+import { prisma } from "@lib/prisma"
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL
 

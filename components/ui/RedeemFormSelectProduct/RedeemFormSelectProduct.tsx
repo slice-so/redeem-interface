@@ -27,7 +27,9 @@ const RedeemFormSelectProduct = ({
 }: Props) => {
   const isPrintful = linkedProducts.length > 0
   const allVariants = isPrintful
-    ? linkedProducts.map(({ variants }) => variants).flat()
+    ? // TODO: Set as image the product image, instead of the variant image
+      // const productImage = product.thumbnail_url // from linkedProducts
+      linkedProducts.map(({ variants }) => variants).flat()
     : [{ external_id: `${product.Slicer.id}-${product.Slicer.name}`, product }]
 
   const id = `${slicerId}-${productId}`

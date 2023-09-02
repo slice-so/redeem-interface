@@ -6,6 +6,8 @@ import sendBaseMessage from "@utils/sendBaseMessage"
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
 
+  // TODO: sync products update webhook
+
   try {
     if (req.method === "POST") {
       const { type, data } = req.body

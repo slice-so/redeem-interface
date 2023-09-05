@@ -82,8 +82,9 @@ const RedeemFormSelectProduct = ({
 
   return (
     <>
-      <div className="pt-6 rounded-md shadow-sm bg-gray-50">
-        <div className="flex gap-6 px-4">
+      <div className="pt-4 rounded-md shadow-sm">
+        {/* TODO: readd bg-gray-50 */}
+        <div className="px-4">
           {isSingleVariant && (
             <SingleVariant
               value={allVariants[0]}

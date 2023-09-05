@@ -1,7 +1,6 @@
-// TODO - Create a job to run this script every tot hours
-const fs = require("fs").promises
+import fs from "fs/promises"
 
-async function getVariants() {
+export default async function getPrintfulVariants() {
   const res = await fetch("https://api.printful.com/products")
   const data = await res.json()
 
@@ -13,7 +12,7 @@ async function getVariants() {
 
     const product = await fetch(`https://api.printful.com/products/${p.id}`)
     const res = await product.json()
-    console.log(res)
+
     const productData = res.result
     if (!productData.variants) continue
 
@@ -33,5 +32,3 @@ async function getVariants() {
     JSON.stringify(variants, null, 2)
   )
 }
-
-getVariants()

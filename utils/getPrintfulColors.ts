@@ -1,6 +1,6 @@
-const fs = require("fs").promises
+import fs from "fs/promises"
 
-async function getPrintfulColors() {
+export default async function getPrintfulColors() {
   const res = await fetch("https://api.printful.com/products")
   const data = await res.json()
 
@@ -35,5 +35,3 @@ async function getPrintfulColors() {
     JSON.stringify(colors, null, 2)
   )
 }
-
-getPrintfulColors()

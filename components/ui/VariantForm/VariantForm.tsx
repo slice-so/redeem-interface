@@ -55,10 +55,10 @@ const VariantForm = ({
 
   return (
     <>
-      <div>
+      <div className="space-y-2">
         {allVariants.length > 1 && (
-          <div className="mb-2">
-            <p className="mt-4 sm:mt-0">Available products</p>
+          <div className="mt-4 sm:mt-0">
+            <p className="text-sm text-gray-600 pb-1">Products</p>
             <div className="overflow-y-scroll ">
               <div className="flex mb-2 w-fit">
                 {allVariants.map((value, index) => {
@@ -70,8 +70,8 @@ const VariantForm = ({
                       <Image
                         src={image}
                         alt={`${selectedVariant.product.name} image`}
-                        className={`rounded-lg h-24 img-background cursor-pointer object-cover duration-100 ${
-                          isSelected ? "opacity-100" : "opacity-80"
+                        className={`rounded-lg aspect-square img-background cursor-pointer object-cover duration-100 ${
+                          isSelected ? "opacity-100" : "opacity-70"
                         }`}
                         width={260}
                         height={260}
@@ -89,9 +89,9 @@ const VariantForm = ({
         )}
 
         {uniqueSizes.length > 1 && (
-          <div className="mb-2">
-            <p className="mb-1">Size</p>
-            <div className="flex flex-wrap pr-2">
+          <div>
+            <p className="text-sm text-gray-600 pb-1">Size</p>
+            <div className="flex flex-wrap pr-2 gap-1">
               {uniqueSizes.map((size: string, key) => {
                 const isSelected = selectedSize == size
                 const isAvailable = allVariants[groupIndex].some(
@@ -102,15 +102,19 @@ const VariantForm = ({
 
                 return (
                   <div
-                    className={`p-1 border-2 border-transparent ${
-                      isSelected && "border-black"
+                    className={`p-1 h-6 border-2 flex justify-center items-center border-transparent rounded-full text-xs ${
+                      isSelected ? "border-black hover:border-black" : ""
                     } ${
-                      isAvailable ? "opacity-100 cursor-pointer" : "opacity-50"
+                      isAvailable
+                        ? `opacity-100 cursor-pointer ${
+                            !isSelected ? "hover:border-gray-600" : ""
+                          }`
+                        : "opacity-50 cursor-not-allowed"
                     }`}
                     onClick={() => (isAvailable ? setSelectedSize(size) : null)}
                     key={key}
                   >
-                    {size}
+                    <p>{size}</p>
                   </div>
                 )
               })}
@@ -119,8 +123,8 @@ const VariantForm = ({
         )}
 
         {uniqueColors.length > 1 && (
-          <div className="mb-2">
-            <p className="mb-1">Color</p>
+          <div>
+            <p className="text-sm text-gray-600 pb-1">Color</p>
             <div className="flex flex-wrap pr-2">
               {uniqueColors.map((color: string, key) => {
                 const isSelected = selectedColor == color
@@ -132,10 +136,14 @@ const VariantForm = ({
 
                 return (
                   <div
-                    className={`p-1 border-2 border-transparent rounded-full ${
-                      isSelected && "border-black"
+                    className={`p-1 border-2 border-transparent rounded-full text-xs ${
+                      isSelected ? "border-black hover:border-black" : ""
                     } ${
-                      isAvailable ? "opacity-100 cursor-pointer" : "opacity-10"
+                      isAvailable
+                        ? `opacity-100 cursor-pointer ${
+                            !isSelected ? "hover:border-gray-600" : ""
+                          }`
+                        : "opacity-50 cursor-not-allowed"
                     }`}
                     onClick={() =>
                       isAvailable ? setSelectedColor(color) : null

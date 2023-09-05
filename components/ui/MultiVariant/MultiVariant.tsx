@@ -39,22 +39,20 @@ const MultiVariant = ({
 
   return (
     <div className="w-full">
-      <div className="flex flex-col pb-6 sm:flex-row sm:h-96">
-        <div className="relative w-full h-72 sm:h-full sm:w-1/2 sm:mr-4">
-          <div className="h-fit">
-            <Image
-              src={selectedVariant.files?.slice(-1)?.[0]?.preview_url}
-              alt={`${selectedVariant.product.name} image`}
-              className={
-                "rounded-lg img-background cursor-pointer object-cover duration-100"
-              }
-              fill
-              objectFit="cover"
-              objectPosition="center"
-            />
-          </div>
+      <div className="flex flex-col pb-6 sm:flex-row">
+        <div className="relative flex-shrink-0 w-full sm:mr-4 aspect-square max-h-[282px] max-w-[282px]">
+          <Image
+            src={selectedVariant.files?.slice(-1)?.[0]?.preview_url}
+            alt={`${selectedVariant.product.name} image`}
+            className={
+              "rounded-lg img-background cursor-pointer object-cover duration-100"
+            }
+            fill
+            objectFit="cover"
+            objectPosition="center"
+          />
         </div>
-        <div className="flex flex-col justify-between text-left sm:w-1/2">
+        <div className="flex flex-col justify-between text-left flex-shrink">
           <VariantForm
             allVariants={allVariants}
             selectedVariant={selectedVariant}
@@ -64,6 +62,7 @@ const MultiVariant = ({
           />
           <div className="mt-4">
             <Button
+              wrapperClassName="w-full"
               onClick={redeemVariant}
               label={"Select"}
               disabled={totalQuantitySelected == quantityToRedeem}

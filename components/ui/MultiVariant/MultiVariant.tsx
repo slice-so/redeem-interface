@@ -38,8 +38,8 @@ const MultiVariant = ({
   }
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col pb-6 sm:flex-row">
+    <div>
+      <div className="flex flex-col pb-6 sm:flex-row flex-1">
         <div className="relative flex-shrink-0 w-full sm:mr-4 aspect-square max-h-[282px] max-w-[282px]">
           <Image
             src={selectedVariant.files?.slice(-1)?.[0]?.preview_url}
@@ -52,7 +52,7 @@ const MultiVariant = ({
             objectPosition="center"
           />
         </div>
-        <div className="flex flex-col justify-between text-left flex-shrink">
+        <div className="flex flex-col justify-between text-left ">
           <VariantForm
             allVariants={allVariants}
             selectedVariant={selectedVariant}
@@ -60,9 +60,8 @@ const MultiVariant = ({
             groupIndex={groupIndex}
             setGroupIndex={setGroupIndex}
           />
-          <div className="mt-4">
+          <div className="mt-4 relative z-10">
             <Button
-              wrapperClassName="w-full"
               onClick={redeemVariant}
               label={"Select"}
               disabled={totalQuantitySelected == quantityToRedeem}
@@ -72,7 +71,6 @@ const MultiVariant = ({
       </div>
       {choosenVariants.length > 0 && (
         <div className="text-left">
-          <p className="mb-4">Choose Quantity</p>
           <div>
             {choosenVariants.map((variant, key) => {
               const value = allVariants
@@ -102,8 +100,10 @@ const MultiVariant = ({
               )
             })}
           </div>
-          <p className="mb-4 text-sm font-semibold text-right text-gray-500">
-            Selected {totalQuantitySelected} out of {quantityToRedeem} available
+          <p className="mb-4 text-sm text-right text-gray-500">
+            <b>
+              {totalQuantitySelected} / {quantityToRedeem} products selected
+            </b>
           </p>
         </div>
       )}

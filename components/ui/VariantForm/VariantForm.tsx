@@ -58,15 +58,15 @@ const VariantForm = ({
       <div className="space-y-2">
         {allVariants.length > 1 && (
           <div className="mt-4 sm:mt-0">
-            <p className="text-sm text-gray-600 pb-1">Products</p>
-            <div className="overflow-y-scroll ">
-              <div className="flex mb-2 w-fit">
+            <p className="text-xs font-medium text-gray-600 pb-1">Products</p>
+            <div>
+              <div className="flex gap-1">
                 {allVariants.map((value, index) => {
                   const image = value[0].files?.slice(-1)?.[0]?.preview_url
                   const isSelected = groupIndex == index
 
                   return (
-                    <div className="relative w-20 pb-1 pr-1" key={index}>
+                    <div className="relative w-20" key={index}>
                       <Image
                         src={image}
                         alt={`${selectedVariant.product.name} image`}
@@ -90,7 +90,7 @@ const VariantForm = ({
 
         {uniqueSizes.length > 1 && (
           <div>
-            <p className="text-sm text-gray-600 pb-1">Size</p>
+            <p className="text-xs font-medium text-gray-600 pb-1">Size</p>
             <div className="flex flex-wrap pr-2 gap-1">
               {uniqueSizes.map((size: string, key) => {
                 const isSelected = selectedSize == size
@@ -102,7 +102,7 @@ const VariantForm = ({
 
                 return (
                   <div
-                    className={`p-1 h-6 border-2 flex justify-center items-center border-transparent rounded-full text-xs ${
+                    className={`p-1 h-6 border-2 flex justify-center items-center border-transparent rounded-full text-xs text-gray-900 ${
                       isSelected ? "border-black hover:border-black" : ""
                     } ${
                       isAvailable
@@ -124,7 +124,7 @@ const VariantForm = ({
 
         {uniqueColors.length > 1 && (
           <div>
-            <p className="text-sm text-gray-600 pb-1">Color</p>
+            <p className="text-xs font-medium text-gray-600 pb-1">Color</p>
             <div className="flex flex-wrap pr-2">
               {uniqueColors.map((color: string, key) => {
                 const isSelected = selectedColor == color

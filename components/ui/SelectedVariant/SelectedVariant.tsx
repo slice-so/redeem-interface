@@ -35,11 +35,12 @@ const SelectedVariant = ({
   const mockupUrl = files?.slice(-1)?.[0]?.preview_url
   const color = vatiantsJson[variant_id]?.colorCode
   const size = vatiantsJson[variant_id]?.size
+  const shortName = name.split(" - ")[0]
 
   return (
     <div className="flex flex-col mb-8 sm:flex-row">
       <div>
-        <div className="relative w-56 h-32 pb-1 pr-1" key={index}>
+        <div className="relative aspect-square h-24 pb-1 pr-2" key={index}>
           <Image
             src={mockupUrl || image}
             alt={`${name} image`}
@@ -51,19 +52,19 @@ const SelectedVariant = ({
         </div>
       </div>
       <div className="flex flex-col justify-between w-full sm:pl-8">
-        <p className="sm:text-lg">{name}</p>
+        <p className="text-gray-600">{shortName}</p>
         {(color || size) && (
           <div className="flex items-center">
-            <div className="p-1 mr-4">
+            <div className="p-1">
               <div
-                className={"w-6 h-6"}
+                className="w-4 h-4 rounded-full text-xs"
                 style={{ content: "", background: color }}
-              ></div>
+              />
             </div>
-            <p className="p-1 text-lg">{size}</p>
+            <p className="text-sm pl-1 text-gray-600">{size}</p>
           </div>
         )}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center gap-x-6 pt-2">
           <div className="relative z-10 grid items-center justify-center w-48 grid-cols-4 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">
             {/* @dev Different logic from component in ListItem */}
             <button
@@ -143,7 +144,7 @@ const SelectedVariant = ({
               )
             }
           >
-            <Trash className="w-[17px] h-[17px] cursor-pointer" />
+            <Trash className="w-[17px] h-[17px] cursor-pointer hover:text-red-500" />
           </div>
         </div>
       </div>

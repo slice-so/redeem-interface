@@ -11,7 +11,6 @@ import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 import Button from "../Button"
 import { useRouter } from "next/router"
 import useSWR from "swr"
-import { error } from "console"
 
 export type ProductDataExpanded = {
   product: ProductData

@@ -33,6 +33,3 @@ yarn-error.log*
 
 # vercel
 .vercel
-
-# printful data fetched in job
-constants/printfulVariants.json

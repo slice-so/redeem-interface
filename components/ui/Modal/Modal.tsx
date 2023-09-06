@@ -29,7 +29,7 @@ const Modal = ({ modalView, setModalView }: Props) => {
   }
 
   return (
-    <div className="fixed top-0 z-50 w-screen h-screen py-12 overflow-y-scroll xs:py-20 background-modal">
+    <div className="fixed top-0 z-50 w-screen h-screen py-14 overflow-y-scroll background-modal">
       <div
         className="absolute w-full h-full mt-[-3rem] xs:mt-[-5rem]"
         onClick={() => (cross ? setModalView({ name: "" }) : null)}
@@ -38,9 +38,9 @@ const Modal = ({ modalView, setModalView }: Props) => {
         className="flex items-center justify-center"
         style={{ minHeight: "100%" }}
       >
-        <div className="relative w-full px-4 py-16 mx-4 bg-white shadow-xl xs:py-20 xs:px-8 rounded-xl max-w-screen-xs">
+        <div className="relative w-full px-4 py-14 mx-4 bg-white shadow-xl sm:px-6 rounded-xl max-w-screen-sm">
           {cross && (
-            <div className="absolute top-[24px] right-[24px]">
+            <div className="absolute top-[20px] right-[20px]">
               <Cross
                 className="text-right cursor-pointer hover:text-red-500"
                 onClick={() => setModalView({ name: "" })}

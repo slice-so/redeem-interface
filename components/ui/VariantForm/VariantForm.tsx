@@ -58,7 +58,7 @@ const VariantForm = ({
       <div className="space-y-2">
         {allVariants.length > 1 && (
           <div className="mt-4 sm:mt-0">
-            <p className="text-xs font-medium text-gray-600 pb-1">Products</p>
+            <p className="pb-1 text-xs font-medium text-gray-600">Products</p>
             <div>
               <div className="flex gap-1">
                 {allVariants.map((value, index) => {
@@ -90,8 +90,8 @@ const VariantForm = ({
 
         {uniqueSizes.length > 1 && (
           <div>
-            <p className="text-xs font-medium text-gray-600 pb-1">Size</p>
-            <div className="flex flex-wrap pr-2 gap-1">
+            <p className="pb-1 text-xs font-medium text-gray-600">Size</p>
+            <div className="flex flex-wrap gap-1 pr-2">
               {uniqueSizes.map((size: string, key) => {
                 const isSelected = selectedSize == size
                 const isAvailable = allVariants[groupIndex].some(
@@ -124,7 +124,7 @@ const VariantForm = ({
 
         {uniqueColors.length > 1 && (
           <div>
-            <p className="text-xs font-medium text-gray-600 pb-1">Color</p>
+            <p className="pb-1 text-xs font-medium text-gray-600">Color</p>
             <div className="flex flex-wrap pr-2">
               {uniqueColors.map((color: string, key) => {
                 const isSelected = selectedColor == color

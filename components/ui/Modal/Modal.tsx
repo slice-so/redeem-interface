@@ -1,6 +1,11 @@
 import Cross from "@components/icons/Cross"
 import { Dispatch, SetStateAction } from "react"
-import { View, NETWORK_VIEW, SUBMISSIONS_VIEW } from "@lib/content/modals"
+import {
+  View,
+  NETWORK_VIEW,
+  SUBMISSIONS_VIEW,
+  FULLSCREEN_IMAGE
+} from "@lib/content/modals"
 
 type Props = {
   modalView: View
@@ -17,6 +22,9 @@ const Modal = ({ modalView, setModalView }: Props) => {
       break
     case "SUBMISSIONS_VIEW":
       content = SUBMISSIONS_VIEW(params)
+      break
+    case "FULLSCREEN_IMAGE":
+      content = FULLSCREEN_IMAGE(params)
       break
   }
 

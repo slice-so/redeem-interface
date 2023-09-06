@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { useState } from "react"
 import { SelectedVariant, VariantForm, Button } from "@components/ui"
+import { useAppContext } from "../context"
 
 type Props = {
   allVariants: any[]
@@ -28,6 +29,8 @@ const MultiVariant = ({
   const [selectedVariant, setSelectedVariant] = useState(allVariants[0][0])
   const [groupIndex, setGroupIndex] = useState(0)
 
+  const { setModalView } = useAppContext()
+
   function redeemVariant() {
     const index = choosenVariants.findIndex(
       ({ variantId: chosenVariantId }) =>
@@ -39,8 +42,20 @@ const MultiVariant = ({
 
   return (
     <div>
-      <div className="flex flex-col pb-6 sm:flex-row flex-1">
-        <div className="relative flex-shrink-0 w-full sm:mr-4 aspect-square max-h-[282px] max-w-[282px]">
+      <div className="flex flex-col flex-1 pb-6 sm:flex-row">
+        <div
+          className="relative flex-shrink-0 w-full sm:mr-4 aspect-square max-h-[282px] max-w-[282px]"
+          onClick={() =>
+            setModalView({
+              name: "FULLSCREEN_IMAGE",
+              cross: true,
+              params: {
+                src: selectedVariant.files?.slice(-1)?.[0]?.preview_url,
+                name: selectedVariant.product.name
+              }
+            })
+          }
+        >
           <Image
             src={selectedVariant.files?.slice(-1)?.[0]?.preview_url}
             alt={`${selectedVariant.product.name} image`}
@@ -60,7 +75,7 @@ const MultiVariant = ({
             groupIndex={groupIndex}
             setGroupIndex={setGroupIndex}
           />
-          <div className="mt-4 relative z-10">
+          <div className="relative z-10 mt-4">
             <Button
               onClick={redeemVariant}
               label={"Select"}

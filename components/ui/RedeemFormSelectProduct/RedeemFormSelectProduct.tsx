@@ -29,7 +29,6 @@ const RedeemFormSelectProduct = ({
     ? linkedVariants.flat()
     : [{ external_id: `${product.Slicer.id}-${product.Slicer.name}`, product }]
   const isSingleVariant = allVariants.length == 1
-  console.log({ product, isSingleVariant, allVariants })
 
   const id = `${slicerId}-${productId}`
   const choosenVariants = answers?.[id]?.choosenVariants || []

@@ -116,10 +116,10 @@ const HomeRedeem = () => {
         )
       ) : (
         <div>
-          <h2 className="text-2xl">Products redeemed successfully!</h2>
+          <p className="text-xl">Products redeemed successfully!</p>
           <div className="py-8">
             <Button
-              label="Go to Slice"
+              label="Explore stores"
               href={`https://${getSliceSubdomain()}slice.so/slicer`}
             />
           </div>

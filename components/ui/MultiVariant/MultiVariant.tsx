@@ -103,7 +103,7 @@ const MultiVariant = ({
         </div>
       </div>
       {totalQuantitySelected != 0 && (
-        <div className="text-left pt-4 pb-8 space-y-6">
+        <div className="pt-4 pb-8 space-y-6 text-left">
           {choosenVariants.map((variant, key) => {
             const value = allVariants
               .flat()
@@ -115,23 +115,23 @@ const MultiVariant = ({
             )
             const quantitySelected = choosenVariants?.[index]?.quantity || 0
 
-                      vatiantsJson={variantsJson}
-              return (
-                <>
-                  {quantitySelected > 0 && (
-                    <SelectedVariant
-                      key={key}
-                      value={value}
-                      index={index}
-                      quantitySelected={quantitySelected}
-                      totalQuantitySelected={totalQuantitySelected}
-                      quantityToRedeem={quantityToRedeem}
-                      updateProductQuantity={updateProductQuantity}
-                    />
-                  )}
-              )
-                </>
-            })}
+            return (
+              <>
+                {quantitySelected > 0 && (
+                  <SelectedVariant
+                    key={key}
+                    value={value}
+                    index={index}
+                    vatiantsJson={variantsJson}
+                    quantitySelected={quantitySelected}
+                    totalQuantitySelected={totalQuantitySelected}
+                    quantityToRedeem={quantityToRedeem}
+                    updateProductQuantity={updateProductQuantity}
+                  />
+                )}
+              </>
+            )
+          })}
           <p className="absolute bottom-[12px] right-[12px] text-sm text-right text-gray-500">
             <b>
               {totalQuantitySelected} / {quantityToRedeem} products selected

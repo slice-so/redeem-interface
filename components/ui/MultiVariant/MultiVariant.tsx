@@ -2,6 +2,8 @@ import Image from "next/image"
 import { useState } from "react"
 import { SelectedVariant, VariantForm, Button } from "@components/ui"
 import { useAppContext } from "../context"
+import useFetchVariants from "@utils/useFetchVariants"
+import Spinner from "@components/icons/Spinner"
 
 type Props = {
   allVariants: any[]
@@ -28,6 +30,7 @@ const MultiVariant = ({
 }: Props) => {
   const [selectedVariant, setSelectedVariant] = useState(allVariants[0][0])
   const [groupIndex, setGroupIndex] = useState(0)
+  const { variantsJson, isLoading, isError } = useFetchVariants()
 
   const { setModalView } = useAppContext()
 
@@ -39,6 +42,14 @@ const MultiVariant = ({
     const quantityLeft = quantityToRedeem - totalQuantitySelected
     updateProductQuantity(index, selectedVariant.external_id, quantityLeft, 1)
   }
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center">
+        <Spinner className="w-16 h-16 text-random2-600" />
+      </div>
+    )
+  if (isError) return <div>Error fetching variants</div>
 
   return (
     <div>
@@ -70,6 +81,7 @@ const MultiVariant = ({
         <div className="flex flex-col justify-between text-left ">
           <VariantForm
             allVariants={allVariants}
+            variantsJson={variantsJson}
             selectedVariant={selectedVariant}
             setSelectedVariant={setSelectedVariant}
             groupIndex={groupIndex}
@@ -103,6 +115,7 @@ const MultiVariant = ({
                   {quantitySelected > 0 && (
                     <SelectedVariant
                       key={key}
+                      vatiantsJson={variantsJson}
                       value={value}
                       index={index}
                       quantitySelected={quantitySelected}

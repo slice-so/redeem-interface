@@ -7,6 +7,7 @@ type Props = {
   setSelectedVariant: any
   groupIndex: number
   setGroupIndex: any
+  variantsJson: any
 }
 
 const VariantForm = ({
@@ -14,7 +15,8 @@ const VariantForm = ({
   selectedVariant,
   setSelectedVariant,
   groupIndex,
-  setGroupIndex
+  setGroupIndex,
+  variantsJson
 }: Props) => {
   const [selectedColor, setSelectedColor] = useState(
     variantsJson[selectedVariant.variant_id]?.colorCode || ""

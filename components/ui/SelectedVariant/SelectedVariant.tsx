@@ -9,6 +9,7 @@ type Props = {
   quantitySelected: number
   totalQuantitySelected: number
   quantityToRedeem: number
+  vatiantsJson: any
   updateProductQuantity: (
     index: number,
     variantId: string,
@@ -23,6 +24,7 @@ const SelectedVariant = ({
   quantitySelected,
   quantityToRedeem,
   totalQuantitySelected,
+  vatiantsJson,
   updateProductQuantity
 }: Props) => {
   const { product, external_id: variantId, files, name, variant_id } = value

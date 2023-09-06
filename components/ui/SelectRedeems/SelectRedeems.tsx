@@ -56,7 +56,7 @@ const SelectRedeems = ({
         You have no products to redeem
       </p>
       <Button
-        label="Go to Slice"
+        label="Explore stores"
         href={`https://${getSliceSubdomain()}slice.so/slicer`}
       />
     </div>

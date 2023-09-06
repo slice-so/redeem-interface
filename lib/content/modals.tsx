@@ -127,16 +127,12 @@ export const FULLSCREEN_IMAGE = (params: any) => {
   const { src, alt } = params
 
   return (
-    <div className="flex items-center justify-center h-[560px]">
-      <Image
-        src={src}
-        alt={`${alt} image`}
-        className={
-          "img-background cursor-pointer object-cover duration-100 max-w-full max-h-full"
-        }
-        width={800}
-        height={800}
-      />
-    </div>
+    <Image
+      src={src}
+      alt={`${alt} image`}
+      className={"img-background rounded-xl object-cover"}
+      width={800}
+      height={800}
+    />
   )
 }

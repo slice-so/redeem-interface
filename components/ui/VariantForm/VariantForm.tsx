@@ -56,23 +56,25 @@ const VariantForm = ({
 
   return (
     <>
-      <div className="space-y-2">
+      <div className="space-y-3">
         {allVariants.length > 1 && (
           <div className="mt-4 sm:mt-0">
-            <p className="pb-1 text-xs font-medium text-gray-600">Products</p>
-            <div>
-              <div className="flex gap-1">
+            <p className="text-xs font-medium text-gray-600 pb-1">Products</p>
+            <div className="overflow-scroll">
+              <div className="flex gap-1 sm:flex-wrap">
                 {allVariants.map((value, index) => {
                   const image = value[0].files?.slice(-1)?.[0]?.preview_url
                   const isSelected = groupIndex == index
 
                   return (
-                    <div className="relative w-20" key={index}>
+                    <div className="relative w-20 flex-shrink-0" key={index}>
                       <Image
                         src={image}
                         alt={`${selectedVariant.product.name} image`}
                         className={`rounded-lg aspect-square img-background cursor-pointer object-cover duration-100 ${
-                          isSelected ? "opacity-100" : "opacity-70"
+                          isSelected
+                            ? "opacity-100"
+                            : "opacity-70 hover:opacity-100"
                         }`}
                         width={260}
                         height={260}
@@ -103,8 +105,10 @@ const VariantForm = ({
 
                 return (
                   <div
-                    className={`p-1 h-6 border-2 flex justify-center items-center border-transparent rounded-full text-xs text-gray-900 ${
-                      isSelected ? "border-black hover:border-black" : ""
+                    className={`p-1 h-6 border-2 flex justify-center items-center rounded-full text-xs text-gray-900 ${
+                      isSelected
+                        ? "border-black hover:border-black"
+                        : "border-transparent"
                     } ${
                       isAvailable
                         ? `opacity-100 cursor-pointer ${
@@ -125,8 +129,8 @@ const VariantForm = ({
 
         {uniqueColors.length > 1 && (
           <div>
-            <p className="pb-1 text-xs font-medium text-gray-600">Color</p>
-            <div className="flex flex-wrap pr-2">
+            <p className="text-xs font-medium text-gray-600 pb-2">Color</p>
+            <div className="flex flex-wrap gap-3 pr-2 pl-1">
               {uniqueColors.map((color: string, key) => {
                 const isSelected = selectedColor == color
                 const isAvailable = allVariants[groupIndex].some(
@@ -137,12 +141,14 @@ const VariantForm = ({
 
                 return (
                   <div
-                    className={`p-1 border-2 border-transparent rounded-full text-xs ${
-                      isSelected ? "border-black hover:border-black" : ""
+                    className={`outline outline-2 outline-offset-[3px] rounded-full text-xs ${
+                      isSelected
+                        ? "outline-black hover:outline-gray-600 dark:outline-white"
+                        : "outline-transparent"
                     } ${
                       isAvailable
                         ? `opacity-100 cursor-pointer ${
-                            !isSelected ? "hover:border-gray-600" : ""
+                            !isSelected ? "hover:outline-gray-600" : ""
                           }`
                         : "opacity-50 cursor-not-allowed"
                     }`}
@@ -152,10 +158,10 @@ const VariantForm = ({
                     key={key}
                   >
                     <div
-                      className={"w-4 h-4 rounded-full"}
+                      className="w-4 h-4 rounded-full border border-gray-500"
                       key={key}
                       style={{ content: "", background: color }}
-                    ></div>
+                    />
                   </div>
                 )
               })}

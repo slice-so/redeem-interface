@@ -29,7 +29,6 @@ const RedeemFormSelectProduct = ({
     ? linkedVariants.flat()
     : [{ external_id: `${product.Slicer.id}-${product.Slicer.name}`, product }]
   const isSingleVariant = allVariants.length == 1
-  console.log({ product, isSingleVariant, allVariants })
 
   const id = `${slicerId}-${productId}`
   const choosenVariants = answers?.[id]?.choosenVariants || []
@@ -82,29 +81,26 @@ const RedeemFormSelectProduct = ({
 
   return (
     <>
-      <div className="pt-4 rounded-md shadow-sm">
-        {/* TODO: readd bg-gray-50 */}
-        <div className="px-4">
-          {isSingleVariant && (
-            <SingleVariant
-              value={allVariants[0]}
-              choosenVariants={choosenVariants}
-              totalQuantitySelected={totalQuantitySelected}
-              quantityToRedeem={quantityToRedeem}
-              updateProductQuantity={updateProductQuantity}
-            />
-          )}
+      <div className="p-4 rounded-md shadow-sm bg-gray-50 relative">
+        {isSingleVariant && (
+          <SingleVariant
+            value={allVariants[0]}
+            choosenVariants={choosenVariants}
+            totalQuantitySelected={totalQuantitySelected}
+            quantityToRedeem={quantityToRedeem}
+            updateProductQuantity={updateProductQuantity}
+          />
+        )}
 
-          {!isSingleVariant && (
-            <MultiVariant
-              allVariants={linkedVariants}
-              choosenVariants={choosenVariants}
-              totalQuantitySelected={totalQuantitySelected}
-              quantityToRedeem={quantityToRedeem}
-              updateProductQuantity={updateProductQuantity}
-            />
-          )}
-        </div>
+        {!isSingleVariant && (
+          <MultiVariant
+            allVariants={linkedVariants}
+            choosenVariants={choosenVariants}
+            totalQuantitySelected={totalQuantitySelected}
+            quantityToRedeem={quantityToRedeem}
+            updateProductQuantity={updateProductQuantity}
+          />
+        )}
       </div>
     </>
   )

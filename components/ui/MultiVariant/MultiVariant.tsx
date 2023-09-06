@@ -39,8 +39,14 @@ const MultiVariant = ({
       ({ variantId: chosenVariantId }) =>
         chosenVariantId == selectedVariant.external_id
     )
+    const quantitySelected = choosenVariants?.[index]?.quantity || 0
     const quantityLeft = quantityToRedeem - totalQuantitySelected
-    updateProductQuantity(index, selectedVariant.external_id, quantityLeft, 1)
+    updateProductQuantity(
+      index,
+      selectedVariant.external_id,
+      quantitySelected + quantityLeft,
+      quantitySelected + 1
+    )
   }
 
   if (isLoading)
@@ -53,7 +59,7 @@ const MultiVariant = ({
 
   return (
     <div>
-      <div className="flex flex-col flex-1 pb-6 sm:flex-row">
+      <div className="flex flex-col flex-1 pb-2 sm:flex-row">
         <div
           className="relative flex-shrink-0 w-full sm:mr-4 aspect-square max-h-[282px] max-w-[282px]"
           onClick={() =>
@@ -78,7 +84,7 @@ const MultiVariant = ({
             objectPosition="center"
           />
         </div>
-        <div className="flex flex-col justify-between text-left ">
+        <div className="flex flex-col justify-between text-left">
           <VariantForm
             allVariants={allVariants}
             variantsJson={variantsJson}
@@ -87,7 +93,7 @@ const MultiVariant = ({
             groupIndex={groupIndex}
             setGroupIndex={setGroupIndex}
           />
-          <div className="relative z-10 mt-4">
+          <div className="relative z-10 mt-6 mb-2">
             <Button
               onClick={redeemVariant}
               label={"Select"}
@@ -96,26 +102,25 @@ const MultiVariant = ({
           </div>
         </div>
       </div>
-      {choosenVariants.length > 0 && (
-        <div className="text-left">
-          <div>
-            {choosenVariants.map((variant, key) => {
-              const value = allVariants
-                .flat()
-                .find(({ external_id }) => variant.variantId == external_id)
+      {totalQuantitySelected != 0 && (
+        <div className="text-left pt-4 pb-8 space-y-6">
+          {choosenVariants.map((variant, key) => {
+            const value = allVariants
+              .flat()
+              .find(({ external_id }) => variant.variantId == external_id)
 
-              const index = choosenVariants.findIndex(
-                ({ variantId: chosenVariantId }) =>
-                  chosenVariantId == value.external_id
-              )
-              const quantitySelected = choosenVariants?.[index]?.quantity || 0
+            const index = choosenVariants.findIndex(
+              ({ variantId: chosenVariantId }) =>
+                chosenVariantId == value.external_id
+            )
+            const quantitySelected = choosenVariants?.[index]?.quantity || 0
 
+                      vatiantsJson={variantsJson}
               return (
                 <>
                   {quantitySelected > 0 && (
                     <SelectedVariant
                       key={key}
-                      vatiantsJson={variantsJson}
                       value={value}
                       index={index}
                       quantitySelected={quantitySelected}
@@ -124,11 +129,10 @@ const MultiVariant = ({
                       updateProductQuantity={updateProductQuantity}
                     />
                   )}
-                </>
               )
+                </>
             })}
-          </div>
-          <p className="mb-4 text-sm text-right text-gray-500">
+          <p className="absolute bottom-[12px] right-[12px] text-sm text-right text-gray-500">
             <b>
               {totalQuantitySelected} / {quantityToRedeem} products selected
             </b>

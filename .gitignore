@@ -34,4 +34,4 @@ yarn-error.log*
 # vercel
 .vercel
 
-# constants/test.json
+constants/test.json

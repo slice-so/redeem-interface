@@ -1,4 +1,3 @@
-import variantsJson from "constants/printfulVariants.json"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 

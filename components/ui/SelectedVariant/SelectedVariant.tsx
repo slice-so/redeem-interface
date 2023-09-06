@@ -1,4 +1,3 @@
-import vatiantsJson from "constants/printfulVariants.json"
 import Minus from "@components/icons/Minus"
 import Plus from "@components/icons/Plus"
 import Trash from "@components/icons/Trash"

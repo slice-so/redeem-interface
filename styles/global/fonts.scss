@@ -19,6 +19,12 @@ a {
   }
 }
 
+a.noHoverColor {
+  :hover {
+    color: inherit;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

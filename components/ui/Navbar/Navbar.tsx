@@ -43,7 +43,7 @@ const Navbar = () => {
               href={`https://${getSliceSubdomain()}slice.so/slicer`}
               className="text-[0.925rem] font-medium"
             >
-              Explore
+              <p>Explore</p>
             </Link>
           </div>
           <div className="relative z-10 flex items-center space-x-6">

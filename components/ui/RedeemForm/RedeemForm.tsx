@@ -174,7 +174,7 @@ const RedeemForm = ({
         {error && (
           <p className="pb-6 text-sm font-semibold text-red-500">{error}</p>
         )}
-        <Button label="Continue" type="submit" loading={loading} />
+        <Button label="Submit" type="submit" loading={loading} />
       </div>
       <a className="highlight" onClick={() => setIsFormView(false)}>
         Go back

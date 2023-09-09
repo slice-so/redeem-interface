@@ -1,13 +1,14 @@
 import { DoubleText, SubmissionBlock } from "@components/ui"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import saEvent from "@utils/saEvent"
+import Image from "next/image"
 
 export type View = {
   name: ViewNames
   cross?: boolean
   params?: object
 }
-type ViewNames = "" | "NETWORK_VIEW" | "SUBMISSIONS_VIEW"
+type ViewNames = "" | "NETWORK_VIEW" | "SUBMISSIONS_VIEW" | "FULLSCREEN_IMAGE"
 
 export const NETWORK_VIEW = () => {
   const chainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
@@ -119,5 +120,19 @@ export const SUBMISSIONS_VIEW = (params: any) => {
         ))}
       </ul>
     </>
+  )
+}
+
+export const FULLSCREEN_IMAGE = (params: any) => {
+  const { src, alt } = params
+
+  return (
+    <Image
+      src={src}
+      alt={`${alt} image`}
+      className={"img-background rounded-xl object-cover"}
+      width={800}
+      height={800}
+    />
   )
 }

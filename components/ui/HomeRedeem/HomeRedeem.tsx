@@ -11,6 +11,7 @@ import { getSliceSubdomain } from "@utils/getSliceSubdomain"
 import Button from "../Button"
 import { useRouter } from "next/router"
 import useSWR from "swr"
+import { useAccount } from "wagmi"
 
 export type ProductDataExpanded = {
   product: ProductData
@@ -30,6 +31,7 @@ const HomeRedeem = () => {
   const { account } = useAppContext()
   const router = useRouter()
   const { slicerId, productId } = router.query
+  const { connector } = useAccount()
 
   const { data } = useSWR(account ? `/api/products/${account}` : null, fetcher)
   let productData = data as RedeemData
@@ -38,6 +40,7 @@ const HomeRedeem = () => {
   const [isFormView, setIsFormView] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState("")
+  const isCoinbaseWallet = connector?.id == "coinbaseWallet"
 
   const preloadSelectedProducts = () => {
     const slicerIds = []
@@ -116,10 +119,16 @@ const HomeRedeem = () => {
         )
       ) : (
         <div>
-          <h2 className="text-2xl">Products redeemed successfully!</h2>
+          <p className="text-xl">Products redeemed successfully!</p>
+          {isCoinbaseWallet && (
+            <p className="pt-6 text-gray-600">
+              You will receive any notification for your order on your Coinbase
+              wallet
+            </p>
+          )}
           <div className="py-8">
             <Button
-              label="Go to Slice"
+              label="Explore stores"
               href={`https://${getSliceSubdomain()}slice.so/slicer`}
             />
           </div>

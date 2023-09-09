@@ -56,7 +56,7 @@ const ProductsList = () => {
     ) : (
       <>
         <p className="pb-8 text-lg">You haven&apos;t created a form yet</p>
-        <Button label="Create form" href="/create" />
+        <Button label="Create form" href="/create" targetBlank={false} />
       </>
     )
   ) : (

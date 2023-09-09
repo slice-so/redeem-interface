@@ -110,7 +110,7 @@ const RedeemForm = ({ answers, setAnswers }: Props) => {
                 }
                 helpText={
                   question === "Email" && isCoinbaseWallet
-                    ? "Email is not required. Order details and tracking information will be sent via messages on your Coinbase Wallet"
+                    ? "Email is not required. Order details and shipping information will be sent via messages on Coinbase Wallet"
                     : null
                 }
               />

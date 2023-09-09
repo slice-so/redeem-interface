@@ -1,8 +1,8 @@
-import vatiantsJson from "constants/printfulVariants.json"
 import Minus from "@components/icons/Minus"
 import Plus from "@components/icons/Plus"
 import Trash from "@components/icons/Trash"
 import Image from "next/image"
+import { useAppContext } from "../context"
 
 type Props = {
   value: any
@@ -10,6 +10,7 @@ type Props = {
   quantitySelected: number
   totalQuantitySelected: number
   quantityToRedeem: number
+  vatiantsJson: any
   updateProductQuantity: (
     index: number,
     variantId: string,
@@ -24,8 +25,10 @@ const SelectedVariant = ({
   quantitySelected,
   quantityToRedeem,
   totalQuantitySelected,
+  vatiantsJson,
   updateProductQuantity
 }: Props) => {
+  const { setModalView } = useAppContext()
   const { product, external_id: variantId, files, name, variant_id } = value
   const { image } = product
 
@@ -38,9 +41,22 @@ const SelectedVariant = ({
   const shortName = name.split(" - ")[0]
 
   return (
-    <div className="flex flex-col mb-8 sm:flex-row">
+    <div className="flex">
       <div>
-        <div className="relative aspect-square h-24 pb-1 pr-2" key={index}>
+        <div
+          className="relative aspect-square h-24 pb-1 pr-2"
+          key={index}
+          onClick={() =>
+            setModalView({
+              name: "FULLSCREEN_IMAGE",
+              cross: true,
+              params: {
+                src: mockupUrl || image,
+                name: name
+              }
+            })
+          }
+        >
           <Image
             src={mockupUrl || image}
             alt={`${name} image`}
@@ -51,25 +67,25 @@ const SelectedVariant = ({
           />
         </div>
       </div>
-      <div className="flex flex-col justify-between w-full sm:pl-8">
-        <p className="text-gray-600">{shortName}</p>
-        {(color || size) && (
-          <div className="flex items-center">
-            <div className="p-1">
+      <div className="flex flex-col justify-between w-full pl-3 sm:pl-8">
+        <div className="space-y-1">
+          <p className="text-gray-600 pt-0">{shortName}</p>
+          {(color || size) && (
+            <div className="flex items-center space-x-2">
               <div
-                className="w-4 h-4 rounded-full text-xs"
+                className="w-4 h-4 rounded-full border border-gray-500"
                 style={{ content: "", background: color }}
               />
+              <p className="text-sm text-gray-600">{size}</p>
             </div>
-            <p className="text-sm pl-1 text-gray-600">{size}</p>
-          </div>
-        )}
+          )}
+        </div>
         <div className="flex items-center gap-x-6 pt-2">
-          <div className="relative z-10 grid items-center justify-center w-48 grid-cols-4 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">
+          <div className="relative z-10 grid items-center justify-center w-40 grid-cols-4 overflow-hidden text-center bg-white border border-gray-100 rounded-md shadow-md">
             {/* @dev Different logic from component in ListItem */}
             <button
               type="button"
-              className={`flex items-center justify-center h-8 transition-colors duration-150 ${
+              className={`flex items-center justify-center h-7 transition-colors duration-150 ${
                 quantitySelected > 1
                   ? "text-red-500 hover:bg-red-500 hover:text-white"
                   : "text-white bg-gray-400 cursor-default"
@@ -85,10 +101,10 @@ const SelectedVariant = ({
                   : null
               }
             >
-              <Minus className="w-[17px] h-[17px] cursor-pointer" />
+              <Minus className="w-4 h-4" />
             </button>
             <div
-              className={`flex items-center justify-center col-span-2 pl-3 text-sm text-black border-l border-r border-gray-200 cursor-default h-8 ${
+              className={`flex items-center justify-center col-span-2 pl-3 text-sm text-black border-l border-r border-gray-200 cursor-default h-7 ${
                 disabled ? "bg-gray-400" : ""
               }`}
             >
@@ -117,7 +133,7 @@ const SelectedVariant = ({
             </div>
             <button
               type="button"
-              className={`flex items-center justify-center h-8 transition-colors duration-150 ${
+              className={`flex items-center justify-center h-7 transition-colors duration-150 ${
                 quantityLeft != 0
                   ? "text-green-500 hover:bg-green-500 hover:text-white"
                   : "text-white bg-gray-400 cursor-default"
@@ -131,7 +147,7 @@ const SelectedVariant = ({
                 )
               }
             >
-              <Plus className="w-[17px] h-[17px] cursor-pointer" />
+              <Plus className="w-4 h-4" />
             </button>
           </div>
           <div
@@ -144,7 +160,7 @@ const SelectedVariant = ({
               )
             }
           >
-            <Trash className="w-[17px] h-[17px] cursor-pointer hover:text-red-500" />
+            <Trash className="w-4 h-4 cursor-pointer text-gray-600 hover:text-red-500" />
           </div>
         </div>
       </div>

@@ -30,7 +30,7 @@ export type SelectedProducts = {
 const HomeRedeem = () => {
   const { account } = useAppContext()
   const router = useRouter()
-  const { slicerId, productId } = router.query
+  const { slicer: slicerId, product: productId } = router.query
   const { connector } = useAccount()
 
   const { data } = useSWR(account ? `/api/products/${account}` : null, fetcher)

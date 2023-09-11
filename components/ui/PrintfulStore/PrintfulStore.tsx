@@ -12,6 +12,11 @@ export type LinkedProducts = {
   variants: any[]
 }[]
 
+export type ExternalSettings = {
+  instantOrder: boolean
+  onSiteRedemption: boolean
+}
+
 type Props = {
   account: Account
   printfulItems: Items

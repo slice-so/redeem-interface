@@ -32,6 +32,10 @@ const CreateFormPrintful = ({
     setExternalSettings({ ...externalSettings, instantOrder: enabled })
   }
 
+  const handleSetOnSiteRedemption = (enabled: boolean) => {
+    setExternalSettings({ ...externalSettings, onSiteRedemption: enabled })
+  }
+
   return (
     <>
       <div>
@@ -70,37 +74,62 @@ const CreateFormPrintful = ({
         </a>
       </div>
       {linkedProducts.length != 0 && (
-        <div className="relative flex items-center justify-end gap-2 pt-8">
-          <p>Enable instant orders</p>
-          <Question
-            text={
-              <div className="space-y-4 text-sm">
-                <p>
-                  If enabled, orders will be automatically processed and
-                  fulfilled by Printful.
-                </p>
-                <p>
-                  If disabled, each order will need to be manually confirmed
-                  from your Printful dashboard first.
-                </p>
-                <p>
-                  You can change this behaviour anytime by editing the form.
-                </p>
-                {process.env.NEXT_PUBLIC_ENVIRONMENT == "testnet" && (
-                  <p className="text-yellow-600">
-                    Note: This feature can only be enabled on mainnet.
+        <>
+          <div className="relative flex items-center justify-end gap-2 pt-8">
+            <p>Enable on-site redemption</p>
+            <Question
+              text={
+                <div className="space-y-4 text-sm">
+                  <p>
+                    If enabled, buyers will have the option to redeem options
+                    on-site.
                   </p>
-                )}
-              </div>
-            }
-            position="bottom-0 right-0"
-          />
-          <MySwitch
-            enabled={externalSettings["instantOrder"]}
-            setEnabled={handleSetInstantOrder}
-            disabled={process.env.NEXT_PUBLIC_ENVIRONMENT == "testnet"}
-          />
-        </div>
+                  <p>
+                    This will prevent orders to be automatically placed on
+                    Printful, while still receiving submissions in your
+                    dashboard.
+                  </p>
+                </div>
+              }
+              position="bottom-0 right-0"
+            />
+            <MySwitch
+              enabled={externalSettings["onSiteRedemption"]}
+              setEnabled={handleSetOnSiteRedemption}
+            />
+          </div>
+          <div className="relative flex items-center justify-end gap-2 pt-8">
+            <p>Enable instant orders</p>
+            <Question
+              text={
+                <div className="space-y-4 text-sm">
+                  <p>
+                    If enabled, orders will be automatically processed and
+                    fulfilled by Printful.
+                  </p>
+                  <p>
+                    If disabled, each order will need to be manually confirmed
+                    from your Printful dashboard first.
+                  </p>
+                  <p>
+                    You can change this behaviour anytime by editing the form.
+                  </p>
+                  {process.env.NEXT_PUBLIC_ENVIRONMENT == "testnet" && (
+                    <p className="text-yellow-600">
+                      Note: This feature can only be enabled on mainnet.
+                    </p>
+                  )}
+                </div>
+              }
+              position="bottom-0 right-0"
+            />
+            <MySwitch
+              enabled={externalSettings["instantOrder"]}
+              setEnabled={handleSetInstantOrder}
+              disabled={process.env.NEXT_PUBLIC_ENVIRONMENT == "testnet"}
+            />
+          </div>
+        </>
       )}
     </>
   )

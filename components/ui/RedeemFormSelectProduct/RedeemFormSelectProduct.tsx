@@ -1,14 +1,18 @@
 import { Dispatch, SetStateAction, useEffect } from "react"
-import { LinkedProducts } from "../PrintfulStore/PrintfulStore"
+import {
+  ExternalSettings,
+  LinkedProducts
+} from "../PrintfulStore/PrintfulStore"
 import { Answers } from "../RedeemForm/RedeemForm"
 import { ProductData } from "@utils/useProductData"
-import { SingleVariant, MultiVariant } from "@components/ui"
+import { SingleVariant, MultiVariant, MySwitch, Question } from "@components/ui"
 
 type Props = {
   slicerId: number
   productId: number
   quantityToRedeem: number
   linkedProducts: LinkedProducts
+  externalSettings: ExternalSettings
   product: ProductData
   answers: Answers
   setAnswers: Dispatch<SetStateAction<Answers>>
@@ -19,6 +23,7 @@ const RedeemFormSelectProduct = ({
   productId,
   quantityToRedeem,
   linkedProducts,
+  externalSettings,
   product,
   answers,
   setAnswers
@@ -40,6 +45,7 @@ const RedeemFormSelectProduct = ({
     if (allVariants?.length == 1) {
       const answer = answers[id] || {}
       const choosenVariants = answer.choosenVariants || []
+      const onSiteRedemption = answer.onSiteRedemption || false
       choosenVariants[0] = {
         quantity: quantityToRedeem,
         variantId: allVariants[0].external_id
@@ -47,7 +53,11 @@ const RedeemFormSelectProduct = ({
 
       setAnswers((prev) => ({
         ...prev,
-        [id]: { questionAnswers: answer.questionAnswers, choosenVariants }
+        [id]: {
+          questionAnswers: answer.questionAnswers,
+          choosenVariants,
+          onSiteRedemption
+        }
       }))
     }
   }, [])
@@ -63,6 +73,7 @@ const RedeemFormSelectProduct = ({
 
     const answer = answers[id] || {}
     const choosenVariants = answer.choosenVariants || []
+    const onSiteRedemption = answer.onSiteRedemption || false
 
     if (index == -1) {
       choosenVariants.push({ quantity: amount, variantId })
@@ -75,9 +86,27 @@ const RedeemFormSelectProduct = ({
 
     setAnswers((prev) => ({
       ...prev,
-      [id]: { questionAnswers: answer.questionAnswers, choosenVariants }
+      [id]: {
+        questionAnswers: answer.questionAnswers,
+        choosenVariants,
+        onSiteRedemption
+      }
     }))
   }
+
+  const handleSetOnSiteRedemption = (enabled: boolean) => {
+    const answer = answers[id] || {}
+    setAnswers((prev) => ({
+      ...prev,
+      [id]: {
+        questionAnswers: answer.questionAnswers,
+        choosenVariants: answer.choosenVariants,
+        onSiteRedemption: enabled
+      }
+    }))
+  }
+
+  console.log(answers)
 
   return (
     <>
@@ -102,6 +131,26 @@ const RedeemFormSelectProduct = ({
           />
         )}
       </div>
+      {externalSettings.onSiteRedemption && (
+        <div className="relative flex items-center justify-end gap-2 pt-8">
+          <p>Redeem on-site</p>
+          <Question
+            text={
+              <div className="space-y-4 text-sm">
+                <p>
+                  Enable if you&apos;re redeeming the items at the seller&apos;s
+                  physical store.
+                </p>
+              </div>
+            }
+            position="bottom-0 right-0"
+          />
+          <MySwitch
+            enabled={answers[id]?.onSiteRedemption}
+            setEnabled={handleSetOnSiteRedemption}
+          />
+        </div>
+      )}
     </>
   )
 }

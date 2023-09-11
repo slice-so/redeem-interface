@@ -7,6 +7,9 @@ type Props = {
   index: number
 }
 
+// TODO: Better handle onSiteRedemption
+// Don't show delivery info if it's redeemed on site
+
 const SubmissionBlock = ({ submission, index }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
 

@@ -31,6 +31,7 @@ export const encryptTexts = async (
   return encryptedTexts
 }
 
+// TODO: Better handle onSiteRedemption
 export const decryptTexts = async (
   productFormId: string | number,
   redeemedUnits: string | number,
@@ -45,6 +46,10 @@ export const decryptTexts = async (
 
   for (let i = 0; i < formattedTexts.length; i++) {
     const [question, answer] = formattedTexts[i]
+    if (question === "onSiteRedemption") {
+      decryptedTexts[question] = String(answer)
+      continue
+    }
     const encoded = new Uint8Array(answer.split(",").map((e) => Number(e)))
     const encryptedBuf: ArrayBuffer = await subtle.decrypt(
       {

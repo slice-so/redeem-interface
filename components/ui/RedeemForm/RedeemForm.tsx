@@ -8,7 +8,10 @@ import {
   RedeemFormInputRedeem,
   RedeemFormSelectProduct
 } from "../"
-import { LinkedProducts } from "../PrintfulStore/PrintfulStore"
+import {
+  ExternalSettings,
+  LinkedProducts
+} from "../PrintfulStore/PrintfulStore"
 import { useAppContext } from "../context"
 
 export type Answers = {
@@ -16,6 +19,7 @@ export type Answers = {
     [key: string]: string
   }
   [id: string]: {
+    onSiteRedemption?: boolean
     questionAnswers?: string[]
     choosenVariants?: { quantity: number; variantId: string }[]
   }
@@ -60,9 +64,14 @@ const RedeemForm = ({
     return redeemData
   })
 
-  const showDeliveryForm = formsSelectedProducts.some(
-    ({ form }) => !!form.linkedProducts
-  )
+  const showDeliveryForm = formsSelectedProducts.some(({ form }) => {
+    const answer = answers[`${form.slicerId}-${form.productId}`]
+
+    return (
+      !!form.linkedProducts &&
+      (!form.externalSettings["onSiteRedemption"] || !answer?.onSiteRedemption)
+    )
+  })
 
   const submit = async (e) => {
     e.preventDefault()
@@ -132,6 +141,7 @@ const RedeemForm = ({
                 productId={productId}
                 quantityToRedeem={quantityToRedeem}
                 linkedProducts={form.linkedProducts as LinkedProducts}
+                externalSettings={form.externalSettings as ExternalSettings}
                 answers={answers}
                 setAnswers={setAnswers}
                 product={product}

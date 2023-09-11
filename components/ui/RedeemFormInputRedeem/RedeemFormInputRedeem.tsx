@@ -37,7 +37,8 @@ const RedeemFormInputRedeem = ({
       ...prev,
       [`${slicerId}-${productId}`]: {
         questionAnswers,
-        choosenVariants: answer.choosenVariants
+        choosenVariants: answer.choosenVariants,
+        onSiteRedemption: answer.onSiteRedemption
       }
     }))
   }

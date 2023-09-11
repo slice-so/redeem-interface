@@ -46,7 +46,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const printfulOrders = {} as PrintfulOrders
       const submissions = []
       const answersEntries = Object.entries(answers)
-      const totalToRedeem = answersEntries.length - 1
+      const totalToRedeem =
+        answersEntries.length - (answers.deliveryInfo ? 1 : 0)
 
       // check the user can redeem selected products and the quantities are correct
       answersEntries.forEach(([id, answer]) => {
@@ -81,46 +82,51 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const { linkedProducts, externalSettings } = productInfo.form
-        const isPrintful = linkedProducts.some((linkedProduct) =>
-          linkedProduct.accountId.includes("printful")
-        )
+        const isOnSiteRedemption =
+          externalSettings?.["onSiteRedemption"] || false
 
-        if (isPrintful) {
-          let cleanedVariants = []
-          // clean variants and check they are allowed
-          choosenVariants?.forEach((variant) => {
-            if (variant.quantity > 0) {
-              cleanedVariants.push(variant)
+        if (!isOnSiteRedemption) {
+          const isPrintful = linkedProducts.some((linkedProduct) =>
+            linkedProduct.accountId.includes("printful")
+          )
+
+          if (isPrintful) {
+            let cleanedVariants = []
+            // clean variants and check they are allowed
+            choosenVariants?.forEach((variant) => {
+              if (variant.quantity > 0) {
+                cleanedVariants.push(variant)
+              }
+
+              const isVariantAllowed = linkedProducts?.find(
+                (product) =>
+                  product.variants.findIndex(
+                    (v) => v.external_id == variant.variantId
+                  ) != -1
+              )
+
+              if (!isVariantAllowed) {
+                throw Error("Invalid variant")
+              }
+            })
+
+            const storeId = linkedProducts[0].accountId.split("printful")[1]
+            const isInstantOrder = !!externalSettings["instantOrder"] || false
+            const key = `${storeId}-${isInstantOrder}`
+            printfulOrders[key] = printfulOrders[key] || {
+              products: [],
+              success: false,
+              error: "",
+              orderId: null
             }
 
-            const isVariantAllowed = linkedProducts?.find(
-              (product) =>
-                product.variants.findIndex(
-                  (v) => v.external_id == variant.variantId
-                ) != -1
-            )
-
-            if (!isVariantAllowed) {
-              throw Error("Invalid variant")
-            }
-          })
-
-          const storeId = linkedProducts[0].accountId.split("printful")[1]
-          const isInstantOrder = !!externalSettings["instantOrder"] || false
-          const key = `${storeId}-${isInstantOrder}`
-          printfulOrders[key] = printfulOrders[key] || {
-            products: [],
-            success: false,
-            error: "",
-            orderId: null
+            printfulOrders[key].products.push({
+              productId,
+              slicerId,
+              variants: cleanedVariants || [],
+              isInstantOrder
+            })
           }
-
-          printfulOrders[key].products.push({
-            productId,
-            slicerId,
-            variants: cleanedVariants || [],
-            isInstantOrder
-          })
         }
       })
 
@@ -212,21 +218,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           externalSettings
         } = productInfo.form
 
-        const isPrintful = linkedProducts.some((linkedProduct) =>
-          linkedProduct.accountId.includes("printful")
-        )
+        const isOnSiteRedemption =
+          externalSettings?.["onSiteRedemption"] || false
 
-        if (isPrintful) {
-          const storeId = linkedProducts[0].accountId.split("printful")[1]
-          const isInstantOrder = !!externalSettings["instantOrder"] || false
-          const key = `${storeId}-${isInstantOrder}`
-          orderId = printfulOrders[key].orderId
+        if (!isOnSiteRedemption) {
+          const isPrintful = linkedProducts.some((linkedProduct) =>
+            linkedProduct.accountId.includes("printful")
+          )
 
-          if (!printfulOrders[key].success) {
-            continue
-          } else {
+          if (isPrintful) {
+            const storeId = linkedProducts[0].accountId.split("printful")[1]
+            const isInstantOrder = !!externalSettings["instantOrder"] || false
+            const key = `${storeId}-${isInstantOrder}`
             orderId = printfulOrders[key].orderId
-            orderProvider = "printful"
+
+            if (!printfulOrders[key].success) {
+              continue
+            } else {
+              orderId = printfulOrders[key].orderId
+              orderProvider = "printful"
+            }
           }
         }
 
@@ -235,15 +246,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           formattedQuestions[question.question] = value.questionAnswers[index]
         })
 
-        Object.entries(answers.deliveryInfo).forEach(([key, value]) => {
-          formattedQuestions[key] = value
-        })
+        if (answers.deliveryInfo) {
+          Object.entries(answers.deliveryInfo).forEach(([key, value]) => {
+            formattedQuestions[key] = value
+          })
+        }
 
         const encryptedAnswers = await encryptTexts(
           formId,
           String(quantityRedeemed),
           formattedQuestions
         )
+
+        encryptedAnswers["onSiteRedemption"] = isOnSiteRedemption
 
         // Create user if it doesn't exist
         await prisma.user.upsert({
@@ -272,6 +287,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (submissions.length == 0) {
         throw Error("Error during redemption")
       }
+
+      console.log()
 
       res.status(200).json({ submissions, totalToRedeem })
     } catch (error) {

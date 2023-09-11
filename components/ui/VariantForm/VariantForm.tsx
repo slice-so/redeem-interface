@@ -8,6 +8,7 @@ type Props = {
   groupIndex: number
   setGroupIndex: any
   variantsJson: any
+  totalQuantitySelected: number
 }
 
 const VariantForm = ({
@@ -16,7 +17,8 @@ const VariantForm = ({
   setSelectedVariant,
   groupIndex,
   setGroupIndex,
-  variantsJson
+  variantsJson,
+  totalQuantitySelected
 }: Props) => {
   const [selectedColor, setSelectedColor] = useState(
     variantsJson[selectedVariant.variant_id]?.colorCode || ""
@@ -60,6 +62,13 @@ const VariantForm = ({
         {allVariants.length > 1 && (
           <div className="relative mt-4 sm:mt-0">
             <p className="pb-1 text-xs font-medium text-gray-600">Products</p>
+            <input
+              name="totalQuantitySelected"
+              value={totalQuantitySelected}
+              type="number"
+              className="opacity-0 h-[1px] absolute top-[-10px] right-0"
+              min={1}
+            />
             <div className="overflow-scroll">
               <div className="flex gap-1 sm:flex-wrap">
                 {allVariants.map((value, index) => {

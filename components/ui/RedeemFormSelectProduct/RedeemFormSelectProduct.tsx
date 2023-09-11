@@ -106,11 +106,9 @@ const RedeemFormSelectProduct = ({
     }))
   }
 
-  console.log(answers)
-
   return (
     <>
-      <div className="p-4 rounded-md shadow-sm bg-gray-50 relative">
+      <div className="relative p-4 rounded-md shadow-sm bg-gray-50">
         {isSingleVariant && (
           <SingleVariant
             value={allVariants[0]}
@@ -120,7 +118,6 @@ const RedeemFormSelectProduct = ({
             updateProductQuantity={updateProductQuantity}
           />
         )}
-
         {!isSingleVariant && (
           <MultiVariant
             allVariants={linkedVariants}

@@ -288,7 +288,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         throw Error("Error during redemption")
       }
 
-      console.log()
 
       res.status(200).json({ submissions, totalToRedeem })
     } catch (error) {

@@ -91,23 +91,23 @@ const CreateForm = ({
               Buyers will be prompted to reply to your questions when redeeming
               the product
             </p>
-            {linkedProducts.length != 0 && (
-              <div className="text-sm text-yellow-600">
-                <p>
-                  In order to process the order,{" "}
-                  <span className="font-bold">delivery info</span> (name,
-                  address, city, state, country, zip) will be added
-                  automatically to the form.
+
+            <div className="text-sm text-yellow-600">
+              <p>
+                In order to process the order,{" "}
+                <span className="font-bold">delivery info</span> (name, address,
+                city, state, country, zip) will be added automatically to the
+                form.
+              </p>
+              {linkedProducts.length > 1 && (
+                <p className="pt-6">
+                  Buyers will pick{" "}
+                  <b>one of the {linkedProducts.length} selected products</b>{" "}
+                  when redeeming their purchases.
                 </p>
-                {linkedProducts.length != 1 && (
-                  <p className="pt-6">
-                    Buyers will pick{" "}
-                    <b>one of the {linkedProducts.length} selected products</b>{" "}
-                    when redeeming their purchases.
-                  </p>
-                )}
-              </div>
-            )}
+              )}
+            </div>
+
             {questionsNumber != 0 && (
               <div className="pt-6">
                 {[...Array(questionsNumber)].map((i, key) => (

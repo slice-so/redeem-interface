@@ -246,7 +246,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           formattedQuestions[question.question] = value.questionAnswers[index]
         })
 
-        if (answers.deliveryInfo) {
+        if (answers.deliveryInfo && !isOnSiteRedemption) {
           Object.entries(answers.deliveryInfo).forEach(([key, value]) => {
             formattedQuestions[key] = value
           })
@@ -287,8 +287,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (submissions.length == 0) {
         throw Error("Error during redemption")
       }
-
-      console.log()
 
       res.status(200).json({ submissions, totalToRedeem })
     } catch (error) {

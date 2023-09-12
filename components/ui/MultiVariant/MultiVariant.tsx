@@ -92,6 +92,7 @@ const MultiVariant = ({
             setSelectedVariant={setSelectedVariant}
             groupIndex={groupIndex}
             setGroupIndex={setGroupIndex}
+            totalQuantitySelected={totalQuantitySelected}
           />
           <div className="relative z-10 mt-6 mb-2">
             <Button

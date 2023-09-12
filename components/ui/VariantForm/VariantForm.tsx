@@ -8,6 +8,7 @@ type Props = {
   groupIndex: number
   setGroupIndex: any
   variantsJson: any
+  totalQuantitySelected: number
 }
 
 const VariantForm = ({
@@ -16,7 +17,8 @@ const VariantForm = ({
   setSelectedVariant,
   groupIndex,
   setGroupIndex,
-  variantsJson
+  variantsJson,
+  totalQuantitySelected
 }: Props) => {
   const [selectedColor, setSelectedColor] = useState(
     variantsJson[selectedVariant.variant_id]?.colorCode || ""
@@ -58,8 +60,15 @@ const VariantForm = ({
     <>
       <div className="space-y-3">
         {allVariants.length > 1 && (
-          <div className="mt-4 sm:mt-0">
-            <p className="text-xs font-medium text-gray-600 pb-1">Products</p>
+          <div className="relative mt-4 sm:mt-0">
+            <p className="pb-1 text-xs font-medium text-gray-600">Products</p>
+            <input
+              name="totalQuantitySelected"
+              value={totalQuantitySelected}
+              type="number"
+              className="opacity-0 h-[1px] absolute top-[-10px] right-0"
+              min={1}
+            />
             <div className="overflow-scroll">
               <div className="flex gap-1 sm:flex-wrap">
                 {allVariants.map((value, index) => {
@@ -67,7 +76,7 @@ const VariantForm = ({
                   const isSelected = groupIndex == index
 
                   return (
-                    <div className="relative w-20 flex-shrink-0" key={index}>
+                    <div className="relative flex-shrink-0 w-20" key={index}>
                       <Image
                         src={image}
                         alt={`${selectedVariant.product.name} image`}
@@ -129,8 +138,8 @@ const VariantForm = ({
 
         {uniqueColors.length > 1 && (
           <div>
-            <p className="text-xs font-medium text-gray-600 pb-2">Color</p>
-            <div className="flex flex-wrap gap-3 pr-2 pl-1">
+            <p className="pb-2 text-xs font-medium text-gray-600">Color</p>
+            <div className="flex flex-wrap gap-3 pl-1 pr-2">
               {uniqueColors.map((color: string, key) => {
                 const isSelected = selectedColor == color
                 const isAvailable = allVariants[groupIndex].some(
@@ -158,7 +167,7 @@ const VariantForm = ({
                     key={key}
                   >
                     <div
-                      className="w-4 h-4 rounded-full border border-gray-500"
+                      className="w-4 h-4 border border-gray-500 rounded-full"
                       key={key}
                       style={{ content: "", background: color }}
                     />
